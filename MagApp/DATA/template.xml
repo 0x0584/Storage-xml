@@ -1,15 +1,12 @@
 <database>
-  <file prefix="../DATA/" />
   <products >
-    <product id="ID">
+    <product>
+      <id> ACD-0000 </id>
       <lable> LABLE </lable>
       <quantity> DIGIT </quantity>
-      <in>
-	<timing time="HH:MM"> DIGIT </timing>
-      </in>
-      <out>
-	<timing time="HH:MM"> DIGIT </timing>
-      </out>
+      <io> IN | OUT </io>
+      <io-time> HH:MM </io-time>
+      <io-quantity> DIGIT </io-quantity>
     </product>
   </products>
 </database>

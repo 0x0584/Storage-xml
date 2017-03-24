@@ -1,6 +1,6 @@
 ﻿namespace MagApp
 {
-    partial class MainForm1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.

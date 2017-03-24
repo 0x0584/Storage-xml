@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace MagApp
 {
-    public partial class MainForm1 : Form
+    public partial class MainForm : Form
     {
-        public MainForm1()
+        public MainForm()
         {
             InitializeComponent();
         }
