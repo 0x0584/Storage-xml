@@ -1,0 +1,54 @@
+<database>
+  <file prefix="~/Documents/" />
+
+  <products >	   <!-- our table -->
+    <!-- About the id:					                        -->
+    <!--						                                    -->
+    <!-- each product has a unique `id`. (XYZ-1123)	    -->
+    <!--						                                    -->
+    <!-- the first character, in this example 'X', is 	-->
+    <!-- used to indicate its (product) category.	      -->
+    <!-- while the second character 'Y' is used to	    -->
+    <!-- indicate its concentration, and the third	    -->
+    <!-- character 'Z' is used to indicate its volume.	-->
+    <!--						                                    -->
+    <!-- the four digits, 1123 VIVA FIBONACCI, are used -->
+    <!-- to indocate its unique reference to it's lable	-->
+
+    <product id="ACB-0000">	<!-- a record -->
+      <lable> MOGHRABI </lable>
+      
+      <!-- this node is affected each time we update `in`
+	   and `out` nodes  -->
+      <quantity> 52 </quantity>
+
+      <!-- in-storage (added) -->
+      <in>
+	<timing time="10:26"> 50 </timing>
+	<timing time="11:22"> 33 </timing>
+      </in>
+
+      <!-- out-storage (sold) -->
+      <out>
+	<timing time="15:22"> 10 </timing>
+	<timing time="13:22"> 12 </timing>
+      </out>
+    </product>
+
+    <product id="AFD-1554">
+      <lable> Red Label </lable>
+      <quantity> 10 </quantity>
+      <in>
+	<timing time="11:22"> 33 </timing>
+	<timing time="12:22"> 65 </timing>
+	<timing time="14:22"> 11 </timing>
+      </in>
+      <out>
+	<timing time="10:12"> 11 </timing>
+	<timing time="12:22"> 10 </timing>
+	<timing time="13:22"> 12 </timing>
+      </out>
+    </product>
+
+  </products>
+</database>

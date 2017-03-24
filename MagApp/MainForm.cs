@@ -9,24 +9,11 @@ using System.Windows.Forms;
 
 namespace MagApp
 {
-    public partial class MainForm : Form
+    public partial class MainForm1 : Form
     {
-        #region
-        
-        #endregion
-
-        bool isadmin;
-
-        public MainForm(bool title)
+        public MainForm1()
         {
             InitializeComponent();
-
-            isadmin = title;
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            MessageBox.Show(isadmin ? "ADMIN":"USER");
         }
     }
 }
