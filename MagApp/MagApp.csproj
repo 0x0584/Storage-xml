@@ -81,8 +81,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\DATA\template.xml" />
+    <Content Include="DATA\10_02_2017.xml" />
     <Content Include="DATA\12_Dec_2016.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\DATA\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
