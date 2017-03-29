@@ -23,16 +23,56 @@ namespace MagApp
         XDocument xmldoc;
         List<Product> products;
 
+        List<CheckBox> checks; // yeaah!!
+        List<NumericUpDown> nums;
+        List<Label> labels;
+
+
+        public void SetupMain()
+        {
+            checks = new List<CheckBox>();
+            nums = new List<NumericUpDown>();
+            labels = new List<Label>();
+
+            foreach (var item in groupBox2.Controls)
+            {
+                if ((item is CheckBox)) checks.Add((CheckBox)item);
+                else if (item is NumericUpDown) nums.Add((NumericUpDown)item);
+                else if (item is Label) labels.Add((Label)item);
+            }
+
+            foreach (var item in groupBox3.Controls)
+            {
+                if ((item is CheckBox)) checks.Add((CheckBox)item);
+                else if (item is NumericUpDown) nums.Add((NumericUpDown)item);
+                else if (item is Label) labels.Add((Label)item);
+            }
+        }
+
         public CRUDForm()
         {
             InitializeComponent();
             products = new List<Product>();
 
+            // setup the texts
+            comboBox3.Text = comboBox3.Items[0].ToString();
+            numconcen.Value = 10;
+            combcategory.Text = combcategory.Items[0].ToString();
+
+            SetupMain();
+
         }
+
+        //Product p = new Product(int.Parse(numconcen.Value.ToString()),
+        //           int.Parse(comboBox3.Text), combcategory.Text,
+        //            "foo", 50.15f);
+
+        Product p;
 
         private void Parsexml(List<Product> prods, DataGridView datagrid)
         {
-            xmldoc = XDocument.Load(@"..\DATA\template.xml");   //add xml document  
+            Product.SetDocument(@"..\DATA\10_02_2017.xml");
+            xmldoc = XDocument.Load(@"..\DATA\10_02_2017.xml");   //add xml document  
 
             var bind = xmldoc.Descendants("product").Select(p => new
             {
@@ -43,9 +83,29 @@ namespace MagApp
             }
             ).OrderBy(p => p.Id);
 
+            p = new Product(45, 33, "Whiskey", "Red Label", 10, 70.56f);
+
+            // fill the data
             foreach (var item in bind)
-                prods.Add(new Product(item.Id, item.Lable, float.Parse(item.Price)));
-            
+                prods.Add(new Product(int.Parse(numconcen.Value.ToString()),
+                    int.Parse(comboBox3.Text), combcategory.Text,
+                    item.Lable, int.Parse(item.Quantity), float.Parse(item.Price)));
+
+
+
+            for (int i = 0; i < prods.Count; i++)
+            {
+                try
+                {
+                    checks[i].Text = prods[i].Lable;
+                    labels[i].Text = prods[i].Quantity.ToString();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show(string.Format("{0} this should be the next page", i));
+                }
+            }
+            //bind the grid
             datagrid.DataSource = bind.ToList();
         }
 
@@ -55,10 +115,31 @@ namespace MagApp
             Parsexml(products, dgv);
         }
 
-        private void btnadd_Click(object sender, EventArgs e)
+        #region CRUD operations
+        private void btnadd_Click_1(object sender, EventArgs e)
         {
-            Product p = new Product("1123", "foo", 50.15f);
-            p.AddToXML(xmldoc);
+            Product fooprod = new Product(int.Parse(numconcen.Value.ToString()),
+                                int.Parse(comboBox3.Text), combcategory.Text,
+                                tboxlable.Text, int.Parse(numericUpDown33.Value.ToString()),
+                                float.Parse(tboxprice.Text));
+            fooprod.XMLAdd(xmldoc);
+            Parsexml(products, dgv);
         }
+
+        private void btndelete_Click_1(object sender, EventArgs e)
+        {
+
+            p.XMLRemove(xmldoc);
+            Parsexml(products, dgv);
+        }
+
+        private void tbsearch_TextChanged(object sender, EventArgs e)
+        {
+            // TODO: change teh content of the datagrid
+            // based on the new text.
+            //
+
+        }
+
     }
 }
