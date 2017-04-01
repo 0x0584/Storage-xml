@@ -54,6 +54,7 @@
             this.btnupdate.TabIndex = 0;
             this.btnupdate.Text = "Modifier";
             this.btnupdate.UseVisualStyleBackColor = true;
+            this.btnupdate.Click += new System.EventHandler(this.btnupdate_Click);
             // 
             // btnadd
             // 
@@ -73,12 +74,18 @@
             this.btndelete.TabIndex = 0;
             this.btndelete.Text = "Supprime";
             this.btndelete.UseVisualStyleBackColor = true;
+            this.btndelete.Click += new System.EventHandler(this.btndelete_Click);
             // 
             // dgv
             // 
+            this.dgv.AllowUserToResizeColumns = false;
+            this.dgv.AllowUserToResizeRows = false;
+            this.dgv.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv.Location = new System.Drawing.Point(12, 47);
+            this.dgv.Location = new System.Drawing.Point(12, 54);
+            this.dgv.MultiSelect = false;
             this.dgv.Name = "dgv";
+            this.dgv.ReadOnly = true;
             this.dgv.Size = new System.Drawing.Size(479, 247);
             this.dgv.TabIndex = 1;
             // 
@@ -89,18 +96,18 @@
             this.tbsearch.Size = new System.Drawing.Size(153, 20);
             this.tbsearch.TabIndex = 2;
             // 
-            // MainForm
+            // CRUDForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(504, 309);
+            this.ClientSize = new System.Drawing.Size(504, 319);
             this.Controls.Add(this.tbsearch);
             this.Controls.Add(this.dgv);
             this.Controls.Add(this.btndelete);
             this.Controls.Add(this.btnadd);
             this.Controls.Add(this.btnupdate);
             this.Controls.Add(this.btnsearch);
-            this.Name = "MainForm";
+            this.Name = "CRUDForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
