@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using System.Windows.Forms;
 namespace MagApp
 {
-    class Product
+    public class Product
     {
         protected struct Delivry
         {
@@ -30,29 +30,23 @@ namespace MagApp
                 xdoc = x;
             }
         };
-
-        // TODO: generate a an id like XYZ-4321 
-        // the first character, in this example 'X', 
-        // is used to indicate its (product) category.
-        // while the second character 'Y' is used to
-        // indicate its concentration, and the third
-        // character 'Z' is used to indicate its volume.
-        // the four digits, 1123 VIVA FIBONACCI, are used
-        // to indocate its unique reference to it's lable
-        // 
+        // TODO: just a normal id
         // done.
-        private string id;
+        private int id;
         static int lastid; // this id is the product of the last id
 
         private string lable;
         private int quantity;
         private float price;
+        private string volume;
+        private string type;
+        private XElement XElem;
         static File file = null;
-        private bool isthereafile = false;
+        static bool isthereafile;
         private List<Delivry> In, Out;
 
         #region Props
-        public string Id
+        public int Id
         {
             get
             {
@@ -127,8 +121,8 @@ namespace MagApp
             {
                 file.SetFile(XDocument.Load(filepath), filepath);
                 string fooid = file.xdoc.Descendants("id").LastOrDefault().Value.ToString();
-
-                lastid = int.Parse(fooid.Substring(fooid.Length - 4));
+                lastid = int.Parse(fooid);
+                isthereafile = true;
                 return true;
             }
             catch (Exception)
@@ -155,33 +149,41 @@ namespace MagApp
         }
         #endregion
 
-        private string GenerateID(int conc, int vol, string categ)
+        public static int GenerateID()
         {
-            string str = categ.Substring(0, 3).ToUpper();
-            str += conc.ToString();
-
-            switch (vol)
-            {
-                case 33: str += "A"; break;
-                case 50: str += "B"; break;
-                case 75: str += "C"; break;
-                case 100: str += "D"; break;
-            };
-
-            return string.Format("{0}-{1}", str, ++lastid);
+            return ++lastid;
         }
 
-        public Product(int conc, int volume, string catg, string lable, int q, float price)
+        public Product(int id, string volume, string type,
+            string lable, int quantity, float price)
+        {
+            this.id = id;
+            this.lable = lable;
+            this.price = price;
+            this.quantity = quantity;
+            this.volume = volume;
+            this.type = type;
+
+            if (file == null) OpenDocument();
+        }
+
+        public Product(string volume, string type,
+            string lable, int quantity, float price)
         {
             // setup the document if the methode `SetDocument`
             // was not called outside
             if (file == null) OpenDocument();
 
-            id = GenerateID(conc, volume, catg);
+            id = GenerateID();
             this.lable = lable;
             this.price = price;
-            quantity = q;
+            this.quantity = quantity;
+            this.volume = volume;
+            this.type = type;
 
+            XElem = file.xdoc.Descendants("product").FirstOrDefault(
+                p => p.Element("id").Value == id.ToString()
+                );
             //foreach (var i in intime)
             //    foreach (var ii in inquantity)
             //    {
@@ -202,7 +204,7 @@ namespace MagApp
         }
 
         #region XML Operation
-        public void XMLAdd(XDocument x)
+        public void XMLAdd()
         {
             // TODO: add product to a XML file
             // done.
@@ -210,41 +212,76 @@ namespace MagApp
             XElement XProduct = new XElement("product",
                 new XElement("id", id.ToString()),
                 new XElement("lable", lable),
+                new XElement("type", type),
                 new XElement("price", price.ToString()),
+                new XElement("volume", volume),
                 new XElement("quantity", quantity.ToString()));
-            x.Root.Add(XProduct);
 
-            if (isthereafile) x.Save(file.filepath);
-            else OpenDocument();
+            file.xdoc.Root.Add(XProduct);
+
+            if (!isthereafile)
+            {
+                MessageBox.Show("No Document was set");
+                OpenDocument();
+            }
+
+            file.xdoc.Save(file.filepath);
         }
 
-        public void XMLRemove(XDocument x)
+        public void XMLRemove()
         {
             // TODO: remove from XML
             // done
 
-            XElement product = x.Descendants("product").FirstOrDefault(p => p.Element("id").Value == id);
+            XElement product = file.xdoc.Descendants("product").FirstOrDefault(
+                p => int.Parse(p.Element("id").Value) == id
+                );
+
             if (product != null)
             {
                 product.Remove();
-                x.Save(file.filepath);
+
+                if (!isthereafile)
+                {
+                    MessageBox.Show("No Document was set");
+                    OpenDocument();
+                }
+
+                file.xdoc.Save(file.filepath);
             }
         }
 
-        public void XMLUpdate(XDocument x, string ID, string lable, float price, int quant)
+        public void XMLUpdate(Product prod)
         {
             // TODO: update an existing product
-            // done
+            // UPDATE: NOT YET!
+            // 
 
-            XElement XProduct = x.Descendants("product").FirstOrDefault(p => p.Element("id").Value == ID);
+            //XElement XProduct = x.Descendants("product").FirstOrDefault(
+            //    p => p.Element("id").Value == id.ToString()
+            //);
 
+            XElement XProduct = file.xdoc.Descendants("product").FirstOrDefault(
+                p => int.Parse(p.Element("id").Value) == id);
+            
+            //List<XElement> list = file.xdoc.Descendants("product").ToList();
+
+            //XElement x;
+            //foreach (XElement item in list)
+            //{
+            //    if (int.Parse(item.Element("id").Value) == id)
+            //        x = item;
+            //}
+
+            // HERE
             if (XProduct != null)
             {
-                XProduct.Element("lable").Value = lable;
-                XProduct.Element("price").Value = price.ToString();
-                XProduct.Element("quantity").Value = quant.ToString();
-                x.Root.Add(XProduct);
-                x.Save(file.filepath);
+                XProduct.Element("lable").Value = prod.lable;
+                XProduct.Element("type").Value = prod.type;
+                XProduct.Element("volume").Value = prod.volume;
+                XProduct.Element("price").Value = prod.price.ToString();
+                XProduct.Element("quantity").Value = prod.quantity.ToString();
+                file.xdoc.Save(file.filepath);
             }
             else MessageBox.Show("NOT FOUND!");
         }
@@ -254,5 +291,39 @@ namespace MagApp
         {
             return string.Format("(ID: {0}) {1} - {2} DH", id, lable.ToUpper(), price);
         }
+
+        public override bool Equals(object obj)
+        {
+            //       
+            // See the full list of guidelines at
+            //   http://go.microsoft.com/fwlink/?LinkID=85237  
+            // and also the guidance for operator== at
+            //   http://go.microsoft.com/fwlink/?LinkId=85238
+            //
+
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            // TODO: write your implementation of Equals() here
+
+            if (((Product)obj).id == id
+                && ((Product)obj).lable == lable
+                && ((Product)obj).price == price
+                && ((Product)obj).quantity == quantity
+                && ((Product)obj).type == type
+                && ((Product)obj).volume == volume
+                ) return true;
+            else return false;
+        }
+
+        // override object.GetHashCode
+        //public override int GetHashCode()
+        //{
+        //    // TODO: write your implementation of GetHashCode() here
+        //    //throw new NotImplementedException();
+        //    //return base.GetHashCode();
+        //}
     }
 }
