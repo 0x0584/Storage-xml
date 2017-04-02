@@ -81,12 +81,16 @@ namespace MagApp
             }
             ).OrderBy(p => p.Id);
 
+            prods.Clear();
+
             // fill the list of products
             foreach (var item in bind)
-            {
-                float p = float.Parse(item.Price);
-                int q = int.Parse(item.Quantity);
-                prods.Add(new Product(int.Parse(item.Id), item.Volume, item.Type, item.Lable, q, p));
+            {   
+                Product foo = new Product( int.Parse(item.Id), item.Volume, 
+                    item.Type, item.Lable, int.Parse(item.Quantity), 
+                    float.Parse(item.Price));
+
+             prods.Add(foo);
             }
 
             //bind the grid
@@ -119,10 +123,22 @@ namespace MagApp
 
         private void btndelete_Click(object sender, EventArgs e)
         {
-            p.XMLAdd();
+            // TODO: find the product based on the clicked cell. 
+            // then, delete it form teh list and from the xml file.
 
-            p.XMLRemove();
-            Parsexml(products, dgv);
+            if (dgv.SelectedCells.Count > 0)
+            {
+                int scell = dgv.SelectedCells[0].RowIndex;
+                DataGridViewRow drow = dgv.Rows[scell];
+                foreach (Product item in products)
+                    if (int.Parse(drow.Cells[0].Value.ToString()) == item.Id)
+                    {
+                        item.XMLRemove();
+                        products.Remove(item);
+                        Parsexml(products, dgv);
+                        break;
+                    }
+            }
         }
 
         private void tbsearch_TextChanged(object sender, EventArgs e)

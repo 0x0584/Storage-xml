@@ -87,6 +87,9 @@
     <Content Include="bin\DATA\10_02_2017.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="bin\DATA\IO.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="DATA\12_Dec_2016.xml" />
   </ItemGroup>
   <ItemGroup />
