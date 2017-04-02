@@ -49,6 +49,12 @@
     <Compile Include="CRUDForm.Designer.cs">
       <DependentUpon>CRUDForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FillForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FillForm.Designer.cs">
+      <DependentUpon>FillForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -60,6 +66,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CRUDForm.resx">
       <DependentUpon>CRUDForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FillForm.resx">
+      <DependentUpon>FillForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -85,6 +94,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\DATA\10_02_2017.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="bin\DATA\IO.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="DATA\12_Dec_2016.xml" />
