@@ -89,14 +89,12 @@ namespace MagApp
                 prods.Add(new Product(int.Parse(item.Id), item.Volume, item.Type, item.Lable, q, p));
             }
 
-
             //bind the grid
             datagrid.DataSource = bind.ToList();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
             Parsexml(products, dgv);
             p = new Product("test", "foo", "foo", 10, 15.12f);
         }
@@ -112,7 +110,7 @@ namespace MagApp
             if (!m.IsDisposed)
             {
                 fooprod = m.NewProduct(Product.GenerateID());
-                fooprod.XMLAdd(xmldoc);
+                fooprod.XMLAdd();
                 m.Dispose();
                 m.Close();
                 Parsexml(products, dgv);
@@ -121,9 +119,9 @@ namespace MagApp
 
         private void btndelete_Click(object sender, EventArgs e)
         {
-            p.XMLAdd(xmldoc);
+            p.XMLAdd();
 
-            p.XMLRemove(xmldoc);
+            p.XMLRemove();
             Parsexml(products, dgv);
         }
 
@@ -171,7 +169,7 @@ namespace MagApp
             {
                 foreach (Product item in products)
                     if (item.Id == id)
-                    { item.XMLUpdate(xmldoc, m.NewProduct(id)); break; }
+                    { item.XMLUpdate(m.NewProduct(id)); break; }
 
                 m.Dispose();
                 m.Close();

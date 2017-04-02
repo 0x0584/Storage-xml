@@ -40,6 +40,7 @@ namespace MagApp
         private float price;
         private string volume;
         private string type;
+        private XElement XElem;
         static File file = null;
         static bool isthereafile;
         private List<Delivry> In, Out;
@@ -153,7 +154,7 @@ namespace MagApp
             return ++lastid;
         }
 
-        public Product(int id, string volume, string type, 
+        public Product(int id, string volume, string type,
             string lable, int quantity, float price)
         {
             this.id = id;
@@ -166,7 +167,7 @@ namespace MagApp
             if (file == null) OpenDocument();
         }
 
-        public Product(string volume, string type, 
+        public Product(string volume, string type,
             string lable, int quantity, float price)
         {
             // setup the document if the methode `SetDocument`
@@ -180,6 +181,9 @@ namespace MagApp
             this.volume = volume;
             this.type = type;
 
+            XElem = file.xdoc.Descendants("product").FirstOrDefault(
+                p => p.Element("id").Value == id.ToString()
+                );
             //foreach (var i in intime)
             //    foreach (var ii in inquantity)
             //    {
@@ -200,7 +204,7 @@ namespace MagApp
         }
 
         #region XML Operation
-        public void XMLAdd(XDocument x)
+        public void XMLAdd()
         {
             // TODO: add product to a XML file
             // done.
@@ -213,7 +217,7 @@ namespace MagApp
                 new XElement("volume", volume),
                 new XElement("quantity", quantity.ToString()));
 
-            x.Root.Add(XProduct);
+            file.xdoc.Root.Add(XProduct);
 
             if (!isthereafile)
             {
@@ -221,15 +225,15 @@ namespace MagApp
                 OpenDocument();
             }
 
-            x.Save(file.filepath);
+            file.xdoc.Save(file.filepath);
         }
 
-        public void XMLRemove(XDocument x)
+        public void XMLRemove()
         {
             // TODO: remove from XML
             // done
 
-            XElement product = x.Descendants("product").FirstOrDefault(
+            XElement product = file.xdoc.Descendants("product").FirstOrDefault(
                 p => p.Element("id").Value == id.ToString()
                 );
 
@@ -243,11 +247,11 @@ namespace MagApp
                     OpenDocument();
                 }
 
-                x.Save(file.filepath);
+                file.xdoc.Save(file.filepath);
             }
         }
 
-        public void XMLUpdate(XDocument x, Product prod)
+        public void XMLUpdate(Product prod)
         {
             // TODO: update an existing product
             // UPDATE: NOT YET!
@@ -255,37 +259,33 @@ namespace MagApp
 
             //XElement XProduct = x.Descendants("product").FirstOrDefault(
             //    p => p.Element("id").Value == id.ToString()
-            //    );
+            //);
 
+            XElement XProduct = file.xdoc.Descendants("product").FirstOrDefault(
+                p => int.Parse(p.Element("id").Value) == id);
+            
+            //List<XElement> list = file.xdoc.Descendants("product").ToList();
 
-            XElement XProduct = x.Descendants("product").FirstOrDefault(
-                p => p.Element("id").Value.ToString() == id.ToString()
-                );
-
+            //XElement x;
+            //foreach (XElement item in list)
+            //{
+            //    if (int.Parse(item.Element("id").Value) == id)
+            //        x = item;
+            //}
 
             // HERE
             if (XProduct != null)
             {
-                //    XProduct.Element("lable").Value = prod.lable;
-                //    XProduct.Element("type").Value = prod.type;
-                //    XProduct.Element("volume").Value = prod.volume;
-                //    XProduct.Element("price").Value = prod.price.ToString();
-                //    XProduct.Element("quantity").Value = prod.quantity.ToString();
-                //    x.Root.Add(XProduct);
-                //    x.Save(file.filepath);
+                XProduct.Element("lable").Value = prod.lable;
+                XProduct.Element("type").Value = prod.type;
+                XProduct.Element("volume").Value = prod.volume;
+                XProduct.Element("price").Value = prod.price.ToString();
+                XProduct.Element("quantity").Value = prod.quantity.ToString();
+                file.xdoc.Save(file.filepath);
             }
             else MessageBox.Show("NOT FOUND!");
         }
         #endregion
-
-        public void Update(Product p)
-        {
-            this.lable = p.lable;
-            this.quantity = p.quantity;
-            this.price = p.price;
-            this.volume = p.volume;
-            this.type = p.type;
-        }
 
         public override string ToString()
         {
