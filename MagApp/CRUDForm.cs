@@ -60,10 +60,6 @@ namespace MagApp
 
         }
 
-        //Product p = new Product(int.Parse(numconcen.Value.ToString()),
-        //           int.Parse(comboBox3.Text), combcategory.Text,
-        //            "foo", 50.15f);
-
         Product p;
 
         private void Parsexml(List<Product> prods, DataGridView datagrid)
@@ -85,12 +81,12 @@ namespace MagApp
 
             // fill the list of products
             foreach (var item in bind)
-            {   
-                Product foo = new Product( int.Parse(item.Id), item.Volume, 
-                    item.Type, item.Lable, int.Parse(item.Quantity), 
+            {
+                Product foo = new Product(int.Parse(item.Id), item.Volume,
+                    item.Type, item.Lable, int.Parse(item.Quantity),
                     float.Parse(item.Price));
 
-             prods.Add(foo);
+                prods.Add(foo);
             }
 
             //bind the grid
@@ -130,6 +126,7 @@ namespace MagApp
             {
                 int scell = dgv.SelectedCells[0].RowIndex;
                 DataGridViewRow drow = dgv.Rows[scell];
+
                 foreach (Product item in products)
                     if (int.Parse(drow.Cells[0].Value.ToString()) == item.Id)
                     {
@@ -193,5 +190,30 @@ namespace MagApp
             }
         }
         #endregion
+
+        private void dgv_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            // TODO: find ou how to do it!
+            //
+
+            if (dgv.SelectedCells.Count > 0)
+            {
+                int __rowindex = dgv.SelectedCells[0].RowIndex;
+                DataGridViewRow drow = dgv.Rows[__rowindex];
+                bool value;
+
+                foreach (DataGridViewRow row in dgv.Rows)
+                {
+                    int rowindex = row.Cells[0].RowIndex;
+                    bool isit = (rowindex == __rowindex);
+
+                    if (isit) value = true;
+                    else value = false;
+
+                    foreach (DataGridViewCell cell in row.Cells)
+                        cell.Selected = value;
+                }
+            }
+        }
     }
 }
