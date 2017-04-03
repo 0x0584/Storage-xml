@@ -21,21 +21,16 @@ namespace MagApp
         // TODO: Bind the Grid  
         // done.
 
-        List<Product> products;
-
         public CRUDForm()
         {
             InitializeComponent();
-            products = new List<Product>();
+        
             Product.SetDocument(@"..\DATA\10_02_2017.xml");
         }
 
         private void Bind(DataGridView datagrid)
         {
-            IEnumerable<Product> IProduct = Product.ToList();
-            //bind the grid
-
-            products = ((List<Product>)(datagrid.DataSource = IProduct)).ToList();
+            datagrid.DataSource = Product.List;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -71,11 +66,10 @@ namespace MagApp
                 int scell = dgv.SelectedCells[0].RowIndex;
                 DataGridViewRow drow = dgv.Rows[scell];
 
-                foreach (Product item in products)
+                foreach (Product item in Product.List)
                     if (int.Parse(drow.Cells[0].Value.ToString()) == item.Id)
                     {
                         item.RemoveXML();
-                        products.Remove(item);
                         Bind(dgv);
                         break;
                     }
@@ -124,7 +118,7 @@ namespace MagApp
 
             if (!m.IsDisposed)
             {
-                foreach (Product item in products)
+                foreach (Product item in Product.List)
                     if (item.Id == id)
                     { item.UpdateXML(m.NewProduct(id)); break; }
 

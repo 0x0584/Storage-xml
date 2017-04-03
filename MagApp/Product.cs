@@ -43,9 +43,13 @@ namespace MagApp
         private float price;
         private string volume;
         private string type;
+
+        // in to storage, out from storage
+        private List<Delivry> In, Out;
+        #region Static variables
         private static File file = null;
         private static bool isthereafile;
-        private List<Delivry> In, Out;
+        #endregion
         #endregion
 
         #region Properties
@@ -96,6 +100,39 @@ namespace MagApp
 
             set { type = value; }
         }
+
+        public static List<Product> List
+        {
+            get
+            {
+                if (!isthereafile) SetDocument(@"..\DATA\10_02_2017.xml");
+
+                List<Product> list = new List<Product>();
+
+                var bind = file.xdoc.Descendants("product").Select(p => new
+                {
+                    Id = p.Element("id").Value,
+                    Lable = p.Element("lable").Value,
+                    Price = p.Element("price").Value,
+                    Volume = p.Element("volume").Value,
+                    Type = p.Element("type").Value,
+                    Quantity = p.Element("quantity").Value
+                }
+                ).OrderBy(p => p.Id);
+
+                // fill the list of products
+                foreach (var item in bind)
+                {
+                    Product foo = new Product(int.Parse(item.Id), item.Volume,
+                        item.Type, item.Lable, int.Parse(item.Quantity),
+                        float.Parse(item.Price));
+
+                    list.Add(foo);
+                }
+
+                return list.ToList();
+            }
+        } 
         #endregion
 
         #region Document Setup
@@ -141,33 +178,6 @@ namespace MagApp
             return ++lastid;
         }
 
-        public static IEnumerable<Product> ToList()
-        {
-            List<Product> list = new List<Product>();
-
-            var bind = file.xdoc.Descendants("product").Select(p => new
-            {
-                Id = p.Element("id").Value,
-                Lable = p.Element("lable").Value,
-                Price = p.Element("price").Value,
-                Volume = p.Element("volume").Value,
-                Type = p.Element("type").Value,
-                Quantity = p.Element("quantity").Value
-            }
-            ).OrderBy(p => p.Id);
-
-            // fill the list of products
-            foreach (var item in bind)
-            {
-                Product foo = new Product(int.Parse(item.Id), item.Volume,
-                    item.Type, item.Lable, int.Parse(item.Quantity),
-                    float.Parse(item.Price));
-
-                list.Add(foo);
-            }
-            
-            return list.ToList();
-        }
         #endregion
 
         #region Constructors

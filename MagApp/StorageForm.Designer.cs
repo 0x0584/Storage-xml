@@ -1,6 +1,6 @@
 ﻿namespace MagApp
 {
-    partial class Storage
+    partial class StorageForm
     {
         /// <summary>
         /// Required designer variable.

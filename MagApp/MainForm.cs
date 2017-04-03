@@ -37,6 +37,13 @@ namespace MagApp
             // TODO: here we should take care of all the INs
             //
 
+            StorageForm storage = new StorageForm();
+            Hide();
+            storage.ShowDialog();
+
+            storage.Dispose();
+            storage.Close();
+            Show();
         }
     }
 }

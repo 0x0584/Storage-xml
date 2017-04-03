@@ -9,13 +9,19 @@ using System.Windows.Forms;
 
 namespace MagApp
 {
-    public partial class Storage : Form
+    public partial class StorageForm : Form
     {
-        public Storage()
+        List<Product> products;
+
+        public StorageForm()
         {
             InitializeComponent();
+            products = (List<Product>) Product.List;
 
+            foreach (Product prod in products)
+            {
 
+            }
         }
 
         private void btnaddtolist_Click(object sender, EventArgs e)
