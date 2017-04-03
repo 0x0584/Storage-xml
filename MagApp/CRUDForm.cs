@@ -16,87 +16,31 @@ namespace MagApp
 
         // TODO: this is a basic CRUD, the only problem is 
         // how to do it using xml
-        //
+        // done.
 
         // TODO: Bind the Grid  
         // done.
 
-        XDocument xmldoc;
         List<Product> products;
-
-        //public void SetupMain()
-        //{
-        //    checks = new List<CheckBox>();
-        //    nums = new List<NumericUpDown>();
-        //    labels = new List<Label>();
-
-        //    foreach (var item in groupBox2.Controls)
-        //    {
-        //        if ((item is CheckBox)) checks.Add((CheckBox)item);
-        //        else if (item is NumericUpDown) nums.Add((NumericUpDown)item);
-        //        else if (item is Label) labels.Add((Label)item);
-        //    }
-
-        //    foreach (var item in groupBox3.Controls)
-        //    {
-        //        if ((item is CheckBox)) checks.Add((CheckBox)item);
-        //        else if (item is NumericUpDown) nums.Add((NumericUpDown)item);
-        //        else if (item is Label) labels.Add((Label)item);
-        //    }
-        //}
 
         public CRUDForm()
         {
             InitializeComponent();
             products = new List<Product>();
             Product.SetDocument(@"..\DATA\10_02_2017.xml");
-
-            // setup the texts
-            //comboBox3.Text = comboBox3.Items[0].ToString();
-            //numconcen.Value = 10;
-            //combcategory.Text = combcategory.Items[0].ToString();
-
-            //SetupMain();
-
         }
 
-        Product p;
-
-        private void Parsexml(List<Product> prods, DataGridView datagrid)
+        private void Bind(DataGridView datagrid)
         {
-            xmldoc = XDocument.Load(@"..\DATA\10_02_2017.xml");   //add xml document  
-
-            var bind = xmldoc.Descendants("product").Select(p => new
-            {
-                Id = p.Element("id").Value,
-                Lable = p.Element("lable").Value,
-                Price = p.Element("price").Value,
-                Volume = p.Element("volume").Value,
-                Type = p.Element("type").Value,
-                Quantity = p.Element("quantity").Value
-            }
-            ).OrderBy(p => p.Id);
-
-            prods.Clear();
-
-            // fill the list of products
-            foreach (var item in bind)
-            {
-                Product foo = new Product(int.Parse(item.Id), item.Volume,
-                    item.Type, item.Lable, int.Parse(item.Quantity),
-                    float.Parse(item.Price));
-
-                prods.Add(foo);
-            }
-
+            IEnumerable<Product> IProduct = Product.ToList();
             //bind the grid
-            datagrid.DataSource = bind.ToList();
+
+            products = ((List<Product>)(datagrid.DataSource = IProduct)).ToList();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Parsexml(products, dgv);
-            p = new Product("test", "foo", "foo", 10, 15.12f);
+            Bind(dgv);
         }
 
         #region CRUD operations
@@ -110,10 +54,10 @@ namespace MagApp
             if (!m.IsDisposed)
             {
                 fooprod = m.NewProduct(Product.GenerateID());
-                fooprod.XMLAdd();
+                fooprod.AddXML();
                 m.Dispose();
                 m.Close();
-                Parsexml(products, dgv);
+                Bind(dgv);
             }
         }
 
@@ -130,9 +74,9 @@ namespace MagApp
                 foreach (Product item in products)
                     if (int.Parse(drow.Cells[0].Value.ToString()) == item.Id)
                     {
-                        item.XMLRemove();
+                        item.RemoveXML();
                         products.Remove(item);
-                        Parsexml(products, dgv);
+                        Bind(dgv);
                         break;
                     }
             }
@@ -182,11 +126,11 @@ namespace MagApp
             {
                 foreach (Product item in products)
                     if (item.Id == id)
-                    { item.XMLUpdate(m.NewProduct(id)); break; }
+                    { item.UpdateXML(m.NewProduct(id)); break; }
 
                 m.Dispose();
                 m.Close();
-                Parsexml(products, dgv);
+                Bind(dgv);
             }
         }
         #endregion

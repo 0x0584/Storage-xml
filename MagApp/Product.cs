@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 using System.Windows.Forms;
+
 namespace MagApp
 {
     public class Product
     {
+        #region Classes and Structures
         protected struct Delivry
         {
             DateTime timing;
@@ -20,6 +21,7 @@ namespace MagApp
             }
 
         };
+
         protected class File
         {
             public string filepath;
@@ -30,54 +32,40 @@ namespace MagApp
                 xdoc = x;
             }
         };
-        // TODO: just a normal id
-        // done.
-        private int id;
-        static int lastid; // this id is the product of the last id
 
+        #endregion
+
+        #region Local variables
+        private int id;
+        private static int lastid; // this id is the id of the last product
         private string lable;
         private int quantity;
         private float price;
         private string volume;
         private string type;
-        private XElement XElem;
-        static File file = null;
-        static bool isthereafile;
+        private static File file = null;
+        private static bool isthereafile;
         private List<Delivry> In, Out;
+        #endregion
 
-        #region Props
+        #region Properties
         public int Id
         {
-            get
-            {
-                return id;
-            }
+            get { return id; }
 
-            set
-            {
-                id = value;
-            }
+            set { id = value; }
         }
 
         public string Lable
         {
-            get
-            {
-                return lable;
-            }
+            get { return lable; }
 
-            set
-            {
-                lable = value;
-            }
+            set { lable = value; }
         }
 
         public int Quantity
         {
-            get
-            {
-                return quantity;
-            }
+            get { return quantity; }
 
             set
             {
@@ -90,26 +78,24 @@ namespace MagApp
 
         public float Price
         {
-            get
-            {
-                return price;
-            }
+            get { return price; }
 
-            set
-            {
-                price = value;
-            }
+            set { price = value; }
         }
 
-        //public static string Filepath
-        //{
-        //    get
-        //    {
-        //        return @"..\DATA\10_02_2017.xml";
-        //    }
+        public string Volume
+        {
+            get { return volume; }
 
-        //    set { file.filepath = @"..\DATA\10_02_2017.xml"; }
-        //}
+            set { volume = value; }
+        }
+
+        public string Type
+        {
+            get { return type; }
+
+            set { type = value; }
+        }
         #endregion
 
         #region Document Setup
@@ -149,11 +135,42 @@ namespace MagApp
         }
         #endregion
 
+        #region Static Methods
         public static int GenerateID()
         {
             return ++lastid;
         }
 
+        public static IEnumerable<Product> ToList()
+        {
+            List<Product> list = new List<Product>();
+
+            var bind = file.xdoc.Descendants("product").Select(p => new
+            {
+                Id = p.Element("id").Value,
+                Lable = p.Element("lable").Value,
+                Price = p.Element("price").Value,
+                Volume = p.Element("volume").Value,
+                Type = p.Element("type").Value,
+                Quantity = p.Element("quantity").Value
+            }
+            ).OrderBy(p => p.Id);
+
+            // fill the list of products
+            foreach (var item in bind)
+            {
+                Product foo = new Product(int.Parse(item.Id), item.Volume,
+                    item.Type, item.Lable, int.Parse(item.Quantity),
+                    float.Parse(item.Price));
+
+                list.Add(foo);
+            }
+            
+            return list.ToList();
+        }
+        #endregion
+
+        #region Constructors
         public Product(int id, string volume, string type,
             string lable, int quantity, float price)
         {
@@ -181,9 +198,6 @@ namespace MagApp
             this.volume = volume;
             this.type = type;
 
-            XElem = file.xdoc.Descendants("product").FirstOrDefault(
-                p => p.Element("id").Value == id.ToString()
-                );
             //foreach (var i in intime)
             //    foreach (var ii in inquantity)
             //    {
@@ -202,9 +216,10 @@ namespace MagApp
             //        Out.Add(foo);
             //    }
         }
+        #endregion
 
         #region XML Operation
-        public void XMLAdd()
+        public void AddXML()
         {
             // TODO: add product to a XML file
             // done.
@@ -228,7 +243,7 @@ namespace MagApp
             file.xdoc.Save(file.filepath);
         }
 
-        public void XMLRemove()
+        public void RemoveXML()
         {
             // TODO: remove from XML
             // done
@@ -251,29 +266,14 @@ namespace MagApp
             }
         }
 
-        public void XMLUpdate(Product prod)
+        public void UpdateXML(Product prod)
         {
             // TODO: update an existing product
-            // UPDATE: NOT YET!
-            // 
-
-            //XElement XProduct = x.Descendants("product").FirstOrDefault(
-            //    p => p.Element("id").Value == id.ToString()
-            //);
+            // done.
 
             XElement XProduct = file.xdoc.Descendants("product").FirstOrDefault(
                 p => int.Parse(p.Element("id").Value) == id);
-            
-            //List<XElement> list = file.xdoc.Descendants("product").ToList();
 
-            //XElement x;
-            //foreach (XElement item in list)
-            //{
-            //    if (int.Parse(item.Element("id").Value) == id)
-            //        x = item;
-            //}
-
-            // HERE
             if (XProduct != null)
             {
                 XProduct.Element("lable").Value = prod.lable;
@@ -287,6 +287,7 @@ namespace MagApp
         }
         #endregion
 
+        #region Overrided methods
         public override string ToString()
         {
             return string.Format("(ID: {0}) {1} - {2} DH", id, lable.ToUpper(), price);
@@ -294,12 +295,6 @@ namespace MagApp
 
         public override bool Equals(object obj)
         {
-            //       
-            // See the full list of guidelines at
-            //   http://go.microsoft.com/fwlink/?LinkID=85237  
-            // and also the guidance for operator== at
-            //   http://go.microsoft.com/fwlink/?LinkId=85238
-            //
 
             if (obj == null || GetType() != obj.GetType())
             {
@@ -308,22 +303,21 @@ namespace MagApp
 
             // TODO: write your implementation of Equals() here
 
-            if (((Product)obj).id == id
-                && ((Product)obj).lable == lable
-                && ((Product)obj).price == price
-                && ((Product)obj).quantity == quantity
-                && ((Product)obj).type == type
-                && ((Product)obj).volume == volume
-                ) return true;
+            var _id = ((Product)obj).id;
+            var _lable = ((Product)obj).lable;
+            var _price = ((Product)obj).price;
+            var _quant = ((Product)obj).quantity;
+            var _type = ((Product)obj).type;
+            var _volume = ((Product)obj).volume;
+
+            if (_id == id &&
+                _lable == lable &&
+                _price == price &&
+                _quant == quantity &&
+                _type == type &&
+                _volume == volume) return true;
             else return false;
         }
-
-        // override object.GetHashCode
-        //public override int GetHashCode()
-        //{
-        //    // TODO: write your implementation of GetHashCode() here
-        //    //throw new NotImplementedException();
-        //    //return base.GetHashCode();
-        //}
+        #endregion
     }
 }
