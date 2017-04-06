@@ -22,8 +22,6 @@ namespace MagApp
 
         }
 
-        Product p;
-
         private void btnconf_Click(object sender, EventArgs e)
         {
             Hide();
@@ -51,13 +49,13 @@ namespace MagApp
             return new Product(id, v, type, lab, qu, pr);
         }
 
-        public void UpdateProduct(string lab, float p, string v, string type, int q)
+        public void UpdateProduct(Product prod)
         {
-            combvol.Text = v;
-            numquan.Value = q;
-            combtype.Text = type;
-            tboxlabel.Text = lab;
-            tboxprice.Text = p.ToString();
+            combvol.Text = prod.Volume;
+            numquan.Value = prod.Quantity;
+            combtype.Text = prod.Type;
+            tboxlabel.Text = prod.Lable;
+            tboxprice.Text = prod.Price.ToString();
         }
     }
 }
