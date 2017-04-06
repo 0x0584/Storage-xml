@@ -6,328 +6,430 @@ using System.Windows.Forms;
 
 namespace MagApp
 {
-    public class Product
-    {
-        #region Classes and Structures
-        protected struct Delivry
-        {
-            DateTime timing;
-            int quantity;
+	public class Product
+	{
+		#region Classes and Structures
+		protected struct Delivery
+		{
+			DateTime timing;
 
-            public void Fill(DateTime d, int q)
-            {
-                timing = d;
-                quantity = q;
-            }
 
-        };
 
-        protected class File
-        {
-            public string filepath;
-            public XDocument xdoc;
-            public void SetFile(XDocument x, string fp)
-            {
-                filepath = fp;
-                xdoc = x;
-            }
-        };
+			public void Fill (DateTime d, int q)
+			{
+				timing = d;
 
-        #endregion
+			}
 
-        #region Local variables
-        private int id;
-        private static int lastid; // this id is the id of the last product
-        private string lable;
-        private int quantity;
-        private float price;
-        private string volume;
-        private string type;
+		};
 
-        // in to storage, out from storage
-        private List<Delivry> In, Out;
-        #region Static variables
-        private static File file = null;
-        private static bool isthereafile;
-        #endregion
-        #endregion
+		public class File
+		{
+			public string filepath;
+			public XDocument x;
+			public enum FileType { IO = 0, PRODUCTS = 1, FILE_COUNT };
+			public void SetFile (XDocument x, string fp)
+			{
+				filepath = fp;
+				this.x = x;
+			}
+		};
 
-        #region Properties
-        public int Id
-        {
-            get { return id; }
+		#endregion
 
-            set { id = value; }
-        }
+		#region Local variables
+		private int id;
+		private string lable;
+		private int quantity;
+		private float price;
+		private string volume;
+		private string type;
 
-        public string Lable
-        {
-            get { return lable; }
+		// in to storage, out from storage
+		private List<Delivery> inn, outt;
 
-            set { lable = value; }
-        }
+		#region Static variables
+		private static int lastid; // this id is the id of the last product
+		public static File[] xdoc = new File[(int) File.FileType.FILE_COUNT] { null, null };
+		public static bool[] isthereafile = new bool[(int) File.FileType.FILE_COUNT] { false, false };
+		public static string[] paths = new string[] { @"..\DATA\IO.xml", @"..\DATA\10_02_2017.xml" };
+		#endregion
+		#endregion
 
-        public int Quantity
-        {
-            get { return quantity; }
+		#region Properties
 
-            set
-            {
-                // IDEA: 
-                // store the sum of all the intime and 
+		public int Id
+		{
+			get { return id; }
 
-                quantity = value;
-            }
-        }
+			set { id = value; }
+		}
 
-        public float Price
-        {
-            get { return price; }
+		public string Lable
+		{
+			get { return lable; }
 
-            set { price = value; }
-        }
+			set { lable = value; }
+		}
 
-        public string Volume
-        {
-            get { return volume; }
+		public int Quantity
+		{
+			get { return quantity; }
 
-            set { volume = value; }
-        }
+			set
+			{
+				// IDEA: 
+				// store the sum of all the intime and 
 
-        public string Type
-        {
-            get { return type; }
+				quantity = value;
+			}
+		}
 
-            set { type = value; }
-        }
+		public float Price
+		{
+			get { return price; }
 
-        public static List<Product> List
-        {
-            get
-            {
-                if (!isthereafile) SetDocument(@"..\DATA\10_02_2017.xml");
+			set { price = value; }
+		}
 
-                List<Product> list = new List<Product>();
+		public string Volume
+		{
+			get { return volume; }
 
-                var bind = file.xdoc.Descendants("product").Select(p => new
-                {
-                    Id = p.Element("id").Value,
-                    Lable = p.Element("lable").Value,
-                    Price = p.Element("price").Value,
-                    Volume = p.Element("volume").Value,
-                    Type = p.Element("type").Value,
-                    Quantity = p.Element("quantity").Value
-                }
-                ).OrderBy(p => p.Id);
+			set { volume = value; }
+		}
 
-                // fill the list of products
-                foreach (var item in bind)
-                {
-                    Product foo = new Product(int.Parse(item.Id), item.Volume,
-                        item.Type, item.Lable, int.Parse(item.Quantity),
-                        float.Parse(item.Price));
+		public string Type
+		{
+			get { return type; }
 
-                    list.Add(foo);
-                }
+			set { type = value; }
+		}
 
-                return list.ToList();
-            }
-        } 
-        #endregion
+		public static IEnumerable<Product> List
+		{
+			get
+			{
+				int index = (int) File.FileType.PRODUCTS;
 
-        #region Document Setup
-        public static bool SetDocument(string filepath)
-        {
-            file = new File();
-            // @"..\DATA\10_02_2017.xml"
-            try
-            {
-                file.SetFile(XDocument.Load(filepath), filepath);
-                string fooid = file.xdoc.Descendants("id").LastOrDefault().Value.ToString();
-                lastid = int.Parse(fooid);
-                isthereafile = true;
-                return true;
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("ERROR, WHILE LOADING FILE!");
-                return false;
-            }
-        }
+				if ( !isthereafile[index] )
+					SetDocument(ref xdoc[index], ref isthereafile[index], paths[index]);
 
-        private void OpenDocument()
-        {
-            OpenFileDialog op = new OpenFileDialog();
-            op.FileName = string.Format("{0}.xml", DateTime.Today.ToString());
+				List<Product> list = new List<Product>();
 
-            op.DefaultExt = ".xml";
-            op.Filter = "XML Document (.xml)|*.xml";
+				var bind = xdoc[index].x.Descendants("product").Select(p => new {
+					ProductID = p.Element("id").Value,
+					Lable = p.Element("lable").Value,
+					Price = p.Element("price").Value,
+					Volume = p.Element("volume").Value,
+					Type = p.Element("type").Value,
+					Quantity = p.Element("quantity").Value
+				}
+				).OrderBy(p => p.ProductID);
 
-            BEGIN:
-            MessageBox.Show("No document is set");
+				// fill the list of products
+				foreach ( var item in bind ) {
+					Product foo = new Product(int.Parse(item.ProductID), item.Volume,
+							item.Type, item.Lable, int.Parse(item.Quantity),
+							float.Parse(item.Price));
 
-            if (op.ShowDialog() == DialogResult.OK)
-                if (SetDocument(op.FileName)) isthereafile = true;
-                else goto BEGIN;
-        }
-        #endregion
+					list.Add(foo);
+				}
 
-        #region Static Methods
-        public static int GenerateID()
-        {
-            return ++lastid;
-        }
+				return list.ToList();
+			}
+		}
 
-        #endregion
+		protected List<Delivery> In
+		{
+			get
+			{
+				int index = (int) File.FileType.IO;
 
-        #region Constructors
-        public Product(int id, string volume, string type,
-            string lable, int quantity, float price)
-        {
-            this.id = id;
-            this.lable = lable;
-            this.price = price;
-            this.quantity = quantity;
-            this.volume = volume;
-            this.type = type;
+				if ( !isthereafile[index] )
+					SetDocument(ref xdoc[index], ref isthereafile[index], paths[index]);
 
-            if (file == null) OpenDocument();
-        }
+				List<Delivery> list = new List<Delivery>();
 
-        public Product(string volume, string type,
-            string lable, int quantity, float price)
-        {
-            // setup the document if the methode `SetDocument`
-            // was not called outside
-            if (file == null) OpenDocument();
+				var bind = xdoc[index].x.Descendants("in").Select(
+						p => new {
+							Datetime = p.Attribute("datetime").Value,
+							Prod = p.Element("product"),
+						}
+				).OrderBy(p => p.Datetime);
 
-            id = GenerateID();
-            this.lable = lable;
-            this.price = price;
-            this.quantity = quantity;
-            this.volume = volume;
-            this.type = type;
+				return list.ToList();
+			}
+			set { inn = value; }
+		}
 
-            //foreach (var i in intime)
-            //    foreach (var ii in inquantity)
-            //    {
-            //        Delivry foo = new Delivry();
-            //        foo.Fill(i, ii);
+		protected List<Delivery> Out
+		{
+			get
+			{
+				return outt;
+			}
 
-            //        In.Add(foo);
-            //    }
+			set
+			{
+				outt = value;
+			}
+		}
 
-            //foreach (var i in outime)
-            //    foreach (var ii in outquantity)
-            //    {
-            //        Delivry foo = new Delivry();
-            //        foo.Fill(i, ii);
+		#endregion
 
-            //        Out.Add(foo);
-            //    }
-        }
-        #endregion
+		#region Document Setup
+		public static bool SetDocument (ref File file, ref bool flag, string fpath)
+		{
 
-        #region XML Operation
-        public void AddXML()
-        {
-            // TODO: add product to a XML file
-            // done.
+			//// @"..\DATA\10_02_2017.xml"
+			//string fooid = file.xdoc.Descendants("id").LastOrDefault().Value.ToString();
+			//lastid = int.Parse(fooid);
 
-            XElement XProduct = new XElement("product",
-                new XElement("id", id.ToString()),
-                new XElement("lable", lable),
-                new XElement("type", type),
-                new XElement("price", price.ToString()),
-                new XElement("volume", volume),
-                new XElement("quantity", quantity.ToString()));
+			try {
+				file = new File();
+				file.SetFile(XDocument.Load(fpath), fpath);
+				return ( flag = true );
+			} catch ( Exception ) {
+				MessageBox.Show("ERROR, WHILE LOADING FILE!");
+				return ( flag = false );
+			}
+		}
 
-            file.xdoc.Root.Add(XProduct);
+		private void OpenDocument (File.FileType ftype)
+		{
+			OpenFileDialog op = new OpenFileDialog();
+			string title = "";
 
-            if (!isthereafile)
-            {
-                MessageBox.Show("No Document was set");
-                OpenDocument();
-            }
+			#region Setup the dialog
 
-            file.xdoc.Save(file.filepath);
-        }
+			switch ( ftype ) {
+				case File.FileType.IO:
+					title = "IO";
+					break;
+				case File.FileType.PRODUCTS:
+					title = "PRODUCTS";
+					break;
+				default:
+					title = "";
+					break;
+			};
 
-        public void RemoveXML()
-        {
-            // TODO: remove from XML
-            // done
+			op.Title = title;
+			op.FileName = string.Format("{0}.xml", DateTime.Today.ToString());
 
-            XElement product = file.xdoc.Descendants("product").FirstOrDefault(
-                p => int.Parse(p.Element("id").Value) == id
-                );
+			op.DefaultExt = ".xml";
+			op.Filter = "XML Document (.xml)|*.xml";
+		#endregion
 
-            if (product != null)
-            {
-                product.Remove();
+		BEGIN:
+			MessageBox.Show(string.Format("No document is set for {0}", title));
+			
+			if ( op.ShowDialog() == DialogResult.OK )
+				if ( !SetDocument(ref xdoc[(int) ftype], ref isthereafile[(int) ftype], op.FileName) )
+					goto BEGIN;
+		}
+		#endregion
 
-                if (!isthereafile)
-                {
-                    MessageBox.Show("No Document was set");
-                    OpenDocument();
-                }
+		#region Methods
+		#region Static Methods
+		public static int GenerateID ()
+		{
+			return ++lastid;
+		}
+		#endregion
 
-                file.xdoc.Save(file.filepath);
-            }
-        }
+		public void CopyTo (Product to)
+		{
+			to.Id = id;
+			to.Lable = lable;
+			to.Type = type;
+			to.Volume = volume;
+			to.Quantity = quantity;
+			to.Price = price;
 
-        public void UpdateXML(Product prod)
-        {
-            // TODO: update an existing product
-            // done.
+			to.In = inn;
+			to.Out = outt;
+		}
+		#endregion
 
-            XElement XProduct = file.xdoc.Descendants("product").FirstOrDefault(
-                p => int.Parse(p.Element("id").Value) == id);
+		#region Constructors
+		public Product ()
+		{
+			// setup the document if the methode `SetDocument`
+			// was not called outside
 
-            if (XProduct != null)
-            {
-                XProduct.Element("lable").Value = prod.lable;
-                XProduct.Element("type").Value = prod.type;
-                XProduct.Element("volume").Value = prod.volume;
-                XProduct.Element("price").Value = prod.price.ToString();
-                XProduct.Element("quantity").Value = prod.quantity.ToString();
-                file.xdoc.Save(file.filepath);
-            }
-            else MessageBox.Show("NOT FOUND!");
-        }
-        #endregion
+			int fcount = (int) File.FileType.FILE_COUNT;
 
-        #region Overrided methods
-        public override string ToString()
-        {
-            return string.Format("(ID: {0}) {1} - {2} DH", id, lable.ToUpper(), price);
-        }
+			for ( int i = 0; i < fcount; i++ ) 
+				if ( xdoc[i] == null ) 
+					SetDocument(ref xdoc[i], ref isthereafile[i], xdoc[i].filepath);
+				
+		}
 
-        public override bool Equals(object obj)
-        {
+		public Product (string volume, string type,
+				string lable, int quantity, float price) : base()
+		{
+			// setup the document if the methode `SetDocument`
+			// was not called outside
 
-            if (obj == null || GetType() != obj.GetType())
-            {
-                return false;
-            }
+			id = GenerateID();
+			this.lable = lable;
+			this.price = price;
+			this.quantity = quantity;
+			this.volume = volume;
+			this.type = type;
 
-            // TODO: write your implementation of Equals() here
+			//foreach (var i in intime)
+			//    foreach (var ii in inquantity)
+			//    {
+			//        Delivry foo = new Delivry();
+			//        foo.Fill(i, ii);
 
-            var _id = ((Product)obj).id;
-            var _lable = ((Product)obj).lable;
-            var _price = ((Product)obj).price;
-            var _quant = ((Product)obj).quantity;
-            var _type = ((Product)obj).type;
-            var _volume = ((Product)obj).volume;
+			//        In.Add(foo);
+			//    }
 
-            if (_id == id &&
-                _lable == lable &&
-                _price == price &&
-                _quant == quantity &&
-                _type == type &&
-                _volume == volume) return true;
-            else return false;
-        }
-        #endregion
-    }
+			//foreach (var i in outime)
+			//    foreach (var ii in outquantity)
+			//    {
+			//        Delivry foo = new Delivry();
+			//        foo.Fill(i, ii);
+
+			//        Out.Add(foo);
+			//    }
+		}
+
+		public Product (int id, string volume, string type,
+				string lable, int quantity, float price) : base()
+		{
+			this.id = id;
+			this.lable = lable;
+			this.price = price;
+			this.quantity = quantity;
+			this.volume = volume;
+			this.type = type;
+		}
+
+		#endregion
+
+		#region XML-CRUD Operation
+		public void AddXML ()
+		{
+			// TODO: add product to a XML file
+			// done.
+			int index = (int)File.FileType.PRODUCTS;
+
+			XElement XProduct = new XElement("product",
+					new XElement("id", id.ToString()),
+					new XElement("lable", lable),
+					new XElement("type", type),
+					new XElement("price", price.ToString()),
+					new XElement("volume", volume),
+					new XElement("quantity", quantity.ToString()));
+
+			xdoc[index].x.Root.Add(XProduct);
+
+			if ( !isthereafile[index] ) {
+				MessageBox.Show("No Document was set");
+				OpenDocument((File.FileType)index);
+			}
+
+			xdoc[index].x.Save(xdoc[index].filepath);
+		}
+
+		public void RemoveXML ()
+		{
+			// TODO: remove from XML
+			// done
+
+			int index = (int) File.FileType.PRODUCTS;
+
+				if ( !isthereafile[index] ) {
+					MessageBox.Show("No Document was set");
+					OpenDocument((File.FileType) index);
+				}
+
+			XElement product = xdoc[index].x.Descendants("product").FirstOrDefault(
+					p => int.Parse(p.Element("id").Value) == id );
+
+			if ( product != null ) {
+				product.Remove();
+
+				xdoc[index].x.Save(xdoc[index].filepath);
+			}
+		}
+
+		public void UpdateXML (Product prod)
+		{
+			// TODO: update an existing product
+			// done.
+			int index = (int) File.FileType.PRODUCTS;
+
+			if ( !isthereafile[index] ) {
+				MessageBox.Show("No Document was set");
+				OpenDocument((File.FileType) index);
+			}
+
+			XElement XProduct = xdoc[index].x.Descendants("product").FirstOrDefault(
+					p => int.Parse(p.Element("id").Value) == id);
+
+			if ( XProduct != null ) {
+				XProduct.Element("lable").Value = prod.lable;
+				XProduct.Element("type").Value = prod.type;
+				XProduct.Element("volume").Value = prod.volume;
+				XProduct.Element("price").Value = prod.price.ToString();
+				XProduct.Element("quantity").Value = prod.quantity.ToString();
+
+				xdoc[index].x.Save(xdoc[index].filepath);
+			} else MessageBox.Show("NOT FOUND!");
+		}
+		#endregion
+
+		public void IncomingStorage (int quantity)
+		{
+			Product fooprod;
+
+			this.quantity += quantity;
+			fooprod = this;
+
+			UpdateXML(fooprod);
+
+
+
+		}
+
+		#region Overrided methods
+		public override string ToString ()
+		{
+			return string.Format("{0} {1} (x{2}) {3:00.00} MAD", id, lable, quantity, price);
+		}
+
+		public override bool Equals (object obj)
+		{
+
+			if ( obj == null || GetType() != obj.GetType() ) {
+				return false;
+			}
+
+			// TODO: write your implementation of Equals() here
+
+			var _id = ( (Product) obj ).id;
+			var _lable = ( (Product) obj ).lable;
+			var _price = ( (Product) obj ).price;
+			var _quant = ( (Product) obj ).quantity;
+			var _type = ( (Product) obj ).type;
+			var _volume = ( (Product) obj ).volume;
+
+			if ( _id == id &&
+					_lable == lable &&
+					_price == price &&
+					_quant == quantity &&
+					_type == type &&
+					_volume == volume )
+				return true;
+			else
+				return false;
+		}
+		#endregion
+	}
 }

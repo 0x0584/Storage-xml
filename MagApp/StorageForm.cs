@@ -59,7 +59,7 @@ namespace MagApp
                 listadded.Items[i] = newstring;
                 listadded.SetSelected(i, true);
             }
-            
+
         }
 
         private void btnremove_Click(object sender, EventArgs e)
@@ -67,8 +67,8 @@ namespace MagApp
             if (listadded.SelectedItem != null)
             {
                 int index = listadded.SelectedIndex;
-                string[] str = listadded.Items[index].ToString().Split(new char[] { '(',')'});
-                
+                string[] str = listadded.Items[index].ToString().Split(new char[] { '(', ')' });
+
                 // the total taht is stored in teh label
                 float total = int.Parse(labltotal.Text.Split(new char[] { ' ' })[0]),
                 price = 0.0f;
@@ -90,21 +90,30 @@ namespace MagApp
         {
             // TODO: apply things to the dgv 
             //
-            
-            foreach (string item in listadded.Items)
-            {
-                string[] str = item.Split(new char[] { '(', ')' });
 
-                foreach (Product prod in Product.List)
+            List<Product> current = new List<Product>();
+
+            // List all the products
+            foreach (Product prod in Product.List)
+            {
+                // 
+                foreach (string item in listadded.Items)
                 {
-                     
+                    string[] str = item.Split(new char[] { '(', ')' });
+
+                    if (prod.Lable == str[0].TrimEnd())
+                    {
+                        current.Add(prod);
+
+                    }
+
                 }
             }
 
             // TODO: apply things to the xml file 
             //
 
-             
+
         }
 
         private void listadded_SelectedIndexChanged(object sender, EventArgs e)
@@ -137,7 +146,7 @@ namespace MagApp
                     }
                 }
 
-            labltotal.Text = string.Format("{0:0.00} MAD" , total.ToString());
+            labltotal.Text = string.Format("{0:0.00} MAD", total.ToString());
 
         }
 
