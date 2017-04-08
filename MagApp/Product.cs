@@ -235,6 +235,20 @@ namespace MagApp
 		#region Static Methods
 		public static int GenerateID ()
 		{
+			// recover lastID 
+			// done.
+
+			int index = (int) File.FileType.PRODUCTS;
+
+			var listid = xdoc[index].x.Descendants("id").ToList();
+
+			lastid = int.Parse(listid[0].Value);
+
+			foreach ( var item in listid ) {
+				if ( int.Parse(item.Value) >= lastid )
+					lastid = int.Parse(item.Value);
+			}
+
 			return ++lastid;
 		}
 		#endregion
