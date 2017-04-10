@@ -25,10 +25,11 @@ namespace MagApp
 		{
 			InitializeComponent();
 
-			int index = (int) Product.File.FileType.PRODUCTS;
-			Product.SetDocument(ref Product.xdoc[index], ref Product.isthereafile[index], Product.paths[index]);
-		}
+			int index = (int) XFile.FileType.PRODUCTS;
+			Product.Source.SetDocument(XFile.Paths[index]);
 
+		}
+		
 		private void Bind (DataGridView datagrid)
 		{
 			datagrid.DataSource = Product.List;
