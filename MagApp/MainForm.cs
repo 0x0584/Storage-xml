@@ -11,28 +11,20 @@ namespace MagApp
 {
     public partial class MainForm : Form
     {
-        private int qu;
-        private string type, lab, v;
-        private float pr;
-
-
         public MainForm()
         {
             InitializeComponent();
-
         }
 
-        Product p;
-
-        private void btnconf_Click(object sender, EventArgs e)
+        private void btngestion_Click(object sender, EventArgs e)
         {
+            CRUDForm crud = new CRUDForm();
             Hide();
-        }
+            crud.ShowDialog();
 
-        private void btnclose_Click(object sender, EventArgs e)
-        {
-            Dispose();
-            Close();
+            crud.Dispose();
+            crud.Close();
+            Show();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -40,24 +32,18 @@ namespace MagApp
 
         }
 
-        public Product NewProduct(int id)
+        private void button1_Click(object sender, EventArgs e)
         {
-            v = combvol.Text;
-            qu = int.Parse(numquan.Value.ToString());
-            type = combtype.Text;
-            lab = tboxlabel.Text;
-            pr = float.Parse(tboxprice.Text);
+            // TODO: here we should take care of all the INs
+            //
 
-            return new Product(id, v, type, lab, qu, pr);
-        }
+            StorageForm storage = new StorageForm();
+            Hide();
+            storage.ShowDialog();
 
-        public void UpdateProduct(string lab, float p, string v, string type, int q)
-        {
-            combvol.Text = v;
-            numquan.Value = q;
-            combtype.Text = type;
-            tboxlabel.Text = lab;
-            tboxprice.Text = p.ToString();
+            storage.Dispose();
+            storage.Close();
+            Show();
         }
     }
 }
