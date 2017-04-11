@@ -35,17 +35,27 @@ namespace MagApp
 			// TODO: fix the add in the list
 			//
 
-			bool exists = false;
-			decimal newvalue = 0;
+
 			string newstring = "";
+
+			/* WHAT: whether the product is already in the list */
 			int i = 0;
-
+			bool exists = false;
 			foreach ( string item in listadded.Items ) {
-				string[] str = item.ToString().Split(new char[2] { '(', ')' });
 
-				if ( string.Equals(current.Lable, str[0].Substring(0, str[0].Length - 1)) ) {
+
+				string[] str = item.ToString().Split(new char[2] { '(', ')' });
+				string lable = str[0].TrimEnd();
+				decimal newvalue = 0;
+				bool isequale = string.Equals(current.Lable, lable);
+
+
+				if ( isequale ) {
+					// add the new and the previous values
 					newvalue = numquantity.Value + int.Parse(str[1]);
-					newstring = string.Format("{0} ({1})", current.Lable, ( numquantity.Value = newvalue ));
+					// update the list item overview
+					newstring = FormatLabel(current.Lable, ( numquantity.Value = newvalue ));
+					// flag it's existance
 					exists = true;
 					break;
 				}
@@ -53,13 +63,22 @@ namespace MagApp
 			}
 
 			if ( !exists ) {
-				listadded.Items.Add(string.Format("{0} ({1})", current.Lable, numquantity.Value));
+				// setup a fresh item
+				listadded.Items.Add(FormatLabel(current.Lable, numquantity.Value));
+				// select the item
 				listadded.SetSelected(listadded.Items.Count - 1, true);
 			} else {
+				// it exists!
+				// you may want to check this `i`
 				listadded.Items[i] = newstring;
 				listadded.SetSelected(i, true);
 			}
 
+		}
+
+		private string FormatLabel (string lable, decimal quantity)
+		{
+			return string.Format("{0} ({1})", lable, quantity);
 		}
 
 		private void btnremove_Click (object sender, EventArgs e)
@@ -104,7 +123,7 @@ namespace MagApp
 
 			// bind the datagridview
 			dgvstorage.DataSource = current.ToList();
- 
+
 
 
 		}
@@ -118,25 +137,24 @@ namespace MagApp
 
 				combproducts.Text = info[0];
 				numquantity.Value = int.Parse(info[1]);
-			}
 
-			float total = 0;
+				float total = 0;
 
-			// TODO: find how to take few digits from 
-			// the foalt number
-			// 
+				// TODO: find how to take few digits from 
+				// the foalt number
+				// 
 
-			foreach ( string item in listadded.Items )
-				foreach ( Product prod in Product.List ) {
+				foreach ( string item in listadded.Items ) {
 					string[] str = item.ToString().Split(new char[2] { '(', ')' });
 
-					if ( string.Equals(str[0].Substring(0, str[0].Length - 1), prod.Lable) ) {
-						total += ( float.Parse(str[1]) * prod.Price );
+					if ( string.Equals(str[0].Substring(0, str[0].Length - 1), current.Lable) ) {
+						total += ( float.Parse(str[1]) * current.Price );
 						break;
 					}
 				}
 
-			labltotal.Text = string.Format("{0:0.00} MAD", total.ToString());
+				labltotal.Text = string.Format("{0:0.00} MAD", total.ToString());
+			}
 
 		}
 
@@ -144,6 +162,30 @@ namespace MagApp
 		{
 			// TODO: update the quantity lable
 			// done.
+
+			string labcurrent = combproducts.Text;
+
+			foreach ( Product prod in Product.List )
+				if ( prod.Lable == labcurrent ) {
+					prod.CopyTo(current);
+					lablquant.Text = string.Format("({0})", current.Storage.Quantity);
+
+					for ( int index = 0; index < listadded.Items.Count; ++index ) {
+						string[] str = ( (string) listadded.Items[index] ).Split(new char[] { '(', ')' });
+						bool isit = ( str[0].TrimEnd() == labcurrent ) ? true : false;
+
+						listadded.SetSelected(index, isit);
+						/* you need a */ break; /* you need KitKat*/ 
+						// rempplace all the foreach-loops witha  standard forloop
+					}
+					break; // we found it!
+				}
+
+		}
+
+		private void combproducts_TextUpdate (object sender, EventArgs e)
+		{
+
 
 			string labcurrent = combproducts.SelectedItem.ToString();
 
