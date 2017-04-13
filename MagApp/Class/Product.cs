@@ -38,6 +38,11 @@ namespace MagApp
 			set { id = value; }
 		}
 
+		public int Quantity
+		{
+			get { return storage.Quantity; }
+		}
+
 		public string Lable
 		{
 			get { return lable; }

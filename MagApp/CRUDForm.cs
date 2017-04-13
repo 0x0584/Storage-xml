@@ -102,16 +102,28 @@ namespace MagApp
 					a.Add(item);
 			}
 
-
 			int id = int.Parse(( (DataGridViewCell) a[0] ).Value.ToString()),
-				quantity = int.Parse(( (DataGridViewCell) a[2] ).Value.ToString());
+			 quantity = int.Parse(( (DataGridViewCell) a[1] ).Value.ToString());
 			float price = float.Parse(( (DataGridViewCell) a[3] ).Value.ToString());
-			string lable = ( (DataGridViewCell) a[1] ).Value.ToString(),
-			volume = ((DataGridViewCell) a[4] ).Value.ToString(),
+			string lable = ( (DataGridViewCell) a[2] ).Value.ToString(),
+			volume = ( (DataGridViewCell) a[4] ).Value.ToString(),
 			type = ( (DataGridViewCell) a[5] ).Value.ToString();
 
-			//MessageBox.Show(((DataGridViewCell)a[0]).Value.ToString());
+			/*
+			 
+			  int id = int.Parse(( (DataGridViewCell) a[0] ).Value.ToString()), 
+        quantity = int.Parse(( (DataGridViewCell) a[2] ).Value.ToString()); 
+      float price = float.Parse(( (DataGridViewCell) a[3] ).Value.ToString()); 
+      string lable = ( (DataGridViewCell) a[1] ).Value.ToString(), 
+      volume = ((DataGridViewCell) a[4] ).Value.ToString(), 
+      type = ( (DataGridViewCell) a[5] ).Value.ToString();
+			 */
+
+			//MessageBox.Show(((DataGridViewCell)a[0]).Value.ToString()); 
 			Product foo = new Product(id, volume, type, lable, quantity, price);
+
+
+			//MessageBox.Show(((DataGridViewCell)a[0]).Value.ToString());
 											
 			m.UpdateProduct(foo);
 			m.ShowDialog();
