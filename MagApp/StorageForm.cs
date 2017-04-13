@@ -12,18 +12,25 @@ namespace MagApp
     public partial class StorageForm : Form
     {
 
+        // the product that is checked in the combobox
         Product currentprod;
+        // somme of all (prices * quantity)
         float total;
+
         public StorageForm()
         {
             InitializeComponent( );
             total = 0.0f;
             currentprod = new Product( );
             labltotal.Text = "0.00 MAD";
+
+            #region ComboBox Setup
+            // add things
             foreach( Product prod in Product.List )
                 combproducts.Items.Add( prod.Lable );
 
             combproducts.Text = combproducts.Items[ 0 ].ToString( );
+            #endregion
 
             // HERE: show the list of in product of today and add a button 
             // to swap between the past and previous ins 
@@ -33,37 +40,35 @@ namespace MagApp
         private void btnaddtolist_Click( object sender, EventArgs e )
         {
             // TODO: fix the add in the list
-            //
-
-
-            string newstring = "";
+            // done.
+            string listitem = "";
 
             /* WHAT: whether the product is already in the list */
-            bool exists = false;
-            int index;
+            bool /* item */ exists = false;
 
+            int index;
             for( index = 0; index < listadded.Items.Count; ++index ) {
                 string lable;
                 decimal newvalue = 0;
 
-                #region Setup
+                #region prepare the listitem 
                 string[ ] str = ( ( string ) listadded.Items[ index ] ).Split( new char[ 2 ] { '(', ')' } );
                 lable = str[ 0 ].TrimEnd( );
                 newvalue = 0;
+                listitem = "";
                 #endregion
 
-                bool isit = string.Equals( currentprod.Lable, lable );
+                bool isit /* the item that we're looking for?*/ = string.Equals( currentprod.Lable, lable );
 
                 if( isit ) {
                     // add the new and the previous values
                     newvalue = ( numquantity.Value + int.Parse( str[ 1 ] ) );
                     // update the list item overview
-                    newstring = FormatLabel( currentprod.Lable, ( numquantity.Value = newvalue ) );
+                    listitem = FormatLabel( currentprod.Lable, ( numquantity.Value = newvalue ) );
                     // flag it's existance
                     exists = true;
                     break;
                 }
-
             }
 
             if( !( exists ) ) {
@@ -74,7 +79,7 @@ namespace MagApp
             } else {
                 // it exists!
                 // you may want to check this `i`
-                listadded.Items[ index ] = newstring;
+                listadded.Items[ index ] = listitem;
                 listadded.SetSelected( index, true );
             }
 
@@ -87,7 +92,7 @@ namespace MagApp
 
                 // TODO: find how to take few digits from 
                 // the foalt number
-                // 
+                // done.
 
                 foreach( string item in listadded.Items ) {
                     string[ ] str = item.ToString( ).Split( new char[ 2 ] { '(', ')' } );
@@ -118,7 +123,7 @@ namespace MagApp
                 float price = 0.0f;
 
                 foreach( Product prod in Product.List )
-                    if( string.Equals( prod.Lable, str[ 0 ].TrimEnd() ) ) {
+                    if( string.Equals( prod.Lable, str[ 0 ].TrimEnd( ) ) ) {
                         price = prod.Price;
                         break;
                     }
@@ -126,7 +131,7 @@ namespace MagApp
                 // minus teh price of the removed items
                 total -= ( float.Parse( str[ 1 ] ) * price );
 
-                labltotal.Text = string.Format("{0} MAD",total.ToString( ));
+                labltotal.Text = string.Format( "{0} MAD", total.ToString( ) );
                 listadded.Items.Remove( listadded.Items[ index ] );
             } else { labnotif.Text = "Select a product first"; }
         }
@@ -181,17 +186,18 @@ namespace MagApp
 
                     for( int index = 0; index < listadded.Items.Count; ++index ) {
                         string[ ] str = ( ( string ) listadded.Items[ index ] ).Split( new char[ ] { '(', ')' } );
-                        bool isit = ( str[ 0 ].TrimEnd( ) == labcurrent ) ? true : false;
+                        bool isit /* tisi */ = ( str[ 0 ].TrimEnd( ) == labcurrent ) ? true : false;
 
                         listadded.SetSelected( index, isit );
 
                         if( isit ) {
                             numquantity.Value = int.Parse( str[ 1 ] );
-                            /* you need a */
+                            // you need a 
                             break;
-                            /* you need KitKat */
+                            // you need KitKat
                         }
                         // rempplace all the foreach-loops witha  standard forloop
+                        // half-done.
                     }
                     break; // we found it!
                 }
@@ -199,7 +205,8 @@ namespace MagApp
 
         private void combproducts_TextUpdate( object sender, EventArgs e )
         {
-
+            // update the quantity lable 
+            // done
 
             string labcurrent = combproducts.SelectedItem.ToString( );
 
