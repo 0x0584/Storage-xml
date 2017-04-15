@@ -243,6 +243,7 @@
             this.Controls.Add(this.dgvstorage);
             this.Name = "StorageForm";
             this.Text = "Storage";
+            this.Load += new System.EventHandler(this.StorageForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvstorage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numquantity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

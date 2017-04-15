@@ -31,10 +31,6 @@ namespace MagApp
 
             combproducts.Text = combproducts.Items[ 0 ].ToString( );
             #endregion
-
-            // HERE: show the list of in product of today and add a button 
-            // to swap between the past and previous ins 
-            dgvstorage.DataSource = currentprod.Storage.In;
         }
 
         private void btnaddtolist_Click( object sender, EventArgs e )
@@ -214,6 +210,14 @@ namespace MagApp
                 if( prod.Lable == labcurrent ) { prod.CopyTo( currentprod ); break; }
 
             lablquant.Text = string.Format( "({0})", currentprod.Storage.Quantity );
+        }
+
+        private void StorageForm_Load( object sender, EventArgs e )
+        {
+
+            // HERE: show the list of in product of today and add a button 
+            // to swap between the past and previous ins 
+            dgvstorage.DataSource = currentprod.Storage.In;
         }
     }
 }
