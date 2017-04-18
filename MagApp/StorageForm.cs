@@ -14,6 +14,7 @@ namespace MagApp
 
         // the product that is checked in the combobox
         Product currentprod;
+
         // somme of all (prices * quantity)
         float total;
 
@@ -24,6 +25,10 @@ namespace MagApp
             currentprod = new Product( );
             labltotal.Text = "0.00 MAD";
 
+            // radio buttons
+            rdbtn_in.Enabled = false;
+            rdbtn_in.Checked = true;
+            RefreshForm( );
             #region ComboBox Setup
             // add things
             foreach( Product prod in Product.List )
@@ -31,12 +36,25 @@ namespace MagApp
 
             combproducts.Text = combproducts.Items[ 0 ].ToString( );
             #endregion
+            // TODO: get by date in the dpicker
+            //
+
+            datagrid_in.DataSource = Store.All_In;
+            datagrid_out.DataSource = Store.All_Out;
         }
 
+        //private IEnumerable<Delivery> GetByDate( IEnumerable<Delivery> list, DateTime date )
+        //{
+
+        //}
         private void btnaddtolist_Click( object sender, EventArgs e )
         {
             // TODO: fix the add in the list
             // done.
+
+            // TODO: fix the aupdate of the quantity
+            // panding..
+
             string listitem = "";
 
             /* WHAT: whether the product is already in the list */
@@ -46,6 +64,7 @@ namespace MagApp
             for( index = 0; index < listadded.Items.Count; ++index ) {
                 string lable;
                 decimal newvalue = 0;
+                bool isit /* the item that we're looking for? */;
 
                 #region prepare the listitem 
                 string[ ] str = ( ( string ) listadded.Items[ index ] ).Split( new char[ 2 ] { '(', ')' } );
@@ -54,7 +73,7 @@ namespace MagApp
                 listitem = "";
                 #endregion
 
-                bool isit /* the item that we're looking for?*/ = string.Equals( currentprod.Lable, lable );
+                isit = string.Equals( currentprod.Lable, lable );
 
                 if( isit ) {
                     // add the new and the previous values
@@ -151,10 +170,7 @@ namespace MagApp
             }
 
             // bind the datagridview
-            dgvstorage.DataSource = current.ToList( );
-
-
-
+            datagrid_storage.DataSource = current.ToList( );
         }
 
         private void listadded_SelectedIndexChanged( object sender, EventArgs e )
@@ -217,7 +233,28 @@ namespace MagApp
 
             // HERE: show the list of in product of today and add a button 
             // to swap between the past and previous ins 
-            dgvstorage.DataSource = currentprod.Storage.In;
+            //datagrid_storage.DataSource = currentprod.Storage.In;
+        }
+
+        private void rdbtn_in_CheckedChanged( object sender, EventArgs e )
+        {
+            rdbtn_in.Enabled = false;
+            rdbtn_out.Enabled = true;
+            RefreshForm( );
+        }
+
+        private void rdbtn_out_CheckedChanged( object sender, EventArgs e )
+        {
+            rdbtn_out.Enabled = false;
+            rdbtn_in.Enabled = true;
+            RefreshForm( );
+        }
+
+        private void RefreshForm()
+        {
+            if( !( rdbtn_in.Enabled ) )
+                BackColor = Color.LimeGreen;
+            else BackColor = Color.Orange;
         }
     }
 }

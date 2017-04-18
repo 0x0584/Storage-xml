@@ -9,19 +9,20 @@ namespace MagApp
 {
     class Store
     {
-        public struct Delivery
+        public Store()
         {
-            DateTime timing;
-            int quantity;
-            public void Fill( DateTime d, int q )
-            {
-                timing = d;
-                quantity = q;
-            }
-        };
+        }
+        public Store( int id )
+        {
+            this.id = id;
+        }
 
-        XFile xfile = new XFile( );
+
+        private static XFile xfile = new XFile( );
         private int quantity;
+        private int id;
+
+        #region Propreties
         public int Quantity {
             get { return quantity; }
 
@@ -36,44 +37,116 @@ namespace MagApp
         public List<Delivery> In {
             get
             {
-
-                if( !( xfile.Exists ) ) {
+                #region check source-file
+                if( !( Product.Source == null ) ) {
                     int index = ( int ) XFile.FileType.IO;
                     xfile.SetDocument( XFile.Paths[ index ] );
                 }
+                #endregion
 
                 List<Delivery> list = new List<Delivery>( );
 
-                var bind = this.xfile.XML_File.Descendants( "in" ).Select(
+                #region List setup
+                var bind = xfile.XML_File.Descendants( "in" ).Select(
                         p => new {
-                            Datetime = p.Attribute( "datetime" ).Value,
-                            InQuantity = p.Element("product").Element("quantity"),
-                            Prod = Product.Parse( p.Element( "product" ) )
+                            Id = p.Element( "product" ).Element( "id" ).Value,
+                            Date = p.Attribute( "date" ).Value,
+                            InQuantity = p.Element( "product" ).Element( "quantity" ).Value
                         }
-                ).OrderBy( p => p.Datetime );
+                ).OrderBy( p => p.Date );
 
-                foreach( var foo in bind ) {
-                    MessageBox.Show( foo.Prod.ToString() );
+                foreach( var item in bind ) {
+                    Delivery d = new Delivery( );
+                    DateTime date = DateTime.Parse( item.Date );
+                    int in_q = int.Parse( item.InQuantity );
+
+                    if( int.Parse( item.Id ) == id ) {
+                        d.Fill( date, in_q );
+                        d.Id = id;
+                        quantity += in_q;
+                        // add it to the list
+                        list.Add( d );
+                    }
                 }
+                #endregion
 
                 return list.ToList( );
             }
-            set { inn = value; }
         }
-
         public List<Delivery> Out {
             get
             {
-                return outt;
-            }
+                #region check source-file
+                if( !( Product.Source == null ) ) {
+                    int index = ( int ) XFile.FileType.IO;
+                    xfile.SetDocument( XFile.Paths[ index ] );
+                }
+                #endregion
 
-            set
-            {
-                outt = value;
+                List<Delivery> list = new List<Delivery>( );
+
+                #region List setup
+                var bind = xfile.XML_File.Descendants( "out" ).Select(
+                    p => new {
+                        Id = p.Element( "product" ).Element( "id" ).Value,
+                        Date = p.Attribute( "date" ).Value,
+                        InQuantity = p.Element( "product" ).Element( "quantity" ).Value
+                    }
+                ).OrderBy( p => p.Date );
+
+                foreach( var item in bind ) {
+                    Delivery d = new Delivery( );
+                    DateTime date = DateTime.Parse( item.Date );
+                    int in_q = int.Parse( item.InQuantity );
+
+                    if( int.Parse( item.Id ) == id ) {
+                        d.Fill( date, in_q );
+                        d.Id = id;
+                        quantity += in_q;
+                        // add it to the list
+                        list.Add( d );
+                    }
+
+                }
+                #endregion
+
+                return list.ToList( );
             }
         }
-        // in to storage, out from storage
-        private List<Delivery> inn, outt;
+        public static XFile Source {
+            get { return xfile; }
+            set
+            {
+                int index = ( int ) XFile.FileType.PRODUCTS;
+                if( !Source.SetDocument( XFile.Paths[ index ] ) )
+                    MessageBox.Show( "FILE NOT FOUND" );
+            }
+        }
+        public static IEnumerable<Delivery> All_In {
+            get
+            {
+
+                List<Delivery> list = new List<Delivery>( );
+
+                foreach( Product prod in Product.List )
+                    list.AddRange( prod.Storage.In );
+
+                return list.ToList( );
+            }
+        }
+        public static IEnumerable<Delivery> All_Out {
+            get
+            {
+                List<Delivery> list = new List<Delivery>( );
+
+                foreach( Product prod in Product.List )
+                    list.AddRange( prod.Storage.Out );
+
+                return list.ToList( );
+            }
+        }
+        #endregion
+
 
         public void IncomingStorage( Product prod, int quantity )
         {
@@ -89,15 +162,15 @@ namespace MagApp
             // TODO: update the `io-file`
             // done; 
 
-            if( !this.xfile.Exists ) {
+            if( !xfile.Exists ) {
                 MessageBox.Show( "No Document was set" );
-                this.xfile.OpenDocument( XFile.FileType.IO );
+                xfile.OpenDocument( XFile.FileType.IO );
             }
 
             /* WHAT: the in-div with the attribute of this date
-			 * you may want to create it if it does not exit!
-			 */
-            IEnumerable<XElement> doc = this.xfile.XML_File.Descendants( "in" );
+             * you may want to create it if it does not exit!
+             */
+            IEnumerable<XElement> doc = xfile.XML_File.Descendants( "in" );
 
             // TODO: (determin the in-div from a range of divs)
             // current;
@@ -117,11 +190,11 @@ namespace MagApp
                             new XElement( "quantity", prod.Storage.Quantity.ToString( ) ) );
 
                     // update the io-file
-                    this.xfile.XML_File.Root.Add( X_In );
+                    xfile.XML_File.Root.Add( X_In );
                 }
             }
 
-            this.xfile.XML_File.Save( xfile.Xmlpath );
+            xfile.XML_File.Save( xfile.Xmlpath );
         }
 
 

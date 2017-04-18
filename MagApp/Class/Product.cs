@@ -6,13 +6,10 @@ using System.Windows.Forms;
 using System.Globalization;
 namespace MagApp
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class Product
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        #region Classes and Structures
-
-
-        #endregion
-
         #region Local variables
         private int id;
         private string lable;
@@ -20,12 +17,12 @@ namespace MagApp
         private float price;
         private string volume;
         private string type;
+        private Store storage;
 
 
         #region Static variables
         private static int lastid; // this id is the id of the last product
         private static XFile xfile = new XFile( );
-        private Store storage = new Store( );
         #endregion
         #endregion
 
@@ -89,7 +86,9 @@ namespace MagApp
 
                 // fill the list of products
                 foreach( var item in bind ) {
-                    Product foo = new Product( int.Parse( item.ProductID ), item.Volume,
+                    int id = int.Parse( item.ProductID );
+
+                    Product foo = new Product( id, item.Volume,
                             item.Type, item.Lable, int.Parse( item.Quantity ),
                             float.Parse( item.Price ) );
 
@@ -112,7 +111,7 @@ namespace MagApp
                 int index = ( int ) XFile.FileType.PRODUCTS;
                 if( !Product.Source.SetDocument( XFile.Paths[ index ] ) )
                     MessageBox.Show( "FILE NOT FOUND" );
-                ;
+                
             }
         }
 
@@ -137,8 +136,6 @@ namespace MagApp
         { // recover lastID  
           // done. 
 
-            int index = ( int ) XFile.FileType.PRODUCTS;
-
             var listid = xfile.XML_File.Descendants( "id" ).ToList( );
 
             lastid = int.Parse( listid[ 0 ].Value );
@@ -149,6 +146,19 @@ namespace MagApp
             }
             return ++lastid;
         }
+        public static Product Parse( int id )
+        {
+            Product foo = new Product( );
+
+            foreach( Product item in List )
+                if( id == item.Id ) {
+                    return item;
+                }
+
+            // not found!
+            return null;
+        }
+
         #endregion
 
         public void CopyTo( Product to )
@@ -160,8 +170,8 @@ namespace MagApp
             to.Storage.Quantity = storage.Quantity;
             to.Price = price;
 
-            to.Storage.In = storage.In;
-            to.Storage.Out = storage.Out;
+          //  to.Storage.In = storage.In;
+           // to.Storage.Out = storage.Out;
         }
         #endregion
 
@@ -170,9 +180,9 @@ namespace MagApp
         {
             // setup the document if the methode `SetDocument`
             // was not called outside
+            storage = new Store( );
 
             int fcount = ( int ) XFile.FileType.FILE_COUNT;
-
             for( int i = 0; i < fcount; i++ )
 
                 if( xfile.Exists ) {
@@ -187,7 +197,7 @@ namespace MagApp
             // setup the document if the methode `SetDocument`
             // was not called outside
 
-            id = GenerateID( );
+            storage = new Store( id = GenerateID( ));
             this.lable = lable;
             this.price = price;
             this.storage.Quantity = quantity;
@@ -217,6 +227,7 @@ namespace MagApp
                 string lable, int quantity, float price ) : base( )
         {
             this.id = id;
+            storage = new Store( id );
             this.lable = lable;
             this.price = price;
             this.Storage.Quantity = quantity;
@@ -328,16 +339,6 @@ namespace MagApp
                 return false;
         }
         #endregion
-        public static Product Parse( XElement xele )
-        {
-            foreach( Product item in Product.List ) {
-                if( xele.Element( "id" ).Value == item.Id.ToString( ) ) {
-                    return item; // we find it!!
-                }
-            }
 
-            // not found!
-            return null;
         }
-    }
 }
