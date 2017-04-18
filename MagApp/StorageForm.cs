@@ -12,10 +12,13 @@ namespace MagApp
     public partial class StorageForm : Form
     {
 
+        #region Local Variables
         // the product that is checked in the combobox
         Product currentprod;
+
         // somme of all (prices * quantity)
         float total;
+        #endregion
 
         public StorageForm()
         {
@@ -24,6 +27,10 @@ namespace MagApp
             currentprod = new Product( );
             labltotal.Text = "0.00 MAD";
 
+            // radio buttons
+            rdbtn_in.Enabled = false;
+            rdbtn_in.Checked = true;
+            RefreshForm( );
             #region ComboBox Setup
             // add things
             foreach( Product prod in Product.List )
@@ -31,16 +38,49 @@ namespace MagApp
 
             combproducts.Text = combproducts.Items[ 0 ].ToString( );
             #endregion
+            // TODO: get by date in the dpicker
+            //
+
+            RefreshForm( );
+        }
+
+        #region Form-related Methodes
+        private void StorageForm_Load( object sender, EventArgs e )
+        {
 
             // HERE: show the list of in product of today and add a button 
             // to swap between the past and previous ins 
-            dgvstorage.DataSource = currentprod.Storage.In;
+            //datagrid_storage.DataSource = currentprod.Storage.In;
         }
 
+        private void RefreshForm()
+        {
+            datagrid_in.DataSource = Store.All_In;
+            datagrid_out.DataSource = Store.All_Out;
+            //if( !( rdbtn_in.Enabled ) )
+            //    BackColor = Color.LimeGreen;
+            //else BackColor = Color.Orange;
+        }
+
+        //private IEnumerable<Delivery> GetByDate( IEnumerable<Delivery> list, DateTime date )
+        //{
+
+        //}
+        private string FormatLabel( string lable, decimal quantity )
+        {
+            return string.Format( "{0} ({1})", lable, quantity );
+        }
+        #endregion
+
+        #region Buttons
         private void btnaddtolist_Click( object sender, EventArgs e )
         {
             // TODO: fix the add in the list
             // done.
+
+            // TODO: fix the aupdate of the quantity
+            // panding..
+
             string listitem = "";
 
             /* WHAT: whether the product is already in the list */
@@ -50,6 +90,7 @@ namespace MagApp
             for( index = 0; index < listadded.Items.Count; ++index ) {
                 string lable;
                 decimal newvalue = 0;
+                bool isit /* the item that we're looking for? */;
 
                 #region prepare the listitem 
                 string[ ] str = ( ( string ) listadded.Items[ index ] ).Split( new char[ 2 ] { '(', ')' } );
@@ -58,7 +99,7 @@ namespace MagApp
                 listitem = "";
                 #endregion
 
-                bool isit /* the item that we're looking for?*/ = string.Equals( currentprod.Lable, lable );
+                isit = string.Equals( currentprod.Lable, lable );
 
                 if( isit ) {
                     // add the new and the previous values
@@ -108,11 +149,6 @@ namespace MagApp
 
         }
 
-        private string FormatLabel( string lable, decimal quantity )
-        {
-            return string.Format( "{0} ({1})", lable, quantity );
-        }
-
         private void btnremove_Click( object sender, EventArgs e )
         {
             if( listadded.SelectedItem != null ) {
@@ -141,26 +177,28 @@ namespace MagApp
             // TODO: bind the datagrid and update the XML file
             //
 
-            // get the current list of incomming storage
-            List<Product> current = new List<Product>( );
+            // get the current list of comming storage (in-or-out)
+            //List<Product> current = new List<Product>( );
 
+            // list all added items
             foreach( string item in listadded.Items ) {
                 string[ ] str = item.Split( new char[ ] { '(', ')' } );
+
                 // List all the products
                 foreach( Product prod in Product.List )
                     if( prod.Lable == str[ 0 ].TrimEnd( ) ) {
-                        current.Add( prod );
-                        prod.Storage.IncomingStorage( prod, int.Parse( str[ 1 ].TrimEnd( ) ) );
+                        //          current.Add( prod );
+                        prod.Storage.ComingStorage( prod, int.Parse( str[ 1 ].TrimEnd( ) ), rdbtn_in.Checked );
+                        break;
                     }
             }
-
-            // bind the datagridview
-            dgvstorage.DataSource = current.ToList( );
-
-
-
+            RefreshForm( );
+            //// bind the datagridview
+            //datagrid_storage.DataSource = current.ToList( );
         }
+        #endregion
 
+        #region Events
         private void listadded_SelectedIndexChanged( object sender, EventArgs e )
         {
             labnotif.Text = "";
@@ -193,8 +231,7 @@ namespace MagApp
                         if( isit ) {
                             numquantity.Value = int.Parse( str[ 1 ] );
                             // you need a 
-                            break;
-                            // you need KitKat
+                            break; /* you need KitKat */
                         }
                         // rempplace all the foreach-loops witha  standard forloop
                         // half-done.
@@ -215,6 +252,30 @@ namespace MagApp
 
             lablquant.Text = string.Format( "({0})", currentprod.Storage.Quantity );
         }
+
+        private void rdbtn_in_CheckedChanged( object sender, EventArgs e )
+        {
+            rdbtn_in.Enabled = false;
+            rdbtn_in.Font = new Font( "Microsoft Sans Serif", 10F, ( FontStyle.Bold | FontStyle.Italic ), GraphicsUnit.Point, 0 );
+
+            rdbtn_out.Enabled = true;
+            rdbtn_out.Font = new Font( "Microsoft Sans Serif", 10F, ( FontStyle.Bold ), GraphicsUnit.Point, 0 );
+
+            RefreshForm( );
+        }
+
+        private void rdbtn_out_CheckedChanged( object sender, EventArgs e )
+        {
+            rdbtn_out.Enabled = false;
+            rdbtn_out.Font = new Font( "Microsoft Sans Serif", 10F, ( FontStyle.Bold | FontStyle.Italic ), GraphicsUnit.Point, 0 );
+
+            rdbtn_in.Enabled = true;
+            rdbtn_in.Font = new Font( "Microsoft Sans Serif", 10F, ( FontStyle.Bold ), GraphicsUnit.Point, 0 );
+
+            RefreshForm( );
+        }
+        #endregion
+
     }
 }
 

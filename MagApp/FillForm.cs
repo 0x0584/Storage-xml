@@ -40,6 +40,8 @@ namespace MagApp
 
         public Product NewProduct(int id)
         {
+            try {
+
             v = combvol.Text;
             qu = int.Parse(numquan.Value.ToString());
             type = combtype.Text;
@@ -47,6 +49,11 @@ namespace MagApp
             pr = float.Parse(tboxprice.Text);
 
             return new Product(id, v, type, lab, qu, pr);
+            } catch( Exception ) {
+
+                MessageBox.Show( "make sure you have correct feilds!" );
+                return null;
+            }
         }
 
         public void UpdateProduct(Product prod)
