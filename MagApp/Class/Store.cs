@@ -147,53 +147,65 @@ namespace MagApp
         }
         #endregion
 
-
-        public void IncomingStorage( Product prod, int quantity )
+        public void ComingStorage( Product prod, int quantity, bool type )
         {
             // TODO: update the quantity
             // done.
 
-            this.Quantity += quantity;
+            string[ ] str = new string[ ] { "in", "out" };
+            string currentstorage = str[ ( type ) ? 0 : 1 ];
 
+            #region Update product quantity
+            Quantity += quantity;
 
             //update the product
             prod.UpdateXML( prod );
+            #endregion
 
             // TODO: update the `io-file`
-            // done; 
+            // not done yet!!  
 
+            #region check file existence
             if( !xfile.Exists ) {
                 MessageBox.Show( "No Document was set" );
                 xfile.OpenDocument( XFile.FileType.IO );
             }
+            #endregion
 
-            /* WHAT: the in-div with the attribute of this date
+            /* WHAT: the div with the attribute of this date
              * you may want to create it if it does not exit!
              */
-            IEnumerable<XElement> doc = xfile.XML_File.Descendants( "in" );
+            IEnumerable<XElement> doc = xfile.XML_File.Descendants( currentstorage );
 
             // TODO: (determin the in-div from a range of divs)
             // current;
-            bool exists = false;
+
+            bool storagexists = false;
             foreach( XElement ni in /* while(isHxH = 1) puts("<3"); */ doc ) {
                 // TODO: (apply the )
-                if( ni.Attribute( "date" ).Value == DateTime.Today.ToShortDateString( ) )
-                    exists = true;
+                if( !storagexists && ni.Attribute( "date" ).Value == DateTime.Today.ToShortDateString( ) )
+                    storagexists = true;
 
-                // just update it
-                if( exists ) {
-                    int prev = int.Parse( ni.Element( "" ).Value );
-                    ni.Element( "quantity" ).Value = ( prev + quantity ).ToString( );
-                } else /* you have to create it */ {
-                    XElement X_In = new XElement( "product",
-                            new XElement( "id", prod.Id.ToString( ) ),
-                            new XElement( "quantity", prod.Storage.Quantity.ToString( ) ) );
-
-                    // update the io-file
-                    xfile.XML_File.Root.Add( X_In );
-                }
+                if( storagexists ) /* just update it */
+                    if( ni.Element("product").Element( "id" ).Value == prod.Id.ToString( ) ) {
+                        int prev_q = int.Parse( ni.Element("product").Element( "quantity" ).Value );
+                        ni.Element( "product" ).Element( "quantity" ).Value = ( prev_q + quantity ).ToString( );
+                        break;
+                    }
             }
 
+            if( !storagexists ) /* you have to create it */ {
+                XElement X = new XElement( currentstorage, new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
+                    new XElement( "product",
+                        new XElement( "id", prod.Id.ToString( ) ),
+                        new XElement( "quantity", prod.Storage.Quantity.ToString( ) )
+                        ) );
+
+                // update the io-file
+                xfile.XML_File.Root.Add( X );
+            }
+
+            // save changes to xfile
             xfile.XML_File.Save( xfile.Xmlpath );
         }
 

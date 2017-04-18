@@ -372,7 +372,7 @@
             // rdbtn_in
             // 
             this.rdbtn_in.AutoSize = true;
-            this.rdbtn_in.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdbtn_in.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rdbtn_in.ForeColor = System.Drawing.Color.DarkGreen;
             this.rdbtn_in.Location = new System.Drawing.Point(12, 59);
             this.rdbtn_in.Name = "rdbtn_in";

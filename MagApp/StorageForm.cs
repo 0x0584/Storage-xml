@@ -12,11 +12,13 @@ namespace MagApp
     public partial class StorageForm : Form
     {
 
+        #region Local Variables
         // the product that is checked in the combobox
         Product currentprod;
 
         // somme of all (prices * quantity)
         float total;
+        #endregion
 
         public StorageForm()
         {
@@ -39,14 +41,38 @@ namespace MagApp
             // TODO: get by date in the dpicker
             //
 
+            RefreshForm( );
+        }
+
+        #region Form-related Methodes
+        private void StorageForm_Load( object sender, EventArgs e )
+        {
+
+            // HERE: show the list of in product of today and add a button 
+            // to swap between the past and previous ins 
+            //datagrid_storage.DataSource = currentprod.Storage.In;
+        }
+
+        private void RefreshForm()
+        {
             datagrid_in.DataSource = Store.All_In;
             datagrid_out.DataSource = Store.All_Out;
+            //if( !( rdbtn_in.Enabled ) )
+            //    BackColor = Color.LimeGreen;
+            //else BackColor = Color.Orange;
         }
 
         //private IEnumerable<Delivery> GetByDate( IEnumerable<Delivery> list, DateTime date )
         //{
 
         //}
+        private string FormatLabel( string lable, decimal quantity )
+        {
+            return string.Format( "{0} ({1})", lable, quantity );
+        }
+        #endregion
+
+        #region Buttons
         private void btnaddtolist_Click( object sender, EventArgs e )
         {
             // TODO: fix the add in the list
@@ -123,11 +149,6 @@ namespace MagApp
 
         }
 
-        private string FormatLabel( string lable, decimal quantity )
-        {
-            return string.Format( "{0} ({1})", lable, quantity );
-        }
-
         private void btnremove_Click( object sender, EventArgs e )
         {
             if( listadded.SelectedItem != null ) {
@@ -156,23 +177,28 @@ namespace MagApp
             // TODO: bind the datagrid and update the XML file
             //
 
-            // get the current list of incomming storage
-            List<Product> current = new List<Product>( );
+            // get the current list of comming storage (in-or-out)
+            //List<Product> current = new List<Product>( );
 
+            // list all added items
             foreach( string item in listadded.Items ) {
                 string[ ] str = item.Split( new char[ ] { '(', ')' } );
+
                 // List all the products
                 foreach( Product prod in Product.List )
                     if( prod.Lable == str[ 0 ].TrimEnd( ) ) {
-                        current.Add( prod );
-                        prod.Storage.IncomingStorage( prod, int.Parse( str[ 1 ].TrimEnd( ) ) );
+                        //          current.Add( prod );
+                        prod.Storage.ComingStorage( prod, int.Parse( str[ 1 ].TrimEnd( ) ), rdbtn_in.Checked );
+                        break;
                     }
             }
-
-            // bind the datagridview
-            datagrid_storage.DataSource = current.ToList( );
+            RefreshForm( );
+            //// bind the datagridview
+            //datagrid_storage.DataSource = current.ToList( );
         }
+        #endregion
 
+        #region Events
         private void listadded_SelectedIndexChanged( object sender, EventArgs e )
         {
             labnotif.Text = "";
@@ -205,8 +231,7 @@ namespace MagApp
                         if( isit ) {
                             numquantity.Value = int.Parse( str[ 1 ] );
                             // you need a 
-                            break;
-                            // you need KitKat
+                            break; /* you need KitKat */
                         }
                         // rempplace all the foreach-loops witha  standard forloop
                         // half-done.
@@ -228,34 +253,29 @@ namespace MagApp
             lablquant.Text = string.Format( "({0})", currentprod.Storage.Quantity );
         }
 
-        private void StorageForm_Load( object sender, EventArgs e )
-        {
-
-            // HERE: show the list of in product of today and add a button 
-            // to swap between the past and previous ins 
-            //datagrid_storage.DataSource = currentprod.Storage.In;
-        }
-
         private void rdbtn_in_CheckedChanged( object sender, EventArgs e )
         {
             rdbtn_in.Enabled = false;
+            rdbtn_in.Font = new Font( "Microsoft Sans Serif", 10F, ( FontStyle.Bold | FontStyle.Italic ), GraphicsUnit.Point, 0 );
+
             rdbtn_out.Enabled = true;
+            rdbtn_out.Font = new Font( "Microsoft Sans Serif", 10F, ( FontStyle.Bold ), GraphicsUnit.Point, 0 );
+
             RefreshForm( );
         }
 
         private void rdbtn_out_CheckedChanged( object sender, EventArgs e )
         {
             rdbtn_out.Enabled = false;
+            rdbtn_out.Font = new Font( "Microsoft Sans Serif", 10F, ( FontStyle.Bold | FontStyle.Italic ), GraphicsUnit.Point, 0 );
+
             rdbtn_in.Enabled = true;
+            rdbtn_in.Font = new Font( "Microsoft Sans Serif", 10F, ( FontStyle.Bold ), GraphicsUnit.Point, 0 );
+
             RefreshForm( );
         }
+        #endregion
 
-        private void RefreshForm()
-        {
-            if( !( rdbtn_in.Enabled ) )
-                BackColor = Color.LimeGreen;
-            else BackColor = Color.Orange;
-        }
     }
 }
 
