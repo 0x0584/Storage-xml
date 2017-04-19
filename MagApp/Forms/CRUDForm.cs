@@ -43,16 +43,17 @@ namespace MagApp
         #region CRUD operations
         private void btnadd_Click( object sender, EventArgs e )
         {
-            FillForm m = new FillForm( );
+            FillForm fill = new FillForm( );
             Product fooprod;
 
-            m.ShowDialog( );
+            fill.ShowDialog( );
 
-            if( !m.IsDisposed ) {
-                fooprod = m.NewProduct( Product.GenerateID( ) );
+            if( !fill.IsDisposed ) {
+                fooprod = fill.NewProduct( Product.GenerateID( ) );
                 fooprod.AddXML( );
-                m.Dispose( );
-                m.Close( );
+                fooprod.Storage.ComingStorage( fooprod, fill.Quantity, true );
+                fill.Dispose( );
+                fill.Close( );
                 Bind( dgv );
             }
         }

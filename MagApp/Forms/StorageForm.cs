@@ -52,12 +52,20 @@ namespace MagApp
 
             rdbtn_in.Checked = true;
 
-            combproducts.Text = combproducts.Items[ 0 ].ToString( );
+            if( Product.List.Count == 0 ) {
+                MessageBox.Show( "YOU HAVE NO PRODUCTS!!" );
+                Dispose( );
+                Close( );
+            } else {
 
-            // setup the datagridviews
-            RefreshForm( );
 
-            btnconfirm.Enabled = false;
+                combproducts.Text = combproducts.Items[ 0 ].ToString( );
+
+                // setup the datagridviews
+                RefreshForm( );
+
+                btnconfirm.Enabled = false;
+            }
 
             // HERE: show the list of in product of today and add a button 
             // to swap between the past and previous ins 

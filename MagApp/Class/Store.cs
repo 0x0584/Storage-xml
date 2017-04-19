@@ -42,35 +42,51 @@ namespace MagApp
         public IEnumerable<Delivery> In {
             get
             {
-                #region check source-file
-                if( !(Product.XSource == null) ) {
+                #region check file existence
+                if( !(XSource == null) ) {
                     int index = (int) XFile.FileType.IO;
                     xfile.SetDocument( XFile.Paths[ index ] );
                 }
+                if( !(xfile.Exists) ) {
+                    MessageBox.Show( "No Document was set" );
+                    xfile.OpenDocument( XFile.FileType.IO );
+                }
                 #endregion
+
 
                 return GetStorage( "in" );
             }
         }
+
+        // i just want to tell my self in the future that you diserve 
+        // a better situation that this one! you have to go hard and keep trying
+        // i know you want to do some low-level stuff ut for the moment, you have 
+        // to finish this job! then; you can do whatever you want!
+
         public IEnumerable<Delivery> Out {
             get
             {
-                #region check source-file
-                if( !(Product.XSource == null) ) {
+                #region check file existence
+                if( !(XSource == null) ) {
                     int index = (int) XFile.FileType.IO;
                     xfile.SetDocument( XFile.Paths[ index ] );
                 }
+                if( !(xfile.Exists) ) {
+                    MessageBox.Show( "No Document was set" );
+                    xfile.OpenDocument( XFile.FileType.IO );
+                }
                 #endregion
+
 
                 return GetStorage( "out" );
             }
         }
-        public static XFile Source {
+        public static XFile XSource {
             get { return xfile; }
             set
             {
                 int index = (int) XFile.FileType.PRODUCTS;
-                if( !Source.SetDocument( XFile.Paths[ index ] ) )
+                if( !XSource.SetDocument( XFile.Paths[ index ] ) )
                     MessageBox.Show( "FILE NOT FOUND" );
             }
         }
@@ -83,10 +99,15 @@ namespace MagApp
             {
                 List<object> list = new List<object>( );
 
-                foreach( Product prod in Product.List )
+                foreach( Product prod in Product.List ) {
+                    int q_sum = 0;
                     foreach( Delivery del in prod.Storage.In )
-                        if( del.Id == prod.Id )
-                            list.Add( new { Product = prod.Lable, Quantity = del.Quantity } );
+                        if( del.Id == prod.Id ) {
+                            q_sum += del.Quantity;
+                        }
+
+                    list.Add( new { Product = prod.Lable, Quantity = q_sum } );
+                }
 
                 return list;
             }
@@ -141,7 +162,7 @@ namespace MagApp
 
         }
 
-
+       
 
         public void ComingStorage( Product prod, int quantity, bool isin )
         {
@@ -162,6 +183,10 @@ namespace MagApp
             // done! 
 
             #region check file existence
+            if( !(XSource == null) ) {
+                int index = (int) XFile.FileType.IO;
+                xfile.SetDocument( XFile.Paths[ index ] );
+            }
             if( !xfile.Exists ) {
                 MessageBox.Show( "No Document was set" );
                 xfile.OpenDocument( XFile.FileType.IO );
@@ -177,6 +202,7 @@ namespace MagApp
             // current;
 
             bool storagexists = false;
+            bool elem_exists = false;
             foreach( XElement ni in /* while(isHxH = 1) puts("<3"); */ doc ) {
                 // TODO: check for today's coming storage (in-or-out)
                 if( !storagexists && ni.Attribute( "date" ).Value == DateTime.Today.ToShortDateString( ) )
@@ -185,15 +211,19 @@ namespace MagApp
                 #region Update the element if exists
                 if( storagexists ) /* just update it */
                     if( ni.Element( "product" ).Element( "id" ).Value == prod.Id.ToString( ) ) {
+                        elem_exists = true;
+
                         int prev_q = int.Parse( ni.Element( "product" ).Element( "quantity" ).Value );
                         ni.Element( "product" ).Element( "quantity" ).Value = (prev_q + quantity).ToString( );
+                        // JUST 
                         break;
+                        // THE WALL
                     }
                 #endregion
             }
 
             #region Create new element
-            if( !storagexists ) /* you have to create it */ {
+            if( !(storagexists) || !(elem_exists) ) /* you have to create it */ {
                 XElement X = new XElement( currentstorage, new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
                     new XElement( "product",
                         new XElement( "id", prod.Id.ToString( ) ),

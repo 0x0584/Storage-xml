@@ -6,9 +6,9 @@ using System.Windows.Forms;
 using System.Globalization;
 namespace MagApp
 {
-#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+#pragma warning disable CS0659
     public class Product
-#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+#pragma warning restore CS0659
     {
         #region Local variables
         private int id;
@@ -18,7 +18,6 @@ namespace MagApp
         private string volume;
         private string type;
         private Store storage;
-
 
         #region Static variables
         private static int lastid; // this id is the id of the last product
@@ -64,7 +63,7 @@ namespace MagApp
             set { type = value; }
         }
 
-        public static IEnumerable<Product> List {
+        public static List<Product> List {
             get
             {
                 if( !(xfile.Exists) ) {
@@ -84,8 +83,10 @@ namespace MagApp
                 }
                 ).OrderBy( p => p.ProductID );
 
+
                 // fill the list of products
                 foreach( var item in bind ) {
+
                     int id = int.Parse( item.ProductID );
 
                     Product foo = new Product( id, item.Volume,
@@ -95,7 +96,7 @@ namespace MagApp
                     list.Add( foo );
                 }
 
-                return list.ToList( );
+                return list;
             }
         }
 
@@ -138,12 +139,15 @@ namespace MagApp
 
             var listid = xfile.XML_File.Descendants( "id" ).ToList( );
 
-            lastid = int.Parse( listid[ 0 ].Value );
+            if( listid.Count != 0 ) {
+                lastid = int.Parse( listid[ 0 ].Value );
 
-            foreach( var item in listid ) {
-                if( int.Parse( item.Value ) >= lastid )
-                    lastid = int.Parse( item.Value );
-            }
+                foreach( var item in listid )
+                    if( int.Parse( item.Value ) >= lastid )
+                        lastid = int.Parse( item.Value );
+
+            } else lastid = 0;
+
             return ++lastid;
         }
         public static Product Parse( int id )
@@ -200,39 +204,20 @@ namespace MagApp
             storage = new Store( id = GenerateID( ) );
             this.lable = lable;
             this.price = price;
-            this.storage.Quantity = quantity;
             this.volume = volume;
             this.type = type;
-
-            //foreach (var i in intime)
-            //    foreach (var ii in inquantity)
-            //    {
-            //        Delivry foo = new Delivry();
-            //        foo.Fill(i, ii);
-
-            //        In.Add(foo);
-            //    }
-
-            //foreach (var i in outime)
-            //    foreach (var ii in outquantity)
-            //    {
-            //        Delivry foo = new Delivry();
-            //        foo.Fill(i, ii);
-
-            //        Out.Add(foo);
-            //    }
+            storage.Quantity = quantity;
         }
 
         public Product( int id, string volume, string type,
                 string lable, int quantity, float price ) : base( )
         {
-            this.id = id;
-            storage = new Store( id );
+            storage = new Store( (this.id = id) );
             this.lable = lable;
             this.price = price;
-            this.Storage.Quantity = quantity;
             this.volume = volume;
             this.type = type;
+            storage.Quantity =  quantity;
         }
 
         #endregion
