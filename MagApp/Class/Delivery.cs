@@ -7,35 +7,15 @@ namespace MagApp
 {
     public class Delivery
     {
-
-        private DateTime timing;
+        // TODO: remove the Fill method and use a constructor
+        // panding..
+        #region Local variables
+        private DateTime date;
         private int quantity;
-        int id;
+        private int id;
+        #endregion
 
-        public DateTime Timing {
-            get
-            {
-                return timing;
-            }
-
-            set
-            {
-                timing = value;
-            }
-        }
-
-        public int Quantity {
-            get
-            {
-                return quantity;
-            }
-
-            set
-            {
-                quantity = value;
-            }
-        }
-
+        #region Propreties
         public int Id {
             get
             {
@@ -47,14 +27,42 @@ namespace MagApp
                 id = value;
             }
         }
+        public int Quantity {
+            get
+            {
+                return quantity;
+            }
 
-      
+            set
+            {
+                quantity = value;
+            }
+        }
+        public DateTime Date {
+            get
+            {
+                return date;
+            }
 
+            set
+            {
+                date = value;
+            }
+        }
+        #endregion
+
+        #region Methods
         public void Fill( DateTime d, int q )
         {
-            timing = d;
+            date = d;
             quantity = q;
         }
+        #endregion
 
+        public override string ToString()
+        {
+            string str = string.Format( "({1}) x({2}) : {0:dd/MM/yyyy}", date, id, quantity );
+            return str;
+        }
     }
 }

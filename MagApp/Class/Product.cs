@@ -67,8 +67,8 @@ namespace MagApp
         public static IEnumerable<Product> List {
             get
             {
-                if( !( xfile.Exists ) ) {
-                    int index = ( int ) XFile.FileType.PRODUCTS;
+                if( !(xfile.Exists) ) {
+                    int index = (int) XFile.FileType.PRODUCTS;
                     xfile.SetDocument( XFile.Paths[ index ] );
                 }
 
@@ -101,17 +101,17 @@ namespace MagApp
 
 
 
-        public static XFile Source {
+        public static XFile XSource {
             get
             {
                 return xfile;
             }
             set
             {
-                int index = ( int ) XFile.FileType.PRODUCTS;
-                if( !Product.Source.SetDocument( XFile.Paths[ index ] ) )
+                int index = (int) XFile.FileType.PRODUCTS;
+                if( !Product.XSource.SetDocument( XFile.Paths[ index ] ) )
                     MessageBox.Show( "FILE NOT FOUND" );
-                
+
             }
         }
 
@@ -170,8 +170,8 @@ namespace MagApp
             to.Storage.Quantity = storage.Quantity;
             to.Price = price;
 
-          //  to.Storage.In = storage.In;
-           // to.Storage.Out = storage.Out;
+            //  to.Storage.In = storage.In;
+            // to.Storage.Out = storage.Out;
         }
         #endregion
 
@@ -182,11 +182,11 @@ namespace MagApp
             // was not called outside
             storage = new Store( );
 
-            int fcount = ( int ) XFile.FileType.FILE_COUNT;
+            int fcount = (int) XFile.FileType.FILE_COUNT;
             for( int i = 0; i < fcount; i++ )
 
                 if( xfile.Exists ) {
-                    int index = ( int ) XFile.FileType.PRODUCTS;
+                    int index = (int) XFile.FileType.PRODUCTS;
                     xfile.SetDocument( XFile.Paths[ index ] );
                 }
         }
@@ -197,7 +197,7 @@ namespace MagApp
             // setup the document if the methode `SetDocument`
             // was not called outside
 
-            storage = new Store( id = GenerateID( ));
+            storage = new Store( id = GenerateID( ) );
             this.lable = lable;
             this.price = price;
             this.storage.Quantity = quantity;
@@ -324,12 +324,12 @@ namespace MagApp
 
             // TODO: write your implementation of Equals() here
 
-            var _id = ( ( Product ) obj ).id;
-            var _lable = ( ( Product ) obj ).lable;
-            var _price = ( ( Product ) obj ).price;
-            var _quant = ( ( Product ) obj ).storage.Quantity;
-            var _type = ( ( Product ) obj ).type;
-            var _volume = ( ( Product ) obj ).volume;
+            var _id = ((Product) obj).id;
+            var _lable = ((Product) obj).lable;
+            var _price = ((Product) obj).price;
+            var _quant = ((Product) obj).storage.Quantity;
+            var _type = ((Product) obj).type;
+            var _volume = ((Product) obj).volume;
 
             if( _id == id && _lable == lable && _price == price &&
                         _quant == storage.Quantity && _type == type &&
@@ -340,5 +340,5 @@ namespace MagApp
         }
         #endregion
 
-        }
+    }
 }

@@ -9,6 +9,7 @@ namespace MagApp
 {
     class Store
     {
+        #region Construtors
         public Store()
         {
         }
@@ -16,11 +17,15 @@ namespace MagApp
         {
             this.id = id;
         }
+        #endregion
 
-
-        private static XFile xfile = new XFile( );
+        #region Local Variables
         private int quantity;
         private int id;
+        #region Static Variables
+        private static XFile xfile = new XFile( );
+        #endregion
+        #endregion
 
         #region Propreties
         public int Quantity {
@@ -34,126 +39,117 @@ namespace MagApp
                 quantity = value;
             }
         }
-        public List<Delivery> In {
+        public IEnumerable<Delivery> In {
             get
             {
                 #region check source-file
-                if( !( Product.Source == null ) ) {
-                    int index = ( int ) XFile.FileType.IO;
+                if( !(Product.XSource == null) ) {
+                    int index = (int) XFile.FileType.IO;
                     xfile.SetDocument( XFile.Paths[ index ] );
                 }
                 #endregion
 
-                List<Delivery> list = new List<Delivery>( );
-
-                #region List setup
-                var bind = xfile.XML_File.Descendants( "in" ).Select(
-                        p => new {
-                            Id = p.Element( "product" ).Element( "id" ).Value,
-                            Date = p.Attribute( "date" ).Value,
-                            InQuantity = p.Element( "product" ).Element( "quantity" ).Value
-                        }
-                ).OrderBy( p => p.Date );
-
-                foreach( var item in bind ) {
-                    Delivery d = new Delivery( );
-                    DateTime date = DateTime.Parse( item.Date );
-                    int in_q = int.Parse( item.InQuantity );
-
-                    if( int.Parse( item.Id ) == id ) {
-                        d.Fill( date, in_q );
-                        d.Id = id;
-                        quantity += in_q;
-                        // add it to the list
-                        list.Add( d );
-                    }
-                }
-                #endregion
-
-                return list.ToList( );
+                return GetStorage( "in" );
             }
         }
-        public List<Delivery> Out {
+        public IEnumerable<Delivery> Out {
             get
             {
                 #region check source-file
-                if( !( Product.Source == null ) ) {
-                    int index = ( int ) XFile.FileType.IO;
+                if( !(Product.XSource == null) ) {
+                    int index = (int) XFile.FileType.IO;
                     xfile.SetDocument( XFile.Paths[ index ] );
                 }
                 #endregion
 
-                List<Delivery> list = new List<Delivery>( );
-
-                #region List setup
-                var bind = xfile.XML_File.Descendants( "out" ).Select(
-                    p => new {
-                        Id = p.Element( "product" ).Element( "id" ).Value,
-                        Date = p.Attribute( "date" ).Value,
-                        InQuantity = p.Element( "product" ).Element( "quantity" ).Value
-                    }
-                ).OrderBy( p => p.Date );
-
-                foreach( var item in bind ) {
-                    Delivery d = new Delivery( );
-                    DateTime date = DateTime.Parse( item.Date );
-                    int in_q = int.Parse( item.InQuantity );
-
-                    if( int.Parse( item.Id ) == id ) {
-                        d.Fill( date, in_q );
-                        d.Id = id;
-                        quantity += in_q;
-                        // add it to the list
-                        list.Add( d );
-                    }
-
-                }
-                #endregion
-
-                return list.ToList( );
+                return GetStorage( "out" );
             }
         }
         public static XFile Source {
             get { return xfile; }
             set
             {
-                int index = ( int ) XFile.FileType.PRODUCTS;
+                int index = (int) XFile.FileType.PRODUCTS;
                 if( !Source.SetDocument( XFile.Paths[ index ] ) )
                     MessageBox.Show( "FILE NOT FOUND" );
             }
         }
-        public static IEnumerable<Delivery> All_In {
+
+        // TODO: here I should find a way to not show 
+        // the date! just the products and thier quantity
+        // done.
+        public static IEnumerable<object> All_In {
             get
             {
-
-                List<Delivery> list = new List<Delivery>( );
+                List<object> list = new List<object>( );
 
                 foreach( Product prod in Product.List )
-                    list.AddRange( prod.Storage.In );
+                    foreach( Delivery del in prod.Storage.In )
+                        if( del.Id == prod.Id )
+                            list.Add( new { Product = prod.Lable, Quantity = del.Quantity } );
 
-                return list.ToList( );
+                return list;
             }
         }
-        public static IEnumerable<Delivery> All_Out {
+
+        public static IEnumerable<object> All_Out {
             get
             {
-                List<Delivery> list = new List<Delivery>( );
+                List<object> list = new List<object>( );
 
                 foreach( Product prod in Product.List )
-                    list.AddRange( prod.Storage.Out );
+                    foreach( Delivery del in prod.Storage.Out )
+                        if( del.Id == prod.Id )
+                            list.Add( new { Product = prod.Lable, Quantity = del.Quantity } );
 
-                return list.ToList( );
+                return list;
             }
         }
         #endregion
 
-        public void ComingStorage( Product prod, int quantity, bool type )
+        #region Methods
+        private IEnumerable<Delivery> GetStorage( string type )
+        {
+            List<Delivery> list = new List<Delivery>( );
+
+            #region List setup
+            var bind = xfile.XML_File.Descendants( type ).Select(
+                p => new {
+                    Id = p.Element( "product" ).Element( "id" ).Value,
+                    InQuantity = p.Element( "product" ).Element( "quantity" ).Value,
+                    Date = p.Attribute( "date" ).Value
+                }
+            ).OrderBy( p => p.Date );
+
+            foreach( var item in bind ) {
+                Delivery d = new Delivery( );
+                DateTime date = DateTime.Parse( item.Date );
+                int in_q = int.Parse( item.InQuantity );
+
+                if( int.Parse( item.Id ) == id ) {
+                    d.Fill( date, in_q );
+                    d.Id = id;
+                    quantity += in_q;
+                    // add it to the list
+                    list.Add( d );
+                }
+
+            }
+            #endregion
+
+            return list.ToList( );
+
+        }
+
+
+
+        public void ComingStorage( Product prod, int quantity, bool isin )
         {
             // TODO: update the quantity
             // done.
 
             string[ ] str = new string[ ] { "in", "out" };
-            string currentstorage = str[ ( type ) ? 0 : 1 ];
+            string currentstorage = str[ (isin) ? 0 : 1 ];
 
             #region Update product quantity
             Quantity += quantity;
@@ -163,7 +159,7 @@ namespace MagApp
             #endregion
 
             // TODO: update the `io-file`
-            // not done yet!!  
+            // done! 
 
             #region check file existence
             if( !xfile.Exists ) {
@@ -182,18 +178,21 @@ namespace MagApp
 
             bool storagexists = false;
             foreach( XElement ni in /* while(isHxH = 1) puts("<3"); */ doc ) {
-                // TODO: (apply the )
+                // TODO: check for today's coming storage (in-or-out)
                 if( !storagexists && ni.Attribute( "date" ).Value == DateTime.Today.ToShortDateString( ) )
                     storagexists = true;
 
+                #region Update the element if exists
                 if( storagexists ) /* just update it */
-                    if( ni.Element("product").Element( "id" ).Value == prod.Id.ToString( ) ) {
-                        int prev_q = int.Parse( ni.Element("product").Element( "quantity" ).Value );
-                        ni.Element( "product" ).Element( "quantity" ).Value = ( prev_q + quantity ).ToString( );
+                    if( ni.Element( "product" ).Element( "id" ).Value == prod.Id.ToString( ) ) {
+                        int prev_q = int.Parse( ni.Element( "product" ).Element( "quantity" ).Value );
+                        ni.Element( "product" ).Element( "quantity" ).Value = (prev_q + quantity).ToString( );
                         break;
                     }
+                #endregion
             }
 
+            #region Create new element
             if( !storagexists ) /* you have to create it */ {
                 XElement X = new XElement( currentstorage, new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
                     new XElement( "product",
@@ -204,11 +203,11 @@ namespace MagApp
                 // update the io-file
                 xfile.XML_File.Root.Add( X );
             }
+            #endregion
 
             // save changes to xfile
             xfile.XML_File.Save( xfile.Xmlpath );
         }
-
-
+        #endregion
     }
 }
