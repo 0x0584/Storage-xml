@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Windows.Forms;
+//
 
-namespace MagApp
+namespace MagApp.Class
 {
     class Store
     {

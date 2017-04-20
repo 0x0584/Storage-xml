@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace MagApp
+namespace MagApp.Forms
 {
     public partial class MainForm : Form
     {
