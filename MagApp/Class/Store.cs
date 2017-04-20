@@ -163,15 +163,18 @@ namespace MagApp.Class
 
         }
 
-       
-
         public void ComingStorage( Product prod, int quantity, bool isin )
         {
+
             // TODO: update the quantity
             // done.
 
+            // TODO: substract quantity when it's out!
+
             string[ ] str = new string[ ] { "in", "out" };
             string currentstorage = str[ (isin) ? 0 : 1 ];
+
+            if( !(isin) ) quantity *= (-1);
 
             #region Update product quantity
             Quantity += quantity;
@@ -228,7 +231,7 @@ namespace MagApp.Class
                 XElement X = new XElement( currentstorage, new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
                     new XElement( "product",
                         new XElement( "id", prod.Id.ToString( ) ),
-                        new XElement( "quantity", prod.Storage.Quantity.ToString( ) )
+                        new XElement( "quantity", quantity )
                         ) );
 
                 // update the io-file

@@ -55,8 +55,8 @@ namespace MagApp.Forms
             rdbtn_in.Checked = true;
 
             if( Product.List.Count == 0 ) {
-                //MessageBox.Show( "YOU HAVE NO PRODUCTS!!" );
-               // ErrorFrom 
+                MessageBox.Show( "YOU HAVE NO PRODUCTS!!" );
+                // ErrorFrom 
                 Dispose( );
                 Close( );
             } else {
@@ -82,13 +82,31 @@ namespace MagApp.Forms
 
             //label_date.Text = "Today: " + DateTime.Today.ToShortDateString( );
             //                   ^
+            List<object> list = new List<object>( );
 
             datagrid_in.DataSource = Store.All_In;
             datagrid_out.DataSource = Store.All_Out;
 
+            foreach( Product prod in Product.List )
+                list.Add( new { Label = prod.Lable, Quantity = prod.Quantity} );
+            
+            datagrid_rest.DataSource = list;
+
+            if( datagrid_storage.DataSource != null )
+                datagrid_storage.DataSource = Product.List;
+
+            if( datagrid_total.DataSource != null )
+                datagrid_total.DataSource = GetTotal( );
+            
             //if( !( rdbtn_in.Enabled ) )
             //    BackColor = Color.LimeGreen;
             //else BackColor = Color.Orange;
+        }
+
+        private object GetTotal()
+        {
+            // TTC TVA PU of all the INs and OUTs and The rest
+            throw new NotImplementedException( );
         }
 
         //private IEnumerable<Delivery> GetByDate( IEnumerable<Delivery> list, DateTime date )
