@@ -6,8 +6,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MagApp.Class;
 
-namespace MagApp
+using MagApp.Class;
+namespace MagApp.Forms
 {
     public partial class StorageForm : Form
     {
@@ -53,7 +55,8 @@ namespace MagApp
             rdbtn_in.Checked = true;
 
             if( Product.List.Count == 0 ) {
-                MessageBox.Show( "YOU HAVE NO PRODUCTS!!" );
+                //MessageBox.Show( "YOU HAVE NO PRODUCTS!!" );
+               // ErrorFrom 
                 Dispose( );
                 Close( );
             } else {

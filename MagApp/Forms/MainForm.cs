@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace MagApp
+namespace MagApp.Forms
 {
     public partial class MainForm : Form
     {
@@ -26,6 +26,7 @@ namespace MagApp
                 crud.Dispose( );
                 crud.Close( );
             }
+
             Show( );
         }
 
@@ -43,9 +44,11 @@ namespace MagApp
             Hide( );
             storage.ShowDialog( );
 
-            if( !(storage.IsDisposed) )
+            if( !(storage.IsDisposed) ) {
                 storage.Dispose( );
-            storage.Close( );
+                storage.Close( );
+            }
+
             Show( );
         }
     }

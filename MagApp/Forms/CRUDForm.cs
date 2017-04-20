@@ -8,8 +8,9 @@ using System.Text;
 using System.Xml.Linq;
 using System.Windows.Forms;
 using System.Collections;
+using MagApp.Class;
 
-namespace MagApp
+namespace MagApp.Forms
 {
     public partial class CRUDForm : Form
     {

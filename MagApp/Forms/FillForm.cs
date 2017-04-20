@@ -6,8 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MagApp.Class;
 
-namespace MagApp
+namespace MagApp.Forms
 {
     public partial class FillForm : Form
     {

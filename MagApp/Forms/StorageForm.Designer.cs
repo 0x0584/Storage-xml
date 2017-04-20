@@ -1,4 +1,4 @@
-﻿namespace MagApp
+﻿namespace MagApp.Forms
 {
     partial class StorageForm
     {

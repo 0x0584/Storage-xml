@@ -4,7 +4,8 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Text;
 using System.Windows.Forms;
-namespace MagApp
+
+namespace MagApp.Class
 {
     public class XFile
     {

@@ -4,7 +4,8 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Windows.Forms;
 using System.Globalization;
-namespace MagApp
+
+namespace MagApp.Class
 {
 #pragma warning disable CS0659
     public class Product
