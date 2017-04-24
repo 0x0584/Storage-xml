@@ -44,23 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class\Delivery.cs" />
-    <Compile Include="Forms\CRUDForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\CRUDForm.Designer.cs">
-      <DependentUpon>CRUDForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FillForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FillForm.Designer.cs">
       <DependentUpon>FillForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Class\Product.cs" />
     <Compile Include="Program.cs" />
@@ -73,14 +61,8 @@
       <DependentUpon>StorageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Class\XFile.cs" />
-    <EmbeddedResource Include="Forms\CRUDForm.resx">
-      <DependentUpon>CRUDForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FillForm.resx">
       <DependentUpon>FillForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

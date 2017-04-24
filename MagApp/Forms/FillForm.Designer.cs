@@ -196,7 +196,6 @@
             this.Controls.Add( this.tboxprice );
             this.Controls.Add( this.tboxlabel );
             this.Name = "FillForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MainForm1";
             this.Load += new System.EventHandler( this.MainForm_Load );
             ((System.ComponentModel.ISupportInitialize) (this.numquan)).EndInit( );

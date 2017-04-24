@@ -64,15 +64,21 @@
             this.label_rest_sum = new System.Windows.Forms.Label();
             this.label_storage_info = new System.Windows.Forms.Label();
             this.btn_updown = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.datagrid_total = new System.Windows.Forms.DataGridView();
             this.label_resume = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.ms = new System.Windows.Forms.MenuStrip();
+            this.productToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newProductToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_storage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numquantity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_in)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_out)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_rest)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.datagrid_total)).BeginInit();
+            this.ms.SuspendLayout();
             this.SuspendLayout();
             // 
             // datagrid_storage
@@ -96,7 +102,7 @@
             dataGridViewCellStyle62.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle62.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.datagrid_storage.DefaultCellStyle = dataGridViewCellStyle62;
-            this.datagrid_storage.Location = new System.Drawing.Point(12, 364);
+            this.datagrid_storage.Location = new System.Drawing.Point(11, 391);
             this.datagrid_storage.Name = "datagrid_storage";
             this.datagrid_storage.ReadOnly = true;
             dataGridViewCellStyle63.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -113,7 +119,7 @@
             // 
             // btnconfirm
             // 
-            this.btnconfirm.Location = new System.Drawing.Point(106, 311);
+            this.btnconfirm.Location = new System.Drawing.Point(105, 338);
             this.btnconfirm.Name = "btnconfirm";
             this.btnconfirm.Size = new System.Drawing.Size(78, 23);
             this.btnconfirm.TabIndex = 1;
@@ -124,7 +130,7 @@
             // combproducts
             // 
             this.combproducts.FormattingEnabled = true;
-            this.combproducts.Location = new System.Drawing.Point(12, 6);
+            this.combproducts.Location = new System.Drawing.Point(11, 33);
             this.combproducts.Name = "combproducts";
             this.combproducts.Size = new System.Drawing.Size(170, 21);
             this.combproducts.TabIndex = 2;
@@ -134,7 +140,7 @@
             // listadded
             // 
             this.listadded.FormattingEnabled = true;
-            this.listadded.Location = new System.Drawing.Point(14, 92);
+            this.listadded.Location = new System.Drawing.Point(13, 119);
             this.listadded.Name = "listadded";
             this.listadded.Size = new System.Drawing.Size(172, 212);
             this.listadded.TabIndex = 3;
@@ -142,7 +148,7 @@
             // 
             // numquantity
             // 
-            this.numquantity.Location = new System.Drawing.Point(40, 33);
+            this.numquantity.Location = new System.Drawing.Point(39, 60);
             this.numquantity.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -154,7 +160,7 @@
             // 
             // btnaddtolist
             // 
-            this.btnaddtolist.Location = new System.Drawing.Point(14, 63);
+            this.btnaddtolist.Location = new System.Drawing.Point(13, 90);
             this.btnaddtolist.Name = "btnaddtolist";
             this.btnaddtolist.Size = new System.Drawing.Size(74, 23);
             this.btnaddtolist.TabIndex = 5;
@@ -164,7 +170,7 @@
             // 
             // btnremove
             // 
-            this.btnremove.Location = new System.Drawing.Point(106, 63);
+            this.btnremove.Location = new System.Drawing.Point(105, 90);
             this.btnremove.Name = "btnremove";
             this.btnremove.Size = new System.Drawing.Size(78, 23);
             this.btnremove.TabIndex = 5;
@@ -176,7 +182,7 @@
             // 
             this.lablquant.AutoSize = true;
             this.lablquant.ForeColor = System.Drawing.Color.Green;
-            this.lablquant.Location = new System.Drawing.Point(9, 35);
+            this.lablquant.Location = new System.Drawing.Point(8, 62);
             this.lablquant.Name = "lablquant";
             this.lablquant.Size = new System.Drawing.Size(25, 13);
             this.lablquant.TabIndex = 6;
@@ -186,7 +192,7 @@
             // 
             this.labltotal.AutoSize = true;
             this.labltotal.ForeColor = System.Drawing.Color.DarkBlue;
-            this.labltotal.Location = new System.Drawing.Point(12, 316);
+            this.labltotal.Location = new System.Drawing.Point(11, 343);
             this.labltotal.Name = "labltotal";
             this.labltotal.Size = new System.Drawing.Size(42, 13);
             this.labltotal.TabIndex = 6;
@@ -197,7 +203,7 @@
             this.labnotif.AutoSize = true;
             this.labnotif.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labnotif.ForeColor = System.Drawing.Color.Maroon;
-            this.labnotif.Location = new System.Drawing.Point(193, 316);
+            this.labnotif.Location = new System.Drawing.Point(192, 343);
             this.labnotif.Name = "labnotif";
             this.labnotif.Size = new System.Drawing.Size(102, 13);
             this.labnotif.TabIndex = 7;
@@ -223,7 +229,7 @@
             dataGridViewCellStyle65.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle65.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.datagrid_in.DefaultCellStyle = dataGridViewCellStyle65;
-            this.datagrid_in.Location = new System.Drawing.Point(196, 83);
+            this.datagrid_in.Location = new System.Drawing.Point(195, 110);
             this.datagrid_in.Name = "datagrid_in";
             this.datagrid_in.ReadOnly = true;
             dataGridViewCellStyle66.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -258,7 +264,7 @@
             dataGridViewCellStyle68.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle68.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.datagrid_out.DefaultCellStyle = dataGridViewCellStyle68;
-            this.datagrid_out.Location = new System.Drawing.Point(436, 83);
+            this.datagrid_out.Location = new System.Drawing.Point(435, 110);
             this.datagrid_out.Name = "datagrid_out";
             this.datagrid_out.ReadOnly = true;
             dataGridViewCellStyle69.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -294,7 +300,7 @@
             dataGridViewCellStyle71.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle71.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.datagrid_rest.DefaultCellStyle = dataGridViewCellStyle71;
-            this.datagrid_rest.Location = new System.Drawing.Point(663, 83);
+            this.datagrid_rest.Location = new System.Drawing.Point(662, 110);
             this.datagrid_rest.Name = "datagrid_rest";
             this.datagrid_rest.ReadOnly = true;
             dataGridViewCellStyle72.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -314,7 +320,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(14, 343);
+            this.label1.Location = new System.Drawing.Point(13, 370);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(93, 18);
             this.label1.TabIndex = 9;
@@ -325,7 +331,7 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label4.Location = new System.Drawing.Point(660, 62);
+            this.label4.Location = new System.Drawing.Point(659, 89);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(57, 18);
             this.label4.TabIndex = 9;
@@ -333,17 +339,18 @@
             // 
             // dpicker
             // 
-            this.dpicker.Location = new System.Drawing.Point(410, 12);
+            this.dpicker.Location = new System.Drawing.Point(409, 39);
             this.dpicker.Name = "dpicker";
             this.dpicker.Size = new System.Drawing.Size(183, 20);
             this.dpicker.TabIndex = 10;
+            this.dpicker.ValueChanged += new System.EventHandler(this.dpicker_ValueChanged);
             // 
             // label_out_sum
             // 
             this.label_out_sum.AutoSize = true;
             this.label_out_sum.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_out_sum.ForeColor = System.Drawing.Color.DarkBlue;
-            this.label_out_sum.Location = new System.Drawing.Point(501, 63);
+            this.label_out_sum.Location = new System.Drawing.Point(500, 90);
             this.label_out_sum.Name = "label_out_sum";
             this.label_out_sum.Size = new System.Drawing.Size(77, 18);
             this.label_out_sum.TabIndex = 9;
@@ -354,7 +361,7 @@
             this.label_in_sum.AutoSize = true;
             this.label_in_sum.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_in_sum.ForeColor = System.Drawing.Color.DarkBlue;
-            this.label_in_sum.Location = new System.Drawing.Point(243, 63);
+            this.label_in_sum.Location = new System.Drawing.Point(242, 90);
             this.label_in_sum.Name = "label_in_sum";
             this.label_in_sum.Size = new System.Drawing.Size(77, 18);
             this.label_in_sum.TabIndex = 9;
@@ -365,7 +372,7 @@
             this.rdbtn_in.AutoSize = true;
             this.rdbtn_in.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rdbtn_in.ForeColor = System.Drawing.Color.DarkGreen;
-            this.rdbtn_in.Location = new System.Drawing.Point(196, 60);
+            this.rdbtn_in.Location = new System.Drawing.Point(195, 87);
             this.rdbtn_in.Name = "rdbtn_in";
             this.rdbtn_in.Size = new System.Drawing.Size(46, 21);
             this.rdbtn_in.TabIndex = 11;
@@ -379,7 +386,7 @@
             this.rdbtn_out.AutoSize = true;
             this.rdbtn_out.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rdbtn_out.ForeColor = System.Drawing.Color.DarkRed;
-            this.rdbtn_out.Location = new System.Drawing.Point(436, 60);
+            this.rdbtn_out.Location = new System.Drawing.Point(435, 87);
             this.rdbtn_out.Name = "rdbtn_out";
             this.rdbtn_out.Size = new System.Drawing.Size(64, 21);
             this.rdbtn_out.TabIndex = 11;
@@ -393,7 +400,7 @@
             this.label_date.AutoSize = true;
             this.label_date.Font = new System.Drawing.Font("Roboto Slab", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_date.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label_date.Location = new System.Drawing.Point(351, 13);
+            this.label_date.Location = new System.Drawing.Point(350, 40);
             this.label_date.Name = "label_date";
             this.label_date.Size = new System.Drawing.Size(53, 19);
             this.label_date.TabIndex = 12;
@@ -404,7 +411,7 @@
             this.label_rest_sum.AutoSize = true;
             this.label_rest_sum.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_rest_sum.ForeColor = System.Drawing.Color.DarkBlue;
-            this.label_rest_sum.Location = new System.Drawing.Point(714, 62);
+            this.label_rest_sum.Location = new System.Drawing.Point(713, 89);
             this.label_rest_sum.Name = "label_rest_sum";
             this.label_rest_sum.Size = new System.Drawing.Size(77, 18);
             this.label_rest_sum.TabIndex = 9;
@@ -415,7 +422,7 @@
             this.label_storage_info.AutoSize = true;
             this.label_storage_info.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_storage_info.ForeColor = System.Drawing.Color.DarkBlue;
-            this.label_storage_info.Location = new System.Drawing.Point(108, 343);
+            this.label_storage_info.Location = new System.Drawing.Point(107, 370);
             this.label_storage_info.Name = "label_storage_info";
             this.label_storage_info.Size = new System.Drawing.Size(396, 18);
             this.label_storage_info.TabIndex = 9;
@@ -423,53 +430,99 @@
             // 
             // btn_updown
             // 
+            this.btn_updown.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_updown.ForeColor = System.Drawing.Color.LimeGreen;
-            this.btn_updown.Location = new System.Drawing.Point(582, 316);
+            this.btn_updown.Location = new System.Drawing.Point(790, 338);
             this.btn_updown.Name = "btn_updown";
-            this.btn_updown.Size = new System.Drawing.Size(75, 23);
+            this.btn_updown.Size = new System.Drawing.Size(93, 23);
             this.btn_updown.TabIndex = 13;
-            this.btn_updown.Text = "▼";
+            this.btn_updown.Text = "SHOW    ▼";
             this.btn_updown.UseVisualStyleBackColor = true;
             this.btn_updown.Click += new System.EventHandler(this.btn_updown_Click);
             // 
-            // dataGridView1
+            // datagrid_total
             // 
-            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(663, 383);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(222, 178);
-            this.dataGridView1.TabIndex = 14;
+            this.datagrid_total.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.datagrid_total.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.datagrid_total.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.datagrid_total.Location = new System.Drawing.Point(662, 410);
+            this.datagrid_total.Name = "datagrid_total";
+            this.datagrid_total.Size = new System.Drawing.Size(222, 178);
+            this.datagrid_total.TabIndex = 14;
             // 
             // label_resume
             // 
             this.label_resume.AutoSize = true;
             this.label_resume.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_resume.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label_resume.Location = new System.Drawing.Point(663, 362);
+            this.label_resume.Location = new System.Drawing.Point(662, 389);
             this.label_resume.Name = "label_resume";
-            this.label_resume.Size = new System.Drawing.Size(79, 18);
+            this.label_resume.Size = new System.Drawing.Size(110, 18);
             this.label_resume.TabIndex = 9;
-            this.label_resume.Text = "RESUME";
+            this.label_resume.Text = "TOTAL FINAL";
             // 
-            // button1
+            // ms
             // 
-            this.button1.Location = new System.Drawing.Point(809, 316);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 15;
-            this.button1.Text = "MENU >>";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.ms.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.productToolStripMenuItem});
+            this.ms.Location = new System.Drawing.Point(0, 0);
+            this.ms.Name = "ms";
+            this.ms.Size = new System.Drawing.Size(896, 24);
+            this.ms.TabIndex = 16;
+            this.ms.Text = "menuStrip1";
+            // 
+            // productToolStripMenuItem
+            // 
+            this.productToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newProductToolStripMenuItem,
+            this.deleteToolStripMenuItem,
+            this.updateToolStripMenuItem});
+            this.productToolStripMenuItem.Name = "productToolStripMenuItem";
+            this.productToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.productToolStripMenuItem.Text = "Product";
+            // 
+            // newProductToolStripMenuItem
+            // 
+            this.newProductToolStripMenuItem.Name = "newProductToolStripMenuItem";
+            this.newProductToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+N";
+            this.newProductToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.newProductToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.newProductToolStripMenuItem.Text = "New";
+            this.newProductToolStripMenuItem.Click += new System.EventHandler(this.newProductToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+D";
+            this.deleteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // updateToolStripMenuItem
+            // 
+            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+            this.updateToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+U";
+            this.updateToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.updateToolStripMenuItem.Text = "Update";
+            this.updateToolStripMenuItem.Click += new System.EventHandler(this.updateToolStripMenuItem_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(509, 370);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(147, 20);
+            this.textBox1.TabIndex = 17;
             // 
             // StorageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(896, 573);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.dataGridView1);
+            this.ClientSize = new System.Drawing.Size(896, 595);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.datagrid_total);
             this.Controls.Add(this.btn_updown);
             this.Controls.Add(this.label_date);
             this.Controls.Add(this.rdbtn_out);
@@ -495,10 +548,12 @@
             this.Controls.Add(this.combproducts);
             this.Controls.Add(this.btnconfirm);
             this.Controls.Add(this.datagrid_storage);
+            this.Controls.Add(this.ms);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MainMenuStrip = this.ms;
             this.Name = "StorageForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Storage";
             this.Load += new System.EventHandler(this.StorageForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_storage)).EndInit();
@@ -506,7 +561,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_in)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_out)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_rest)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.datagrid_total)).EndInit();
+            this.ms.ResumeLayout(false);
+            this.ms.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -538,8 +595,13 @@
         private System.Windows.Forms.Label label_rest_sum;
         private System.Windows.Forms.Label label_storage_info;
         private System.Windows.Forms.Button btn_updown;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView datagrid_total;
         private System.Windows.Forms.Label label_resume;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.MenuStrip ms;
+        private System.Windows.Forms.ToolStripMenuItem productToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newProductToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

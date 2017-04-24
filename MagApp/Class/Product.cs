@@ -15,12 +15,13 @@ namespace MagApp.Class
         private int id;
         private string lable;
 
-        private float price;
+        private float uprice;
         private string volume;
         private string type;
         private Store storage;
 
         #region Static variables
+        private static float taux = 1.05F; // UNIT PRICE x TAUX = PRICE 
         private static int lastid; // this id is the id of the last product
         private static XFile xfile = new XFile( );
         #endregion
@@ -43,13 +44,15 @@ namespace MagApp.Class
 
             set { lable = value; }
         }
-
-
-
+        
         public float Price {
-            get { return price; }
+            get { return taux * uprice; }
+        }
 
-            set { price = value; }
+        public float Unit_Price {
+            get { return uprice; }
+
+            set { uprice = value; }
         }
 
         public string Volume {
@@ -84,25 +87,19 @@ namespace MagApp.Class
                 }
                 ).OrderBy( p => p.ProductID );
 
-
                 // fill the list of products
                 foreach( var item in bind ) {
-
-                    int id = int.Parse( item.ProductID );
-
-                    Product foo = new Product( id, item.Volume,
+                    // stack-it
+                    Product foo = new Product( int.Parse( item.ProductID ), item.Volume,
                             item.Type, item.Lable, int.Parse( item.Quantity ),
                             float.Parse( item.Price ) );
-
                     list.Add( foo );
                 }
 
                 return list;
             }
         }
-
-
-
+        
         public static XFile XSource {
             get
             {
@@ -173,7 +170,7 @@ namespace MagApp.Class
             to.Type = type;
             to.Volume = volume;
             to.Storage.Quantity = storage.Quantity;
-            to.Price = price;
+            to.Unit_Price = uprice;
 
             //  to.Storage.In = storage.In;
             // to.Storage.Out = storage.Out;
@@ -204,7 +201,7 @@ namespace MagApp.Class
 
             storage = new Store( id = GenerateID( ) );
             this.lable = lable;
-            this.price = price;
+            this.uprice = price;
             this.volume = volume;
             this.type = type;
             storage.Quantity = quantity;
@@ -215,7 +212,7 @@ namespace MagApp.Class
         {
             storage = new Store( (this.id = id) );
             this.lable = lable;
-            this.price = price;
+            this.uprice = price;
             this.volume = volume;
             this.type = type;
             storage.Quantity =  quantity;
@@ -233,7 +230,7 @@ namespace MagApp.Class
                     new XElement( "id", id.ToString( ) ),
                     new XElement( "lable", lable ),
                     new XElement( "type", type ),
-                    new XElement( "price", price.ToString( ) ),
+                    new XElement( "price", uprice.ToString( ) ),
                     new XElement( "volume", volume ),
                     new XElement( "quantity", storage.Quantity.ToString( ) ) );
 
@@ -285,7 +282,7 @@ namespace MagApp.Class
                 XProduct.Element( "lable" ).Value = prod.lable;
                 XProduct.Element( "type" ).Value = prod.type;
                 XProduct.Element( "volume" ).Value = prod.volume;
-                XProduct.Element( "price" ).Value = prod.price.ToString( );
+                XProduct.Element( "price" ).Value = prod.uprice.ToString( );
                 XProduct.Element( "quantity" ).Value = prod.storage.Quantity.ToString( );
 
                 xfile.XML_File.Save( xfile.Xmlpath );
@@ -297,7 +294,7 @@ namespace MagApp.Class
         #region Overrided methods
         public override string ToString()
         {
-            string str = string.Format( "{0} {1} (x{2}) {3:00.00} MAD", id, lable, Storage.Quantity, price );
+            string str = string.Format( "{0} {1} (x{2}) {3:00.00} MAD", id, lable, Storage.Quantity, uprice );
             return str;
         }
 
@@ -312,12 +309,12 @@ namespace MagApp.Class
 
             var _id = ((Product) obj).id;
             var _lable = ((Product) obj).lable;
-            var _price = ((Product) obj).price;
+            var _price = ((Product) obj).uprice;
             var _quant = ((Product) obj).storage.Quantity;
             var _type = ((Product) obj).type;
             var _volume = ((Product) obj).volume;
 
-            if( _id == id && _lable == lable && _price == price &&
+            if( _id == id && _lable == lable && _price == uprice &&
                         _quant == storage.Quantity && _type == type &&
                         _volume == volume )
                 return true;

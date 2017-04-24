@@ -9,6 +9,7 @@ namespace MagApp.Class
     {
         // TODO: remove the Fill method and use a constructor
         // panding..
+
         #region Local variables
         private DateTime date;
         private int quantity;
