@@ -85,7 +85,7 @@ namespace MagApp.Forms
             numquan.Value = prod.Storage.Quantity;
             combtype.Text = prod.Type;
             tboxlabel.Text = prod.Lable;
-            tboxprice.Text = prod.Price.ToString( );
+            tboxprice.Text = prod.Unit_Price.ToString( );
         }
     }
 }

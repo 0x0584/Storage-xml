@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using MagApp.Class;
 
-using MagApp.Class;
 namespace MagApp.Forms
 {
     public partial class StorageForm : Form
@@ -60,8 +59,6 @@ namespace MagApp.Forms
                 Dispose( );
                 Close( );
             } else {
-
-
                 combproducts.Text = combproducts.Items[ 0 ].ToString( );
 
                 // setup the datagridviews
@@ -187,7 +184,7 @@ namespace MagApp.Forms
                     string[ ] str = item.ToString( ).Split( new char[ 2 ] { '(', ')' } );
 
                     if( string.Equals( str[ 0 ].TrimEnd( ), currentprod.Lable ) ) {
-                        total += (float.Parse( str[ 1 ] ) * currentprod.Price);
+                        total += (float.Parse( str[ 1 ] ) * currentprod.Unit_Price);
                         break;
                     }
                 }
@@ -208,7 +205,7 @@ namespace MagApp.Forms
 
                 foreach( Product prod in Product.List )
                     if( string.Equals( prod.Lable, str[ 0 ].TrimEnd( ) ) ) {
-                        price = prod.Price;
+                        price = prod.Unit_Price;
                         break;
                     }
 

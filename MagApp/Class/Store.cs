@@ -31,15 +31,9 @@ namespace MagApp.Class
         #region Propreties
         public int Quantity {
             get { return quantity; }
-
-            set
-            {
-                // IDEA: 
-                // store the sum of all the intime and 
-
-                quantity = value;
-            }
+            set { quantity = value; }
         }
+
         public IEnumerable<Delivery> In {
             get
             {
@@ -82,15 +76,6 @@ namespace MagApp.Class
                 return GetStorage( "out" );
             }
         }
-        public static XFile XSource {
-            get { return xfile; }
-            set
-            {
-                int index = (int) XFile.FileType.PRODUCTS;
-                if( !XSource.SetDocument( XFile.Paths[ index ] ) )
-                    MessageBox.Show( "FILE NOT FOUND" );
-            }
-        }
 
         // TODO: here I should find a way to not show 
         // the date! just the products and thier quantity
@@ -125,6 +110,16 @@ namespace MagApp.Class
                             list.Add( new { Product = prod.Lable, Quantity = del.Quantity } );
 
                 return list;
+            }
+        }
+
+        public static XFile XSource {
+            get { return xfile; }
+            set
+            {
+                int index = (int) XFile.FileType.PRODUCTS;
+                if( !XSource.SetDocument( XFile.Paths[ index ] ) )
+                    MessageBox.Show( "FILE NOT FOUND" );
             }
         }
         #endregion
