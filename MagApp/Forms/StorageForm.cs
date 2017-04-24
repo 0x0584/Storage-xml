@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MagApp.Class;
+using System.Collections;
 
 namespace MagApp.Forms
 {
@@ -26,23 +27,17 @@ namespace MagApp.Forms
             InitializeComponent( );
             currentprod = new Product( );
 
-            #region ComboBox Setup
-            // add things
-            foreach( Product prod in Product.List )
-                combproducts.Items.Add( prod.Lable );
-
-            #endregion
             // TODO: get by date in the dpicker
             //
 
-
-            RefreshForm( );
+            // RefreshForm( );
         }
 
         #region Form-related Methodes
+
         private void StorageForm_Load( object sender, EventArgs e )
         {
-            Size = new Size( new Point( 912, 400 ) );
+            Size = new Size( new Point( 912, 406 ) );
 
             labltotal.Text = "0.00 MAD";
 
@@ -55,9 +50,6 @@ namespace MagApp.Forms
 
             if( Product.List.Count == 0 ) {
                 MessageBox.Show( "YOU HAVE NO PRODUCTS!!" );
-                // ErrorFrom 
-                Dispose( );
-                Close( );
             } else {
                 combproducts.Text = combproducts.Items[ 0 ].ToString( );
 
@@ -65,6 +57,7 @@ namespace MagApp.Forms
                 RefreshForm( );
 
                 btnconfirm.Enabled = false;
+                btnremove.Enabled = false;
             }
 
             // HERE: show the list of in product of today and add a button 
@@ -79,22 +72,63 @@ namespace MagApp.Forms
 
             //label_date.Text = "Today: " + DateTime.Today.ToShortDateString( );
             //                   ^
-            List<object> list = new List<object>( );
+            List<object> restt = new List<object>( ),
+                inn = new List<object>( ), outt = new List<object>( );
 
-            datagrid_in.DataSource = Store.All_In;
-            datagrid_out.DataSource = Store.All_Out;
+            #region Setup lists
+            foreach( Product prod in Product.List )
+                foreach( Delivery del in prod.Storage.In ) {
+                    string pickstr = dpicker.Value.ToShortDateString( ),
+                            today = del.Date.ToShortDateString( );
+                    if( del.Id == prod.Id && pickstr == today )
+                        inn.Add( new { Product = prod.Lable, Quantity = del.Quantity } );
+                }
 
             foreach( Product prod in Product.List )
-                list.Add( new { Label = prod.Lable, Quantity = prod.Quantity} );
-            
-            datagrid_rest.DataSource = list;
+                foreach( Delivery del in prod.Storage.Out ) {
+                    string pickstr = dpicker.Value.ToShortDateString( ),
+                            today = del.Date.ToShortDateString( );
+                    if( del.Id == prod.Id && pickstr == today )
+                        outt.Add( new { Product = prod.Lable, Quantity = del.Quantity } );
+                }
+
+            foreach( Product prod in Product.List )
+                restt.Add( new { Label = prod.Lable, Quantity = prod.Quantity } );
+            #endregion
+
+            datagrid_in.DataSource = inn;
+            datagrid_out.DataSource = outt;
+
+            datagrid_rest.DataSource = restt;
 
             if( datagrid_storage.DataSource != null )
                 datagrid_storage.DataSource = Product.List;
 
             if( datagrid_total.DataSource != null )
                 datagrid_total.DataSource = GetTotal( );
-            
+
+
+            #region ComboBox Setup
+            combproducts.Items.Clear( );
+            // add things
+            foreach( Product prod in Product.List )
+                combproducts.Items.Add( prod.Lable );
+
+            #endregion
+
+            #region Select First Row
+
+            if( datagrid_in.Rows.Count > 0 )
+                datagrid_in.Rows[ 0 ].Selected = rdbtn_in.Checked;
+            if( datagrid_out.Rows.Count > 0 )
+                datagrid_out.Rows[ 0 ].Selected = rdbtn_out.Checked;
+
+            if( datagrid_rest.Rows.Count > 0 )
+                // select the product at the in or out radios
+                datagrid_rest.Rows[ 0 ].Selected = true;
+            if( datagrid_storage.Rows.Count > 0 )
+                datagrid_storage.Rows[ 0 ].Selected = true;
+            #endregion
             //if( !( rdbtn_in.Enabled ) )
             //    BackColor = Color.LimeGreen;
             //else BackColor = Color.Orange;
@@ -242,26 +276,32 @@ namespace MagApp.Forms
             //datagrid_storage.DataSource = current.ToList( );
         }
 
-        bool flag = false;
-        private void btn_updown_Click( object sender, EventArgs e )
+        bool is_shown = false;
+        private void ShowHide()
         {
-            if( !flag ) {
-                flag = true;
-                btn_updown.Text = "▲";
+            if( !is_shown ) {
+                is_shown = true;
+                btn_updown.Text = "HIDE     ▲";
                 btn_updown.ForeColor = Color.DarkRed;
 
                 datagrid_storage.DataSource = Product.List;
-                Size = new Size( new Point( 912, 611 ) );
+                datagrid_storage.Rows[ 0 ].Selected = true;
+                Size = new Size( new Point( 912, 633 ) );
             } else {
-                flag = false;
-                btn_updown.Text = "▼";
+                is_shown = false;
+                btn_updown.Text = "SHOW    ▼";
                 btn_updown.ForeColor = Color.LimeGreen;
 
                 // clear the datagrid to incress performence
                 datagrid_storage.DataSource = null;
 
-                Size = new Size( new Point( 912, 400 ) );
+                Size = new Size( new Point( 912, 406 ) );
             }
+        }
+
+        private void btn_updown_Click( object sender, EventArgs e )
+        {
+            ShowHide( );
         }
         #endregion
 
@@ -270,8 +310,8 @@ namespace MagApp.Forms
 
         private void listadded_SelectedIndexChanged( object sender, EventArgs e )
         {
-            if( listadded.Items.Count != 0 ) btnconfirm.Enabled = true;
-            else btnconfirm.Enabled = false;
+            if( listadded.Items.Count != 0 ) btnconfirm.Enabled = btnremove.Enabled = true;
+            else btnconfirm.Enabled = btnremove.Enabled = false;
 
             labnotif.Text = "";
             if( listadded.SelectedItem != null ) {
@@ -335,11 +375,11 @@ namespace MagApp.Forms
         {
             rdbtn_in.Enabled = false;
             datagrid_in.BorderStyle = BorderStyle.FixedSingle;
-            rdbtn_in.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Regular | FontStyle.Italic), GraphicsUnit.Point, 0 );
+            rdbtn_in.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold), GraphicsUnit.Point, 0 );
 
             rdbtn_out.Enabled = true;
             datagrid_out.BorderStyle = BorderStyle.Fixed3D;
-            rdbtn_out.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold), GraphicsUnit.Point, 0 );
+            rdbtn_out.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold | FontStyle.Italic), GraphicsUnit.Point, 0 );
 
             RefreshForm( );
         }
@@ -348,11 +388,11 @@ namespace MagApp.Forms
         {
             rdbtn_out.Enabled = false;
             datagrid_out.BorderStyle = BorderStyle.FixedSingle;
-            rdbtn_out.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Regular | FontStyle.Italic), GraphicsUnit.Point, 0 );
+            rdbtn_out.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold), GraphicsUnit.Point, 0 );
 
             rdbtn_in.Enabled = true;
             datagrid_in.BorderStyle = BorderStyle.Fixed3D;
-            rdbtn_in.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold), GraphicsUnit.Point, 0 );
+            rdbtn_in.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold | FontStyle.Italic), GraphicsUnit.Point, 0 );
 
             RefreshForm( );
         }
@@ -371,13 +411,8 @@ namespace MagApp.Forms
                     int rowindex = row.Cells[ 0 ].RowIndex;
                     bool isit = (rowindex == __rowindex);
 
-                    if( isit )
-                        value = true;
-                    else
-                        value = false;
-
-                    foreach( DataGridViewCell cell in row.Cells )
-                        cell.Selected = value;
+                    if( isit ) row.Selected = true;
+                    else row.Selected = false;
                 }
             }
         }
@@ -403,13 +438,108 @@ namespace MagApp.Forms
         }
         #endregion
 
+        #region StripMenu
+
+        private void newProductToolStripMenuItem_Click( object sender, EventArgs e )
+        {
+            FillForm fill = new FillForm( );
+            Product fooprod;
+
+            fill.ShowDialog( );
+
+            if( !fill.IsDisposed ) {
+                fooprod = fill.NewProduct( Product.GenerateID( ) );
+                fooprod.AddXML( );
+                fooprod.Storage.ComingStorage( fooprod, fill.Quantity, true );
+                fill.Dispose( );
+                fill.Close( );
+                if( !is_shown )
+                    ShowHide( );
+                RefreshForm( );
+                foreach( DataGridViewRow row in datagrid_storage.Rows )
+                    row.Selected = false;
+
+                datagrid_storage.Rows[ datagrid_storage.Rows.Count - 1 ].Selected = true;
+            }
+
+
+
+        }
+
+        private void deleteToolStripMenuItem_Click( object sender, EventArgs e )
+        {
+            if( datagrid_storage.DataSource != null )
+                if( datagrid_storage.SelectedCells.Count > 0 ) {
+                    int scell = datagrid_storage.SelectedCells[ 0 ].RowIndex;
+                    DataGridViewRow drow = datagrid_storage.Rows[ scell ];
+
+                    foreach( Product item in Product.List )
+                        if( int.Parse( drow.Cells[ 0 ].Value.ToString( ) ) == item.Id ) {
+                            item.RemoveXML( );
+                            RefreshForm( );
+                            break;
+                        }
+                }
+        }
+
+        private void updateToolStripMenuItem_Click( object sender, EventArgs e )
+        {
+            if( datagrid_storage.DataSource != null ) {
+
+                FillForm fill = new FillForm( );
+                Product foo;
+                int rowindex = 0;
+
+                #region Setup product
+
+                ArrayList a = new ArrayList( );
+
+                if( datagrid_storage.SelectedCells.Count > 0 ) {
+                    rowindex = datagrid_storage.SelectedCells[ 0 ].RowIndex;
+                    DataGridViewRow drow = datagrid_storage.Rows[ rowindex ];
+                    foreach( DataGridViewCell item in drow.Cells )
+                        a.Add( item );
+                }
+
+                int id = int.Parse( ((DataGridViewCell) a[ 0 ]).Value.ToString( ) ),
+                 quantity = int.Parse( ((DataGridViewCell) a[ 1 ]).Value.ToString( ) );
+                float price = float.Parse( ((DataGridViewCell) a[ 3 ]).Value.ToString( ) );
+                string lable = ((DataGridViewCell) a[ 2 ]).Value.ToString( ),
+                volume = ((DataGridViewCell) a[ 4 ]).Value.ToString( ),
+                type = ((DataGridViewCell) a[ 5 ]).Value.ToString( );
+
+                foo = new Product( id, volume, type, lable, quantity, price );
+                #endregion
+
+                fill.UpdateProduct( foo );
+                fill.ShowDialog( );
+
+                if( !fill.IsDisposed ) {
+                    foreach( Product item in Product.List )
+                        if( item.Id == id ) {
+                            Product bar = fill.NewProduct( id );
+                            int qu = item.Quantity >= fill.Quantity ? (item.Quantity - fill.Quantity) : fill.Quantity;
+                            bar.Storage.ComingStorage( bar, qu, true );
+                            item.UpdateXML( bar );
+                            break;
+                        }
+
+                    fill.Dispose( );
+                    fill.Close( );
+                    RefreshForm( );
+                    datagrid_storage.Rows[ 0 ].Selected = false;
+                    datagrid_storage.Rows[ rowindex ].Selected = true;
+                }
+            }
+        }
         #endregion
 
-        private void button1_Click( object sender, EventArgs e )
+
+        private void dpicker_ValueChanged( object sender, EventArgs e )
         {
-            this.Dispose( );
-            this.Close( );
+            RefreshForm( );
         }
+        #endregion
     }
 }
 
