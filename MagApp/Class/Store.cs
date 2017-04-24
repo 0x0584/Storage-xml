@@ -5,8 +5,9 @@ using System.Text;
 using System.Xml.Linq;
 using System.Windows.Forms;
 //
+using Core.Xml;
 
-namespace MagApp.Class
+namespace Core.Class
 {
     class Store
     {
@@ -23,9 +24,10 @@ namespace MagApp.Class
         #region Local Variables
         private int quantity;
         private int id;
+        #endregion
+
         #region Static Variables
         private static XFile xfile = new XFile( );
-        #endregion
         #endregion
 
         #region Propreties
@@ -160,7 +162,6 @@ namespace MagApp.Class
 
         public void ComingStorage( Product prod, int quantity, bool isin )
         {
-
             // TODO: update the quantity
             // done.
 

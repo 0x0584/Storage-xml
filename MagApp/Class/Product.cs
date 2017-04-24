@@ -4,8 +4,9 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Windows.Forms;
 using System.Globalization;
+using Core.Xml;
 
-namespace MagApp.Class
+namespace Core.Class
 {
 #pragma warning disable CS0659
     public class Product
@@ -19,12 +20,12 @@ namespace MagApp.Class
         private string volume;
         private string type;
         private Store storage;
+        #endregion
 
         #region Static variables
         private static float taux = 1.05F; // UNIT PRICE x TAUX = PRICE 
         private static int lastid; // this id is the id of the last product
         private static XFile xfile = new XFile( );
-        #endregion
         #endregion
 
         #region Properties
@@ -46,7 +47,7 @@ namespace MagApp.Class
         }
         
         public float Price {
-            get { return taux * uprice; }
+            get { return float.Parse(string.Format("{0:00.00}",(taux * uprice))); }
         }
 
         public float Unit_Price {

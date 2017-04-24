@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MagApp.Properties
+namespace JIMED.Properties
 {
 
 

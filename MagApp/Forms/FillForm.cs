@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using MagApp.Class;
+using Core.Class;
 
-namespace MagApp.Forms
+namespace JIMED.Forms
 {
     public partial class FillForm : Form
     {
@@ -17,33 +17,17 @@ namespace MagApp.Forms
         private float pr;
 
         public int Quantity {
-            get
-            {
-                return qu;
-            }
-
-            set
-            {
-                qu = value;
-            }
+            get { return qu; }
+            set { qu = value; }
         }
 
-        public FillForm()
-        {
-            InitializeComponent( );
+        public FillForm() { InitializeComponent( ); }
 
-        }
+        #region Buttons
+        private void btnconf_Click( object sender, EventArgs e ) { Hide( ); }
 
-        private void btnconf_Click( object sender, EventArgs e )
-        {
-            Hide( );
-        }
-
-        private void btnclose_Click( object sender, EventArgs e )
-        {
-            Dispose( );
-            Close( );
-        }
+        private void btnclose_Click( object sender, EventArgs e ) { Dispose( ); Close( ); }
+        #endregion 
 
         private void MainForm_Load( object sender, EventArgs e )
         {
@@ -53,20 +37,21 @@ namespace MagApp.Forms
             combtype.Text = combtype.Items[ 0 ].ToString( );
         }
 
+        #region Form-related Methodes
         public Product NewProduct( int id )
         {
             try {
                 #region Set Product's Proprieties
                 v = combvol.Text;
                 // create a product with teh wuantity 0 at first 
-                qu = 0; 
+                qu = 0;
                 // then call ComingStorage() to update it with the real quantity
                 type = combtype.Text;
                 lab = tboxlabel.Text;
                 pr = float.Parse( tboxprice.Text );
                 #endregion
-                Product foo =  new Product( id, v, type, lab, qu, pr );
-                
+                Product foo = new Product( id, v, type, lab, qu, pr );
+
                 // set the real quantity value to pick-it-up from the CRUDFrom
                 qu = int.Parse( numquan.Value.ToString( ) );
 
@@ -87,5 +72,6 @@ namespace MagApp.Forms
             tboxlabel.Text = prod.Lable;
             tboxprice.Text = prod.Unit_Price.ToString( );
         }
+        #endregion 
     }
 }

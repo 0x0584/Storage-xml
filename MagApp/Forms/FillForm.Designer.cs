@@ -1,4 +1,4 @@
-﻿namespace MagApp.Forms
+﻿namespace JIMED.Forms
 {
     partial class FillForm
     {

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Xml;
 
-namespace MagApp.Class
+namespace Core.Class
 {
     public class Delivery
     {
@@ -18,37 +19,19 @@ namespace MagApp.Class
 
         #region Propreties
         public int Id {
-            get
-            {
-                return id;
-            }
+            get{return id;}
 
-            set
-            {
-                id = value;
-            }
+            set{id = value; }
         }
         public int Quantity {
-            get
-            {
-                return quantity;
-            }
+            get { return quantity; }
 
-            set
-            {
-                quantity = value;
-            }
+            set { quantity = value; }
         }
         public DateTime Date {
-            get
-            {
-                return date;
-            }
+            get { return date;  }
 
-            set
-            {
-                date = value;
-            }
+            set { date = value; }
         }
         #endregion
 

@@ -6,10 +6,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using MagApp.Class;
+using Core.Class;
 using System.Collections;
 
-namespace MagApp.Forms
+namespace JIMED.Forms
 {
     public partial class StorageForm : Form
     {
@@ -129,6 +129,7 @@ namespace MagApp.Forms
             if( datagrid_storage.Rows.Count > 0 )
                 datagrid_storage.Rows[ 0 ].Selected = true;
             #endregion
+
             //if( !( rdbtn_in.Enabled ) )
             //    BackColor = Color.LimeGreen;
             //else BackColor = Color.Orange;
@@ -149,7 +150,6 @@ namespace MagApp.Forms
             return string.Format( "{0} ({1})", lable, quantity );
         }
         #endregion
-
 
         #region Buttons
         private void btnaddtolist_Click( object sender, EventArgs e )
@@ -218,7 +218,7 @@ namespace MagApp.Forms
                     string[ ] str = item.ToString( ).Split( new char[ 2 ] { '(', ')' } );
 
                     if( string.Equals( str[ 0 ].TrimEnd( ), currentprod.Lable ) ) {
-                        total += (float.Parse( str[ 1 ] ) * currentprod.Unit_Price);
+                        total += (float.Parse( str[ 1 ] ) * currentprod.Price);
                         break;
                     }
                 }
@@ -262,15 +262,21 @@ namespace MagApp.Forms
             // list all added items
             foreach( string item in listadded.Items ) {
                 string[ ] str = item.Split( new char[ ] { '(', ')' } );
-
+                string lable = str[ 0 ].TrimEnd( );
+                int q = int.Parse( str[ 1 ].TrimEnd( ) );
                 // List all the products
                 foreach( Product prod in Product.List )
-                    if( prod.Lable == str[ 0 ].TrimEnd( ) ) {
-                        //          current.Add( prod );
-                        prod.Storage.ComingStorage( prod, int.Parse( str[ 1 ].TrimEnd( ) ), rdbtn_in.Checked );
-                        break;
+                    if( prod.Lable == lable ) {
+                        if( !rdbtn_in.Checked && prod.Quantity < q ) {
+                            labnotif.Text = string.Format("YOU ONLY GOT {0} OF {1}", 
+                                prod.Quantity, prod.Lable.ToUpper());
+                            goto OUT_OF_RANGE;
+                        }
+                        prod.Storage.ComingStorage( prod, q, rdbtn_in.Checked );
+                        OUT_OF_RANGE: break;
                     }
             }
+
             RefreshForm( );
             //// bind the datagridview
             //datagrid_storage.DataSource = current.ToList( );
@@ -282,10 +288,13 @@ namespace MagApp.Forms
             if( !is_shown ) {
                 is_shown = true;
                 btn_updown.Text = "HIDE     ▲";
-                btn_updown.ForeColor = Color.DarkRed;
+                btn_updown.ForeColor = Color.Orange;
 
-                datagrid_storage.DataSource = Product.List;
-                datagrid_storage.Rows[ 0 ].Selected = true;
+                if( Product.List.Count != 0 ) {
+
+                    datagrid_storage.DataSource = Product.List;
+                    datagrid_storage.Rows[ 0 ].Selected = true;
+                }
                 Size = new Size( new Point( 912, 633 ) );
             } else {
                 is_shown = false;
@@ -405,7 +414,6 @@ namespace MagApp.Forms
             if( dgv.SelectedCells.Count > 0 ) {
                 int __rowindex = dgv.SelectedCells[ 0 ].RowIndex;
                 DataGridViewRow drow = dgv.Rows[ __rowindex ];
-                bool value;
 
                 foreach( DataGridViewRow row in dgv.Rows ) {
                     int rowindex = row.Cells[ 0 ].RowIndex;
