@@ -20,6 +20,7 @@ namespace JIMED.Forms
 
         // somme of all (prices * quantity)
         float total;
+        bool isfirstrun = true;
         #endregion
 
         public StorageForm()
@@ -37,6 +38,7 @@ namespace JIMED.Forms
 
         private void StorageForm_Load( object sender, EventArgs e )
         {
+            MaximizeBox = false;
             Size = new Size( new Point( 912, 406 ) );
 
             labltotal.Text = "0.00 MAD";
@@ -59,6 +61,8 @@ namespace JIMED.Forms
                 btnconfirm.Enabled = false;
                 btnremove.Enabled = false;
             }
+
+            isfirstrun = false;
 
             // HERE: show the list of in product of today and add a button 
             // to swap between the past and previous ins 
@@ -101,8 +105,80 @@ namespace JIMED.Forms
 
             datagrid_rest.DataSource = restt;
 
-            if( datagrid_storage.DataSource != null )
-                datagrid_storage.DataSource = Product.List;
+            if( datagrid_storage.DataSource != null ) {
+                List<object> list = new List<object>( );
+
+                #region enhance data preview
+                foreach( Product prod in Product.List ) {
+                    list.Add( new {
+                        ID = prod.Id,
+                        prod.Lable,
+                        prod.Quantity,
+                        prod.Unit_Price,
+                        prod.Price,
+                        prod.Type,
+                        prod.Volume
+                    } );
+                }
+                datagrid_storage.DataSource = list;
+                foreach( DataGridViewRow row in datagrid_storage.Rows ) {
+                    #region Set row style
+                    row.DefaultCellStyle.Font = new Font( "Microsoft Sans Serif",
+                                                            11F, (FontStyle.Regular),
+                                                            GraphicsUnit.Point, 0 );
+                    // 2 quantity | 1 label | 4 uprice 
+                    row.Cells[ 2 ].Style.Font = row.Cells[ 1 ].Style.Font =
+                    row.Cells[ 4 ].Style.Font = new Font( "Microsoft Sans Serif",
+                                                            12F, (FontStyle.Bold),
+                                                            GraphicsUnit.Point, 0 );
+                    // row.Cells[ 2 ].Style.ForeColor = row.Cells[ 1 ].Style.ForeColor =
+                    //row.Cells[ 4 ].Style.ForeColor = Color.Orange;
+                    #endregion
+                }
+                #endregion
+
+
+                #region Update label
+
+                float totall = 0.0f;
+                foreach( Product prod in Product.List )
+                    foreach( DataGridViewRow item in datagrid_storage.Rows ) {
+                        string label = item.Cells[ 1 ].Value.ToString( );
+                        if( prod.Lable == label ) {
+                            string qu = item.Cells[ 2 ].Value.ToString( );
+                            totall += float.Parse( (int.Parse( qu ) * (prod.Unit_Price)).ToString( ) );
+                            break;
+                        }
+                    }
+                #endregion
+
+                string total = label_rest_sum.Text;
+                int count = 0;
+
+                #region Count the number of Products less than the Min
+                foreach( Product prod in Product.List )
+                    if( prod.IsLessThanMin ) {
+                        ++count;
+                        foreach( DataGridViewRow row in datagrid_storage.Rows ) {
+                            if( prod.Id == int.Parse( row.Cells[ 0 ].Value.ToString( ) ) ) {
+                                foreach( DataGridViewCell cell in row.Cells ) {
+                                    cell.Style.ForeColor = Color.Magenta;
+
+                                }
+                                row.DefaultCellStyle.Font = new Font( "Microsoft Sans Serif", 12F,
+                                                                    (FontStyle.Italic),
+                                                                    GraphicsUnit.Point, 0 );
+                            }
+                        }
+                    }
+                #endregion
+
+                total += string.Format( ", {2} Products ({0} products less than {1})", count,
+                                        Product.MinQuantity, Product.List.Count );
+
+                label_storage_info.Text = total;
+                //
+            }
 
             if( datagrid_total.DataSource != null )
                 datagrid_total.DataSource = GetTotal( );
@@ -120,16 +196,23 @@ namespace JIMED.Forms
 
             if( datagrid_in.Rows.Count > 0 )
                 datagrid_in.Rows[ 0 ].Selected = rdbtn_in.Checked;
+
             if( datagrid_out.Rows.Count > 0 )
                 datagrid_out.Rows[ 0 ].Selected = rdbtn_out.Checked;
 
-            if( datagrid_rest.Rows.Count > 0 )
-                // select the product at the in or out radios
+            if( datagrid_rest.Rows.Count > 0 ) {
+                // TODO: select the product at the in or out radios
+                //
+
                 datagrid_rest.Rows[ 0 ].Selected = true;
+                UpdateTotalLabel( datagrid_rest, label_rest_sum, false );
+            }
+
             if( datagrid_storage.Rows.Count > 0 )
                 datagrid_storage.Rows[ 0 ].Selected = true;
             #endregion
 
+            FreshInput( );
             //if( !( rdbtn_in.Enabled ) )
             //    BackColor = Color.LimeGreen;
             //else BackColor = Color.Orange;
@@ -141,10 +224,6 @@ namespace JIMED.Forms
             throw new NotImplementedException( );
         }
 
-        //private IEnumerable<Delivery> GetByDate( IEnumerable<Delivery> list, DateTime date )
-        //{
-
-        //}
         private string FormatLabel( string lable, decimal quantity )
         {
             return string.Format( "{0} ({1})", lable, quantity );
@@ -158,7 +237,7 @@ namespace JIMED.Forms
             // done.
 
             // TODO: fix the aupdate of the quantity
-            // panding..
+            // done;
 
             string listitem = "";
 
@@ -208,7 +287,6 @@ namespace JIMED.Forms
 
                 combproducts.Text = info[ 0 ].TrimEnd( );
                 numquantity.Value = int.Parse( info[ 1 ] );
-
 
                 // TODO: find how to take few digits from 
                 // the foalt number
@@ -268,9 +346,11 @@ namespace JIMED.Forms
                 foreach( Product prod in Product.List )
                     if( prod.Lable == lable ) {
                         if( !rdbtn_in.Checked && prod.Quantity < q ) {
-                            labnotif.Text = string.Format("YOU ONLY GOT {0} OF {1}", 
-                                prod.Quantity, prod.Lable.ToUpper());
+                            labnotif.Text = string.Format( "YOU ONLY GOT {0} OF {1}",
+                                prod.Quantity, prod.Lable.ToUpper( ) );
                             goto OUT_OF_RANGE;
+                        } else {
+                            labnotif.Text = "";
                         }
                         prod.Storage.ComingStorage( prod, q, rdbtn_in.Checked );
                         OUT_OF_RANGE: break;
@@ -291,10 +371,10 @@ namespace JIMED.Forms
                 btn_updown.ForeColor = Color.Orange;
 
                 if( Product.List.Count != 0 ) {
-
                     datagrid_storage.DataSource = Product.List;
                     datagrid_storage.Rows[ 0 ].Selected = true;
                 }
+
                 Size = new Size( new Point( 912, 633 ) );
             } else {
                 is_shown = false;
@@ -311,6 +391,22 @@ namespace JIMED.Forms
         private void btn_updown_Click( object sender, EventArgs e )
         {
             ShowHide( );
+            RefreshForm( );
+        }
+
+        private void btnclear_Click( object sender, EventArgs e )
+        {
+            FreshInput( );
+        }
+
+        private void FreshInput()
+        {
+            if( listadded.Items.Count > 0 ) {
+                listadded.Items.Clear( );
+                combproducts.Text = combproducts.Items[ 0 ].ToString( );
+                numquantity.Value = 0;
+                lablquant.Text = "(" + Product.List[ 0 ].Quantity.ToString( ) + ")";
+            }
         }
         #endregion
 
@@ -425,6 +521,35 @@ namespace JIMED.Forms
             }
         }
 
+        private void UpdateTotalLabel( DataGridView dgv, Label labl, bool useprice )
+        {
+
+            float total = 0.0f;
+
+            foreach( Product prod in Product.List )
+                foreach( DataGridViewRow row in dgv.Rows ) {
+                    #region Set row style
+                    row.DefaultCellStyle.Font = new Font( "Microsoft Sans Serif",
+                                                            10.00F, (FontStyle.Regular),
+                                                            GraphicsUnit.Point, 0 );
+                    // 2 quantity | 1 label | 4 uprice 
+                    row.Cells[ 0 ].Style.Font = row.Cells[ 1 ].Style.Font = new Font( "Microsoft Sans Serif",
+                                                            12F, (FontStyle.Regular),
+                                                            GraphicsUnit.Point, 0 );
+                    row.Cells[ 0 ].Style.ForeColor = row.Cells[ 1 ].Style.ForeColor = Color.Black;
+                    #endregion
+
+                    string label = row.Cells[ 0 ].Value.ToString( );
+                    if( prod.Lable == label ) {
+                        string qu = row.Cells[ 1 ].Value.ToString( );
+                        total += float.Parse( (int.Parse( qu ) * (useprice ? prod.Price : prod.Unit_Price)).ToString( ) );
+                        break;
+                    }
+                }
+
+            labl.Text = Math.Abs( total ).ToString( ) + " MAD";
+        }
+
         private void datagrid_storage_CellEnter( object sender, DataGridViewCellEventArgs e )
         {
             SelectFullRow( datagrid_storage );
@@ -435,15 +560,45 @@ namespace JIMED.Forms
             SelectFullRow( datagrid_rest );
         }
 
+        #region datagrid_out
+
         private void datagrid_out_CellEnter( object sender, DataGridViewCellEventArgs e )
         {
             SelectFullRow( datagrid_out );
         }
 
+        private void datagrid_out_RowsAdded( object sender, DataGridViewRowsAddedEventArgs e )
+        {
+            //if( !isfirstrun ) {
+            //    //RefreshForm( );
+            //    foreach( DataGridViewRow row in datagrid_out.Rows )
+            //        row.Selected = false;
+
+            //    datagrid_out.Rows[ datagrid_out.Rows.Count - 1 ].Selected = true;
+            //}
+            UpdateTotalLabel( datagrid_out, label_out_sum, true );
+        }
+        #endregion
+
+        #region datagrid_in
+
         private void datagrid_in_CellEnter( object sender, DataGridViewCellEventArgs e )
         {
             SelectFullRow( datagrid_in );
         }
+
+        private void datagrid_in_RowsAdded( object sender, DataGridViewRowsAddedEventArgs e )
+        {
+            //if( !isfirstrun ) {
+            //    //RefreshForm( );
+            //    foreach( DataGridViewRow row in datagrid_in.Rows )
+            //        row.Selected = false;
+
+            //    datagrid_in.Rows[ datagrid_in.Rows.Count - 1 ].Selected = true;
+            //}
+            UpdateTotalLabel( datagrid_in, label_in_sum, false );
+        }
+        #endregion
         #endregion
 
         #region StripMenu
@@ -508,7 +663,7 @@ namespace JIMED.Forms
                     foreach( DataGridViewCell item in drow.Cells )
                         a.Add( item );
                 }
-
+                // TODO
                 int id = int.Parse( ((DataGridViewCell) a[ 0 ]).Value.ToString( ) ),
                  quantity = int.Parse( ((DataGridViewCell) a[ 1 ]).Value.ToString( ) );
                 float price = float.Parse( ((DataGridViewCell) a[ 3 ]).Value.ToString( ) );
@@ -548,6 +703,7 @@ namespace JIMED.Forms
             RefreshForm( );
         }
         #endregion
+
     }
 }
 

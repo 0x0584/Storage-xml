@@ -23,9 +23,10 @@ namespace Core.Class
         #endregion
 
         #region Static variables
-        private static float taux = 1.05F; // UNIT PRICE x TAUX = PRICE 
+        private static float C = 1.05F; // UNIT PRICE x C = PRICE 
         private static int lastid; // this id is the id of the last product
         private static XFile xfile = new XFile( );
+        private static int min = 20; // minimum quantity before warning
         #endregion
 
         #region Properties
@@ -45,15 +46,15 @@ namespace Core.Class
 
             set { lable = value; }
         }
-        
+
         public float Price {
-            get { return float.Parse(string.Format("{0:00.00}",(taux * uprice))); }
+            get { return float.Parse( string.Format( "{0:0000.00}", (C * uprice) ) ); }
         }
 
         public float Unit_Price {
             get { return uprice; }
 
-            set { uprice = value; }
+            set { uprice = float.Parse( string.Format( "{0:0000.00}", (value) ) ); }
         }
 
         public string Volume {
@@ -100,7 +101,7 @@ namespace Core.Class
                 return list;
             }
         }
-        
+
         public static XFile XSource {
             get
             {
@@ -127,7 +128,9 @@ namespace Core.Class
             }
         }
 
+        public bool IsLessThanMin { get { return (Quantity < MinQuantity); } }
 
+        public static int MinQuantity { get { return min; } }
         #endregion
 
         #region Methods
@@ -216,7 +219,7 @@ namespace Core.Class
             this.uprice = price;
             this.volume = volume;
             this.type = type;
-            storage.Quantity =  quantity;
+            storage.Quantity = quantity;
         }
 
         #endregion
@@ -295,7 +298,8 @@ namespace Core.Class
         #region Overrided methods
         public override string ToString()
         {
-            string str = string.Format( "{0} {1} (x{2}) {3:00.00} MAD", id, lable, Storage.Quantity, uprice );
+            string str = string.Format( "[{4}] {0} {1} (x{2}) {3:00.00} MAD", id, lable, Storage.Quantity, uprice,IsLessThanMin ? "X":" " );
+
             return str;
         }
 
