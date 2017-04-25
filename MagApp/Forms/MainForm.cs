@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Core.Class;
 using System.Collections;
+using Core.Printing;
 
 namespace JIMED.Forms
 {
@@ -46,17 +47,17 @@ namespace JIMED.Forms
             total = 0.0f;
 
             // radio buttons
-            rdbtn_in.Enabled = false;
+            //rdbtn_in.Enabled = false;
 
-            rdbtn_in.Checked = true;
+            //rdbtn_in.Checked = true;
 
             if( Product.List.Count == 0 ) {
                 MessageBox.Show( "YOU HAVE NO PRODUCTS!!" );
             } else {
+                RefreshForm( );
                 combproducts.Text = combproducts.Items[ 0 ].ToString( );
 
                 // setup the datagridviews
-                RefreshForm( );
 
                 btnconfirm.Enabled = false;
                 btnremove.Enabled = false;
@@ -231,6 +232,7 @@ namespace JIMED.Forms
         #endregion
 
         #region Buttons
+
         private void btnaddtolist_Click( object sender, EventArgs e )
         {
             // TODO: fix the add in the list
@@ -336,6 +338,10 @@ namespace JIMED.Forms
 
             // get the current list of comming storage (in-or-out)
             //List<Product> current = new List<Product>( );
+            //if( !(rdbtn_in.Checked) && !(rdbtn_out.Checked) ) {
+            //    labnotif.Text = "Select IN or OUT from the upper radio buttons";
+            //    return;
+            //} else labnotif.Text = "";
 
             // list all added items
             foreach( string item in listadded.Items ) {
@@ -345,7 +351,7 @@ namespace JIMED.Forms
                 // List all the products
                 foreach( Product prod in Product.List )
                     if( prod.Lable == lable ) {
-                        if( !rdbtn_in.Checked && prod.Quantity < q ) {
+                        if( !(rdbtn_in.Checked) && prod.Quantity < q ) {
                             labnotif.Text = string.Format( "YOU ONLY GOT {0} OF {1}",
                                 prod.Quantity, prod.Lable.ToUpper( ) );
                             goto OUT_OF_RANGE;
@@ -358,6 +364,10 @@ namespace JIMED.Forms
             }
 
             RefreshForm( );
+
+            //rdbtn_in.Checked = rdbtn_out.Checked = false;
+            //rdbtn_in.Enabled = rdbtn_out.Enabled = true;
+
             //// bind the datagridview
             //datagrid_storage.DataSource = current.ToList( );
         }
@@ -406,6 +416,7 @@ namespace JIMED.Forms
                 combproducts.Text = combproducts.Items[ 0 ].ToString( );
                 numquantity.Value = 0;
                 lablquant.Text = "(" + Product.List[ 0 ].Quantity.ToString( ) + ")";
+               
             }
         }
         #endregion
@@ -695,6 +706,22 @@ namespace JIMED.Forms
                 }
             }
         }
+
+        private void pDFToolStripMenuItem_Click( object sender, EventArgs e )
+        {
+            // find how to export a pdf
+        }
+
+        private void printToolStripMenuItem_Click( object sender, EventArgs e )
+        {
+            if( !is_shown ) ShowHide( );
+            Printing.DataGridView2Print( datagrid_storage );
+        }
+
+        private void excelToolStripMenuItem_Click( object sender, EventArgs e )
+        {
+            // find how to export to excel
+        }
         #endregion
 
 
@@ -703,6 +730,7 @@ namespace JIMED.Forms
             RefreshForm( );
         }
         #endregion
+
 
     }
 }

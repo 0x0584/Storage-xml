@@ -44,6 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class\Delivery.cs" />
+    <Compile Include="Class\Printing.cs" />
+    <Compile Include="Class\PrintOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Class\PrintOptions.Designer.cs">
+      <DependentUpon>PrintOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FillForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -61,6 +68,9 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Class\XFile.cs" />
+    <EmbeddedResource Include="Class\PrintOptions.resx">
+      <DependentUpon>PrintOptions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FillForm.resx">
       <DependentUpon>FillForm.cs</DependentUpon>
     </EmbeddedResource>
