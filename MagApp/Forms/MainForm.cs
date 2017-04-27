@@ -47,9 +47,9 @@ namespace JIMED.Forms
             total = 0.0f;
 
             // radio buttons
-            //rdbtn_in.Enabled = false;
+            rdbtn_in.Enabled = false;
 
-            //rdbtn_in.Checked = true;
+            rdbtn_in.Checked = true;
 
             if( Product.List.Count == 0 ) {
                 MessageBox.Show( "YOU HAVE NO PRODUCTS!!" );
@@ -416,7 +416,7 @@ namespace JIMED.Forms
                 combproducts.Text = combproducts.Items[ 0 ].ToString( );
                 numquantity.Value = 0;
                 lablquant.Text = "(" + Product.List[ 0 ].Quantity.ToString( ) + ")";
-               
+                labnotif.Text = "";
             }
         }
         #endregion
@@ -729,9 +729,17 @@ namespace JIMED.Forms
         {
             RefreshForm( );
         }
+
         #endregion
 
+        private void textBox1_TextChanged( object sender, EventArgs e )
+        {
+            foreach( Product prod in Product.List )
+                if( textBox1.Text == prod.Lable )
+                    foreach( DataGridViewRow row in datagrid_storage.Rows )
+                        row.Selected = row.Cells[ 0 ].Value.ToString( ) == prod.Id.ToString( );
 
+        }
     }
 }
 
