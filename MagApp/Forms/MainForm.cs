@@ -169,10 +169,14 @@ namespace JIMED.Forms
 
             //label_date.Text = "Today: " + DateTime.Today.ToShortDateString( );
             //                   ^
-            List<object> restt = new List<object>( ),
-                inn = new List<object>( ), outt = new List<object>( );
+            List<object> restt, inn, outt;
 
-            #region Setup lists
+            #region Setup IN/OUT/REST Lists
+            restt = new List<object>( );
+            inn = new List<object>( );
+            outt = new List<object>( );
+
+            #region IN
             foreach( Product prod in Product.List )
                 foreach( Delivery del in prod.Storage.In ) {
                     string pickstr = dpicker.Value.ToShortDateString( ),
@@ -180,7 +184,8 @@ namespace JIMED.Forms
                     if( del.Id == prod.Id && pickstr == today )
                         inn.Add( new { Product = prod.Lable, Quantity = del.Quantity } );
                 }
-
+            #endregion
+            #region OUT
             foreach( Product prod in Product.List )
                 foreach( Delivery del in prod.Storage.Out ) {
                     string pickstr = dpicker.Value.ToShortDateString( ),
@@ -188,14 +193,18 @@ namespace JIMED.Forms
                     if( del.Id == prod.Id && pickstr == today )
                         outt.Add( new { Product = prod.Lable, Quantity = del.Quantity } );
                 }
-
+            #endregion
+            #region REST
             foreach( Product prod in Product.List )
                 restt.Add( new { Label = prod.Lable, Quantity = prod.Quantity } );
+            #endregion
             #endregion
 
             datagrid_in.DataSource = inn;
             datagrid_out.DataSource = outt;
 
+            // TODO: make rest a propretie
+            //
             datagrid_rest.DataSource = restt;
 
             if( datagrid_storage.DataSource != null ) {
@@ -510,6 +519,34 @@ namespace JIMED.Forms
                 labnotif.Text = "";
             }
         }
+
+        private void btngen_Click( object sender, EventArgs e )
+        {
+            // TODO: generat out-storage based on the in and the rest
+            //
+
+            // for-each item in teh list
+            foreach( string item in listadded.Items ) {
+                // parse the item
+                string[ ] str = item.Split( new char[ ] { '(', ')' } );
+                string label = str[ 0 ].TrimEnd( );
+                int qu = int.Parse( str[ 1 ] );
+
+                // find the product
+                foreach( Product prod in Product.List )
+                    if( label == prod.Lable )
+                        // if found
+                        foreach( Delivery del in prod.Storage.In ) {
+                            string del_date = del.Date.ToShortDateString( );
+
+                            if( del_date == DateTime.Today.ToShortDateString( ) )
+                                ;
+
+                        }
+            }
+
+            RefreshForm( );
+        }
         #endregion
 
         #region Events
@@ -745,7 +782,7 @@ namespace JIMED.Forms
         {
 
             foreach( Product prod in Product.List )
-                if( textBox1.Text.ToUpper() == prod.Lable.ToUpper() ) {
+                if( textBox1.Text.ToUpper( ) == prod.Lable.ToUpper( ) ) {
                     if( datagrid_storage.DataSource == null ) { ShowHide( ); RefreshForm( ); }
                     foreach( DataGridViewRow row in datagrid_storage.Rows )
                         row.Selected = row.Cells[ 0 ].Value.ToString( ) == prod.Id.ToString( );
@@ -754,10 +791,6 @@ namespace JIMED.Forms
         }
         #endregion
 
-        private void btngen_Click( object sender, EventArgs e )
-        {
-
-        }
     }
 }
 

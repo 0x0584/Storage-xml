@@ -82,6 +82,7 @@ namespace Core.Class
         // TODO: here I should find a way to not show 
         // the date! just the products and thier quantity
         // done.
+        #region Static Propreties
         public static IEnumerable<object> All_In {
             get
             {
@@ -124,6 +125,7 @@ namespace Core.Class
                     MessageBox.Show( "FILE NOT FOUND" );
             }
         }
+        #endregion
         #endregion
 
         #region Methods
