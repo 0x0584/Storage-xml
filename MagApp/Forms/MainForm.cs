@@ -36,11 +36,103 @@ namespace JIMED.Forms
         }
 
         #region Form-related Methodes
+        #region CRUD
+        private void NewProduct()
+        {
+            FillForm fill = new FillForm( );
+            Product fooprod;
+
+            fill.ShowDialog( );
+
+            if( !fill.IsDisposed ) {
+                if( (fooprod = fill.NewProduct( Product.GenerateID( ) )) != null ) {
+
+                    fooprod.AddXML( );
+                    fooprod.Storage.ComingStorage( fooprod, fill.Quantity, true );
+                    fill.Dispose( );
+                    fill.Close( );
+                    if( !is_shown ) ShowHide( );
+                    RefreshForm( );
+                    foreach( DataGridViewRow row in datagrid_storage.Rows )
+                        row.Selected = false;
+
+                    datagrid_storage.Rows[ datagrid_storage.Rows.Count - 1 ].Selected = true;
+                }
+            }
+        }
+        private void DeleteProduct()
+        {
+
+            if( datagrid_storage.DataSource != null )
+                if( datagrid_storage.SelectedCells.Count > 0 ) {
+                    int scell = datagrid_storage.SelectedCells[ 0 ].RowIndex;
+                    DataGridViewRow drow = datagrid_storage.Rows[ scell ];
+
+                    foreach( Product item in Product.List )
+                        if( int.Parse( drow.Cells[ 0 ].Value.ToString( ) ) == item.Id ) {
+                            item.RemoveXML( );
+                            RefreshForm( );
+                            break;
+                        }
+                }
+        }
+        private void UpdateProduct()
+        {
+
+            if( datagrid_storage.DataSource != null ) {
+
+                FillForm fill = new FillForm( );
+                Product foo;
+                int rowindex = 0;
+
+                #region Setup product
+
+                ArrayList a = new ArrayList( );
+
+                if( datagrid_storage.SelectedCells.Count > 0 ) {
+                    rowindex = datagrid_storage.SelectedCells[ 0 ].RowIndex;
+                    DataGridViewRow drow = datagrid_storage.Rows[ rowindex ];
+                    foreach( DataGridViewCell item in drow.Cells )
+                        a.Add( item );
+                }
+                // TODO
+                int id = int.Parse( ((DataGridViewCell) a[ 0 ]).Value.ToString( ) ),
+                 quantity = int.Parse( ((DataGridViewCell) a[ 1 ]).Value.ToString( ) );
+                float price = float.Parse( ((DataGridViewCell) a[ 3 ]).Value.ToString( ) );
+                string lable = ((DataGridViewCell) a[ 2 ]).Value.ToString( ),
+                volume = ((DataGridViewCell) a[ 4 ]).Value.ToString( ),
+                type = ((DataGridViewCell) a[ 5 ]).Value.ToString( );
+
+                foo = new Product( id, volume, type, lable, quantity, price );
+                #endregion
+
+                fill.UpdateProduct( foo );
+                fill.ShowDialog( );
+
+                if( !fill.IsDisposed ) {
+                    foreach( Product item in Product.List )
+                        if( item.Id == id ) {
+                            Product bar = fill.NewProduct( id );
+                            int qu = item.Quantity >= fill.Quantity ? (item.Quantity - fill.Quantity) : fill.Quantity;
+                            bar.Storage.ComingStorage( bar, qu, true );
+                            item.UpdateXML( bar );
+                            break;
+                        }
+
+                    fill.Dispose( );
+                    fill.Close( );
+                    RefreshForm( );
+                    datagrid_storage.Rows[ 0 ].Selected = false;
+                    datagrid_storage.Rows[ rowindex ].Selected = true;
+                }
+            }
+        }
+        #endregion
 
         private void StorageForm_Load( object sender, EventArgs e )
         {
             MaximizeBox = false;
-            Size = new Size( new Point( 912, 406 ) );
+            Size = new Size( new Point( 935, 415 ) );
 
             labltotal.Text = "0.00 MAD";
 
@@ -137,8 +229,6 @@ namespace JIMED.Forms
                     #endregion
                 }
                 #endregion
-
-
                 #region Update label
 
                 float totall = 0.0f;
@@ -191,6 +281,7 @@ namespace JIMED.Forms
             foreach( Product prod in Product.List )
                 combproducts.Items.Add( prod.Lable );
 
+            combproducts.Items.Add( "<New>" );
             #endregion
 
             #region Select First Row
@@ -385,7 +476,7 @@ namespace JIMED.Forms
                     datagrid_storage.Rows[ 0 ].Selected = true;
                 }
 
-                Size = new Size( new Point( 912, 633 ) );
+                Size = new Size( new Point( 935, 658 ) );
             } else {
                 is_shown = false;
                 btn_updown.Text = "SHOW    ▼";
@@ -394,7 +485,7 @@ namespace JIMED.Forms
                 // clear the datagrid to incress performence
                 datagrid_storage.DataSource = null;
 
-                Size = new Size( new Point( 912, 406 ) );
+                Size = new Size( new Point( 935, 415 ) );
             }
         }
 
@@ -444,6 +535,11 @@ namespace JIMED.Forms
         {
             // TODO: update the quantity lable
             // done.
+            if( combproducts.Text == "<New>" ) {
+                NewProduct( );
+                combproducts.Text = combproducts.Items[ 0 ].ToString( );
+                return;
+            }
 
             string labcurrent = combproducts.Text;
 
@@ -613,131 +709,53 @@ namespace JIMED.Forms
         #endregion
 
         #region StripMenu
-
         private void newProductToolStripMenuItem_Click( object sender, EventArgs e )
         {
-            FillForm fill = new FillForm( );
-            Product fooprod;
-
-            fill.ShowDialog( );
-
-            if( !fill.IsDisposed ) {
-                fooprod = fill.NewProduct( Product.GenerateID( ) );
-                fooprod.AddXML( );
-                fooprod.Storage.ComingStorage( fooprod, fill.Quantity, true );
-                fill.Dispose( );
-                fill.Close( );
-                if( !is_shown )
-                    ShowHide( );
-                RefreshForm( );
-                foreach( DataGridViewRow row in datagrid_storage.Rows )
-                    row.Selected = false;
-
-                datagrid_storage.Rows[ datagrid_storage.Rows.Count - 1 ].Selected = true;
-            }
-
-
-
+            NewProduct( );
         }
-
         private void deleteToolStripMenuItem_Click( object sender, EventArgs e )
         {
-            if( datagrid_storage.DataSource != null )
-                if( datagrid_storage.SelectedCells.Count > 0 ) {
-                    int scell = datagrid_storage.SelectedCells[ 0 ].RowIndex;
-                    DataGridViewRow drow = datagrid_storage.Rows[ scell ];
-
-                    foreach( Product item in Product.List )
-                        if( int.Parse( drow.Cells[ 0 ].Value.ToString( ) ) == item.Id ) {
-                            item.RemoveXML( );
-                            RefreshForm( );
-                            break;
-                        }
-                }
+            DeleteProduct( );
         }
-
         private void updateToolStripMenuItem_Click( object sender, EventArgs e )
         {
-            if( datagrid_storage.DataSource != null ) {
-
-                FillForm fill = new FillForm( );
-                Product foo;
-                int rowindex = 0;
-
-                #region Setup product
-
-                ArrayList a = new ArrayList( );
-
-                if( datagrid_storage.SelectedCells.Count > 0 ) {
-                    rowindex = datagrid_storage.SelectedCells[ 0 ].RowIndex;
-                    DataGridViewRow drow = datagrid_storage.Rows[ rowindex ];
-                    foreach( DataGridViewCell item in drow.Cells )
-                        a.Add( item );
-                }
-                // TODO
-                int id = int.Parse( ((DataGridViewCell) a[ 0 ]).Value.ToString( ) ),
-                 quantity = int.Parse( ((DataGridViewCell) a[ 1 ]).Value.ToString( ) );
-                float price = float.Parse( ((DataGridViewCell) a[ 3 ]).Value.ToString( ) );
-                string lable = ((DataGridViewCell) a[ 2 ]).Value.ToString( ),
-                volume = ((DataGridViewCell) a[ 4 ]).Value.ToString( ),
-                type = ((DataGridViewCell) a[ 5 ]).Value.ToString( );
-
-                foo = new Product( id, volume, type, lable, quantity, price );
-                #endregion
-
-                fill.UpdateProduct( foo );
-                fill.ShowDialog( );
-
-                if( !fill.IsDisposed ) {
-                    foreach( Product item in Product.List )
-                        if( item.Id == id ) {
-                            Product bar = fill.NewProduct( id );
-                            int qu = item.Quantity >= fill.Quantity ? (item.Quantity - fill.Quantity) : fill.Quantity;
-                            bar.Storage.ComingStorage( bar, qu, true );
-                            item.UpdateXML( bar );
-                            break;
-                        }
-
-                    fill.Dispose( );
-                    fill.Close( );
-                    RefreshForm( );
-                    datagrid_storage.Rows[ 0 ].Selected = false;
-                    datagrid_storage.Rows[ rowindex ].Selected = true;
-                }
-            }
+            UpdateProduct( );
         }
-
         private void pDFToolStripMenuItem_Click( object sender, EventArgs e )
         {
             // find how to export a pdf
         }
-
         private void printToolStripMenuItem_Click( object sender, EventArgs e )
         {
             if( !is_shown ) ShowHide( );
             Printing.DataGridView2Print( datagrid_storage );
         }
-
         private void excelToolStripMenuItem_Click( object sender, EventArgs e )
         {
             // find how to export to excel
         }
         #endregion
 
-
         private void dpicker_ValueChanged( object sender, EventArgs e )
         {
             RefreshForm( );
         }
 
-        #endregion
-
         private void textBox1_TextChanged( object sender, EventArgs e )
         {
+
             foreach( Product prod in Product.List )
-                if( textBox1.Text == prod.Lable )
+                if( textBox1.Text.ToUpper() == prod.Lable.ToUpper() ) {
+                    if( datagrid_storage.DataSource == null ) { ShowHide( ); RefreshForm( ); }
                     foreach( DataGridViewRow row in datagrid_storage.Rows )
                         row.Selected = row.Cells[ 0 ].Value.ToString( ) == prod.Id.ToString( );
+                }
+
+        }
+        #endregion
+
+        private void btngen_Click( object sender, EventArgs e )
+        {
 
         }
     }
