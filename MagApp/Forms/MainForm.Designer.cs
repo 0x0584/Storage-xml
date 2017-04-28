@@ -28,9 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -44,18 +41,9 @@
             this.lablquant = new System.Windows.Forms.Label();
             this.labltotal = new System.Windows.Forms.Label();
             this.labnotif = new System.Windows.Forms.Label();
-            this.datagrid_in = new System.Windows.Forms.DataGridView();
-            this.datagrid_out = new System.Windows.Forms.DataGridView();
-            this.datagrid_rest = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.dpicker = new System.Windows.Forms.DateTimePicker();
-            this.label_out_sum = new System.Windows.Forms.Label();
-            this.label_in_sum = new System.Windows.Forms.Label();
-            this.rdbtn_in = new System.Windows.Forms.RadioButton();
-            this.rdbtn_out = new System.Windows.Forms.RadioButton();
             this.label_date = new System.Windows.Forms.Label();
-            this.label_rest_sum = new System.Windows.Forms.Label();
             this.label_storage_info = new System.Windows.Forms.Label();
             this.btn_updown = new System.Windows.Forms.Button();
             this.datagrid_total = new System.Windows.Forms.DataGridView();
@@ -81,54 +69,59 @@
             this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnclear = new System.Windows.Forms.Button();
-            this.Storage = new System.Windows.Forms.GroupBox();
-            this.btngen = new System.Windows.Forms.Button();
-            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.datagrid_out = new System.Windows.Forms.DataGridView();
+            this.datagrid_in = new System.Windows.Forms.DataGridView();
+            this.label_out_sum = new System.Windows.Forms.Label();
+            this.label_in_sum = new System.Windows.Forms.Label();
+            this.rdbtn_in = new System.Windows.Forms.RadioButton();
+            this.rdbtn_rest = new System.Windows.Forms.RadioButton();
+            this.rdbtn_out = new System.Windows.Forms.RadioButton();
+            this.datagrid_rest = new System.Windows.Forms.DataGridView();
+            this.label_rest_sum = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_storage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numquantity)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.datagrid_in)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.datagrid_out)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.datagrid_rest)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_total)).BeginInit();
             this.ms.SuspendLayout();
-            this.Storage.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.datagrid_out)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.datagrid_in)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.datagrid_rest)).BeginInit();
             this.SuspendLayout();
             // 
             // datagrid_storage
             // 
             this.datagrid_storage.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.datagrid_storage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.datagrid_storage.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.datagrid_storage.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.datagrid_storage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.datagrid_storage.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.datagrid_storage.DefaultCellStyle = dataGridViewCellStyle11;
             this.datagrid_storage.Location = new System.Drawing.Point(18, 414);
             this.datagrid_storage.Name = "datagrid_storage";
             this.datagrid_storage.ReadOnly = true;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.datagrid_storage.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.datagrid_storage.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.datagrid_storage.Size = new System.Drawing.Size(655, 198);
             this.datagrid_storage.TabIndex = 0;
             this.datagrid_storage.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.datagrid_storage_CellEnter);
@@ -220,71 +213,11 @@
             this.labnotif.AutoSize = true;
             this.labnotif.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labnotif.ForeColor = System.Drawing.Color.Orange;
-            this.labnotif.Location = new System.Drawing.Point(212, 347);
+            this.labnotif.Location = new System.Drawing.Point(207, 358);
             this.labnotif.Name = "labnotif";
             this.labnotif.Size = new System.Drawing.Size(102, 13);
             this.labnotif.TabIndex = 7;
             this.labnotif.Text = "NOTIFICATIONS";
-            // 
-            // datagrid_in
-            // 
-            this.datagrid_in.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.datagrid_in.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.datagrid_in.Location = new System.Drawing.Point(11, 48);
-            this.datagrid_in.Name = "datagrid_in";
-            this.datagrid_in.ReadOnly = true;
-            this.datagrid_in.Size = new System.Drawing.Size(234, 221);
-            this.datagrid_in.TabIndex = 8;
-            this.datagrid_in.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.datagrid_in_CellEnter);
-            this.datagrid_in.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.datagrid_in_RowsAdded);
-            // 
-            // datagrid_out
-            // 
-            this.datagrid_out.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.datagrid_out.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.datagrid_out.Location = new System.Drawing.Point(251, 48);
-            this.datagrid_out.Name = "datagrid_out";
-            this.datagrid_out.ReadOnly = true;
-            this.datagrid_out.Size = new System.Drawing.Size(221, 221);
-            this.datagrid_out.TabIndex = 8;
-            this.datagrid_out.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.datagrid_out_CellEnter);
-            this.datagrid_out.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.datagrid_out_RowsAdded);
-            // 
-            // datagrid_rest
-            // 
-            this.datagrid_rest.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.datagrid_rest.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.datagrid_rest.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
-            this.datagrid_rest.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.datagrid_rest.DefaultCellStyle = dataGridViewCellStyle11;
-            this.datagrid_rest.Location = new System.Drawing.Point(701, 113);
-            this.datagrid_rest.Name = "datagrid_rest";
-            this.datagrid_rest.ReadOnly = true;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.datagrid_rest.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
-            this.datagrid_rest.Size = new System.Drawing.Size(203, 221);
-            this.datagrid_rest.TabIndex = 8;
-            this.datagrid_rest.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.datagrid_rest_CellEnter);
             // 
             // label1
             // 
@@ -297,17 +230,6 @@
             this.label1.TabIndex = 9;
             this.label1.Text = "STORAGE:";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label4.Location = new System.Drawing.Point(708, 91);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(57, 18);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "REST:";
-            // 
             // dpicker
             // 
             this.dpicker.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -316,56 +238,6 @@
             this.dpicker.Size = new System.Drawing.Size(183, 23);
             this.dpicker.TabIndex = 10;
             this.dpicker.ValueChanged += new System.EventHandler(this.dpicker_ValueChanged);
-            // 
-            // label_out_sum
-            // 
-            this.label_out_sum.AutoSize = true;
-            this.label_out_sum.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_out_sum.ForeColor = System.Drawing.Color.DarkBlue;
-            this.label_out_sum.Location = new System.Drawing.Point(316, 28);
-            this.label_out_sum.Name = "label_out_sum";
-            this.label_out_sum.Size = new System.Drawing.Size(61, 18);
-            this.label_out_sum.TabIndex = 9;
-            this.label_out_sum.Text = "00 MAD";
-            // 
-            // label_in_sum
-            // 
-            this.label_in_sum.AutoSize = true;
-            this.label_in_sum.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_in_sum.ForeColor = System.Drawing.Color.DarkBlue;
-            this.label_in_sum.Location = new System.Drawing.Point(58, 28);
-            this.label_in_sum.Name = "label_in_sum";
-            this.label_in_sum.Size = new System.Drawing.Size(61, 18);
-            this.label_in_sum.TabIndex = 9;
-            this.label_in_sum.Text = "00 MAD";
-            // 
-            // rdbtn_in
-            // 
-            this.rdbtn_in.AutoSize = true;
-            this.rdbtn_in.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rdbtn_in.ForeColor = System.Drawing.Color.DarkGreen;
-            this.rdbtn_in.Location = new System.Drawing.Point(11, 25);
-            this.rdbtn_in.Name = "rdbtn_in";
-            this.rdbtn_in.Size = new System.Drawing.Size(46, 21);
-            this.rdbtn_in.TabIndex = 11;
-            this.rdbtn_in.TabStop = true;
-            this.rdbtn_in.Text = "IN:";
-            this.rdbtn_in.UseVisualStyleBackColor = true;
-            this.rdbtn_in.CheckedChanged += new System.EventHandler(this.rdbtn_in_CheckedChanged);
-            // 
-            // rdbtn_out
-            // 
-            this.rdbtn_out.AutoSize = true;
-            this.rdbtn_out.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rdbtn_out.ForeColor = System.Drawing.Color.DarkRed;
-            this.rdbtn_out.Location = new System.Drawing.Point(251, 25);
-            this.rdbtn_out.Name = "rdbtn_out";
-            this.rdbtn_out.Size = new System.Drawing.Size(64, 21);
-            this.rdbtn_out.TabIndex = 11;
-            this.rdbtn_out.TabStop = true;
-            this.rdbtn_out.Text = "OUT:";
-            this.rdbtn_out.UseVisualStyleBackColor = true;
-            this.rdbtn_out.CheckedChanged += new System.EventHandler(this.rdbtn_out_CheckedChanged);
             // 
             // label_date
             // 
@@ -377,17 +249,6 @@
             this.label_date.Size = new System.Drawing.Size(53, 19);
             this.label_date.TabIndex = 12;
             this.label_date.Text = "Today:";
-            // 
-            // label_rest_sum
-            // 
-            this.label_rest_sum.AutoSize = true;
-            this.label_rest_sum.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_rest_sum.ForeColor = System.Drawing.Color.DarkBlue;
-            this.label_rest_sum.Location = new System.Drawing.Point(791, 89);
-            this.label_rest_sum.Name = "label_rest_sum";
-            this.label_rest_sum.Size = new System.Drawing.Size(77, 18);
-            this.label_rest_sum.TabIndex = 9;
-            this.label_rest_sum.Text = "1542 MAD";
             // 
             // label_storage_info
             // 
@@ -404,7 +265,7 @@
             // 
             this.btn_updown.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_updown.ForeColor = System.Drawing.Color.LimeGreen;
-            this.btn_updown.Location = new System.Drawing.Point(811, 351);
+            this.btn_updown.Location = new System.Drawing.Point(802, 348);
             this.btn_updown.Name = "btn_updown";
             this.btn_updown.Size = new System.Drawing.Size(93, 23);
             this.btn_updown.TabIndex = 13;
@@ -605,33 +466,6 @@
             this.btnclear.UseVisualStyleBackColor = true;
             this.btnclear.Click += new System.EventHandler(this.btnclear_Click);
             // 
-            // Storage
-            // 
-            this.Storage.Controls.Add(this.btngen);
-            this.Storage.Controls.Add(this.datagrid_out);
-            this.Storage.Controls.Add(this.datagrid_in);
-            this.Storage.Controls.Add(this.label_out_sum);
-            this.Storage.Controls.Add(this.label_in_sum);
-            this.Storage.Controls.Add(this.rdbtn_in);
-            this.Storage.Controls.Add(this.rdbtn_out);
-            this.Storage.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Storage.Location = new System.Drawing.Point(211, 66);
-            this.Storage.Name = "Storage";
-            this.Storage.Size = new System.Drawing.Size(484, 278);
-            this.Storage.TabIndex = 19;
-            this.Storage.TabStop = false;
-            this.Storage.Text = "Storage";
-            // 
-            // btngen
-            // 
-            this.btngen.Location = new System.Drawing.Point(397, 23);
-            this.btngen.Name = "btngen";
-            this.btngen.Size = new System.Drawing.Size(75, 23);
-            this.btngen.TabIndex = 12;
-            this.btngen.Text = "Generat";
-            this.btngen.UseVisualStyleBackColor = true;
-            this.btngen.Click += new System.EventHandler(this.btngen_Click);
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.btnclear);
@@ -661,28 +495,139 @@
             this.label2.TabIndex = 21;
             this.label2.Text = "Find";
             // 
+            // datagrid_out
+            // 
+            this.datagrid_out.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.datagrid_out.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.datagrid_out.Location = new System.Drawing.Point(686, 120);
+            this.datagrid_out.Name = "datagrid_out";
+            this.datagrid_out.ReadOnly = true;
+            this.datagrid_out.Size = new System.Drawing.Size(221, 221);
+            this.datagrid_out.TabIndex = 22;
+            // 
+            // datagrid_in
+            // 
+            this.datagrid_in.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.datagrid_in.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.datagrid_in.Location = new System.Drawing.Point(447, 120);
+            this.datagrid_in.Name = "datagrid_in";
+            this.datagrid_in.ReadOnly = true;
+            this.datagrid_in.Size = new System.Drawing.Size(234, 221);
+            this.datagrid_in.TabIndex = 23;
+            // 
+            // label_out_sum
+            // 
+            this.label_out_sum.AutoSize = true;
+            this.label_out_sum.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_out_sum.ForeColor = System.Drawing.Color.DarkBlue;
+            this.label_out_sum.Location = new System.Drawing.Point(751, 100);
+            this.label_out_sum.Name = "label_out_sum";
+            this.label_out_sum.Size = new System.Drawing.Size(61, 18);
+            this.label_out_sum.TabIndex = 25;
+            this.label_out_sum.Text = "00 MAD";
+            // 
+            // label_in_sum
+            // 
+            this.label_in_sum.AutoSize = true;
+            this.label_in_sum.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_in_sum.ForeColor = System.Drawing.Color.DarkBlue;
+            this.label_in_sum.Location = new System.Drawing.Point(502, 99);
+            this.label_in_sum.Name = "label_in_sum";
+            this.label_in_sum.Size = new System.Drawing.Size(61, 18);
+            this.label_in_sum.TabIndex = 26;
+            this.label_in_sum.Text = "00 MAD";
+            // 
+            // rdbtn_in
+            // 
+            this.rdbtn_in.AutoSize = true;
+            this.rdbtn_in.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdbtn_in.ForeColor = System.Drawing.Color.DarkGreen;
+            this.rdbtn_in.Location = new System.Drawing.Point(450, 96);
+            this.rdbtn_in.Name = "rdbtn_in";
+            this.rdbtn_in.Size = new System.Drawing.Size(46, 21);
+            this.rdbtn_in.TabIndex = 28;
+            this.rdbtn_in.TabStop = true;
+            this.rdbtn_in.Text = "IN:";
+            this.rdbtn_in.UseVisualStyleBackColor = true;
+            this.rdbtn_in.CheckedChanged += new System.EventHandler(this.rdbtn_in_CheckedChanged);
+            // 
+            // rdbtn_rest
+            // 
+            this.rdbtn_rest.AutoSize = true;
+            this.rdbtn_rest.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdbtn_rest.ForeColor = System.Drawing.Color.Black;
+            this.rdbtn_rest.Location = new System.Drawing.Point(207, 99);
+            this.rdbtn_rest.Name = "rdbtn_rest";
+            this.rdbtn_rest.Size = new System.Drawing.Size(72, 21);
+            this.rdbtn_rest.TabIndex = 29;
+            this.rdbtn_rest.TabStop = true;
+            this.rdbtn_rest.Text = "REST:";
+            this.rdbtn_rest.UseVisualStyleBackColor = true;
+            this.rdbtn_rest.CheckedChanged += new System.EventHandler(this.rdbtn_rest_CheckedChanged);
+            // 
+            // rdbtn_out
+            // 
+            this.rdbtn_out.AutoSize = true;
+            this.rdbtn_out.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdbtn_out.ForeColor = System.Drawing.Color.DarkRed;
+            this.rdbtn_out.Location = new System.Drawing.Point(686, 97);
+            this.rdbtn_out.Name = "rdbtn_out";
+            this.rdbtn_out.Size = new System.Drawing.Size(64, 21);
+            this.rdbtn_out.TabIndex = 30;
+            this.rdbtn_out.TabStop = true;
+            this.rdbtn_out.Text = "OUT:";
+            this.rdbtn_out.UseVisualStyleBackColor = true;
+            this.rdbtn_out.CheckedChanged += new System.EventHandler(this.rdbtn_out_CheckedChanged);
+            // 
+            // datagrid_rest
+            // 
+            this.datagrid_rest.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.datagrid_rest.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.datagrid_rest.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.datagrid_rest.Location = new System.Drawing.Point(207, 120);
+            this.datagrid_rest.Name = "datagrid_rest";
+            this.datagrid_rest.ReadOnly = true;
+            this.datagrid_rest.Size = new System.Drawing.Size(234, 221);
+            this.datagrid_rest.TabIndex = 24;
+            // 
+            // label_rest_sum
+            // 
+            this.label_rest_sum.AutoSize = true;
+            this.label_rest_sum.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_rest_sum.ForeColor = System.Drawing.Color.DarkBlue;
+            this.label_rest_sum.Location = new System.Drawing.Point(285, 99);
+            this.label_rest_sum.Name = "label_rest_sum";
+            this.label_rest_sum.Size = new System.Drawing.Size(65, 18);
+            this.label_rest_sum.TabIndex = 27;
+            this.label_rest_sum.Text = "00  MAD";
+            // 
             // StorageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(919, 620);
+            this.Controls.Add(this.datagrid_out);
+            this.Controls.Add(this.datagrid_in);
+            this.Controls.Add(this.label_out_sum);
+            this.Controls.Add(this.label_in_sum);
+            this.Controls.Add(this.rdbtn_in);
+            this.Controls.Add(this.rdbtn_rest);
+            this.Controls.Add(this.rdbtn_out);
+            this.Controls.Add(this.datagrid_rest);
+            this.Controls.Add(this.label_rest_sum);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.datagrid_total);
             this.Controls.Add(this.btn_updown);
             this.Controls.Add(this.label_date);
             this.Controls.Add(this.dpicker);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label_storage_info);
-            this.Controls.Add(this.label_rest_sum);
             this.Controls.Add(this.label_resume);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.datagrid_rest);
             this.Controls.Add(this.labnotif);
             this.Controls.Add(this.datagrid_storage);
             this.Controls.Add(this.ms);
-            this.Controls.Add(this.Storage);
             this.Controls.Add(this.groupBox1);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -693,16 +638,14 @@
             this.Load += new System.EventHandler(this.StorageForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_storage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numquantity)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.datagrid_in)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.datagrid_out)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.datagrid_rest)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_total)).EndInit();
             this.ms.ResumeLayout(false);
             this.ms.PerformLayout();
-            this.Storage.ResumeLayout(false);
-            this.Storage.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.datagrid_out)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.datagrid_in)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.datagrid_rest)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -720,18 +663,9 @@
         private System.Windows.Forms.Label lablquant;
         private System.Windows.Forms.Label labltotal;
         private System.Windows.Forms.Label labnotif;
-        private System.Windows.Forms.DataGridView datagrid_in;
-        private System.Windows.Forms.DataGridView datagrid_out;
-        private System.Windows.Forms.DataGridView datagrid_rest;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DateTimePicker dpicker;
-        private System.Windows.Forms.Label label_out_sum;
-        private System.Windows.Forms.Label label_in_sum;
-        private System.Windows.Forms.RadioButton rdbtn_in;
-        private System.Windows.Forms.RadioButton rdbtn_out;
         private System.Windows.Forms.Label label_date;
-        private System.Windows.Forms.Label label_rest_sum;
         private System.Windows.Forms.Label label_storage_info;
         private System.Windows.Forms.Button btn_updown;
         private System.Windows.Forms.DataGridView datagrid_total;
@@ -743,8 +677,6 @@
         private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button btnclear;
-        private System.Windows.Forms.GroupBox Storage;
-        private System.Drawing.Printing.PrintDocument printDocument1;
         private System.Windows.Forms.ToolStripMenuItem exportToToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pDFToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem excelToolStripMenuItem;
@@ -759,8 +691,16 @@
         private System.Windows.Forms.ToolStripMenuItem centralToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem7;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem8;
-        private System.Windows.Forms.Button btngen;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.DataGridView datagrid_out;
+        private System.Windows.Forms.DataGridView datagrid_in;
+        private System.Windows.Forms.Label label_out_sum;
+        private System.Windows.Forms.Label label_in_sum;
+        private System.Windows.Forms.RadioButton rdbtn_in;
+        private System.Windows.Forms.RadioButton rdbtn_rest;
+        private System.Windows.Forms.RadioButton rdbtn_out;
+        private System.Windows.Forms.DataGridView datagrid_rest;
+        private System.Windows.Forms.Label label_rest_sum;
     }
 }

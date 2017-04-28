@@ -48,7 +48,7 @@ namespace JIMED.Forms
                 if( (fooprod = fill.NewProduct( Product.GenerateID( ) )) != null ) {
 
                     fooprod.AddXML( );
-                    fooprod.Storage.ComingStorage( fooprod, fill.Quantity, true );
+                    fooprod.Storage.ComingStorage( fooprod, fill.Quantity, Store.ListType.IN );
                     fill.Dispose( );
                     fill.Close( );
                     if( !is_shown ) ShowHide( );
@@ -114,7 +114,7 @@ namespace JIMED.Forms
                         if( item.Id == id ) {
                             Product bar = fill.NewProduct( id );
                             int qu = item.Quantity >= fill.Quantity ? (item.Quantity - fill.Quantity) : fill.Quantity;
-                            bar.Storage.ComingStorage( bar, qu, true );
+                            bar.Storage.ComingStorage( bar, qu, Store.ListType.IN );
                             item.UpdateXML( bar );
                             break;
                         }
@@ -158,17 +158,23 @@ namespace JIMED.Forms
             isfirstrun = false;
 
             // $$
-            foreach( Product prod in Product.List ) {
-                foreach( Delivery del in prod.Storage.Rest ) {
-                    MessageBox.Show( del.ToString( ) );
-                }
-            }
+            
             // HERE: show the list of in product of today and add a button 
             // to swap between the past and previous ins 
             //datagrid_storage.DataSource = currentprod.Storage.In;
         }
 
-
+        private void FreshInput()
+        {
+            if( listadded.Items.Count > 0 ) {
+                listadded.Items.Clear( );
+                combproducts.Text = combproducts.Items[ 0 ].ToString( );
+                numquantity.Value = 0;
+                lablquant.Text = "(" + Product.List[ 0 ].Quantity.ToString( ) + ")";
+                labnotif.Text = "";
+                btnconfirm.Enabled = btnremove.Enabled = false;
+            }
+        }
 
         private void RefreshForm()
         {
@@ -183,6 +189,7 @@ namespace JIMED.Forms
 
             datagrid_rest.DataSource = Store.SetupList( Store.ListType.REST, dpicker );
 
+            #region setup datagrid_storage
             if( datagrid_storage.DataSource != null ) {
                 List<object> list = new List<object>( );
 
@@ -255,6 +262,7 @@ namespace JIMED.Forms
                 label_storage_info.Text = total;
                 //
             }
+            #endregion
 
             if( datagrid_total.DataSource != null )
                 datagrid_total.DataSource = GetTotal( );
@@ -289,7 +297,7 @@ namespace JIMED.Forms
                 datagrid_storage.Rows[ 0 ].Selected = true;
             #endregion
 
-            FreshInput( );
+            //FreshInput( );
             //if( !( rdbtn_in.Enabled ) )
             //    BackColor = Color.LimeGreen;
             //else BackColor = Color.Orange;
@@ -415,11 +423,10 @@ namespace JIMED.Forms
             content += rdbtn_in.Checked ? "IN:\n\n" : "OUT:\n\n";
             content += listadded.Items[ 0 ].ToString( );
             for( int i = 1; i < listadded.Items.Count; i++ )
-                content += ("\n" + listadded.Items[ i ].ToString());
+                content += ("\n" + listadded.Items[ i ].ToString( ));
             #endregion
 
-            if( MessageBox.Show( content, 
-                                "confirmation", MessageBoxButtons.YesNo ) == DialogResult.Yes ) {
+            if( MessageBox.Show( content, "confirmation", MessageBoxButtons.YesNo ) == DialogResult.Yes ) {
                 // list all added items
                 foreach( string item in listadded.Items ) {
                     string[ ] str = item.Split( new char[ ] { '(', ')' } );
@@ -428,19 +435,26 @@ namespace JIMED.Forms
                     // List all the products
                     foreach( Product prod in Product.List )
                         if( prod.Lable == lable ) {
-                            if( !(rdbtn_in.Checked) && prod.Quantity < q ) {
+                            if( rdbtn_out.Checked && prod.Quantity < q ) {
                                 labnotif.Text = string.Format( "YOU ONLY GOT {0} OF {1}",
                                     prod.Quantity, prod.Lable.ToUpper( ) );
                                 goto OUT_OF_RANGE;
                             } else {
                                 labnotif.Text = "";
                             }
-                            prod.Storage.ComingStorage( prod, q, rdbtn_in.Checked );
+                            Store.ListType type;
+
+                            if( rdbtn_in.Checked ) type = Store.ListType.IN;
+                            else if( rdbtn_out.Checked ) type = Store.ListType.OUT;
+                            else type = Store.ListType.REST;
+
+                            prod.Storage.ComingStorage( prod, q, type );
                             OUT_OF_RANGE: break;
                         }
                 }
 
                 RefreshForm( );
+                FreshInput( );
             }
         }
 
@@ -479,45 +493,6 @@ namespace JIMED.Forms
         private void btnclear_Click( object sender, EventArgs e )
         {
             FreshInput( );
-        }
-
-        private void FreshInput()
-        {
-            if( listadded.Items.Count > 0 ) {
-                listadded.Items.Clear( );
-                combproducts.Text = combproducts.Items[ 0 ].ToString( );
-                numquantity.Value = 0;
-                lablquant.Text = "(" + Product.List[ 0 ].Quantity.ToString( ) + ")";
-                labnotif.Text = "";
-            }
-        }
-
-        private void btngen_Click( object sender, EventArgs e )
-        {
-            // TODO: generat out-storage based on the in and the rest
-            //
-
-            // for-each item in teh list
-            foreach( string item in listadded.Items ) {
-                // parse the item
-                string[ ] str = item.Split( new char[ ] { '(', ')' } );
-                string label = str[ 0 ].TrimEnd( );
-                int qu = int.Parse( str[ 1 ] );
-
-                // find the product
-                foreach( Product prod in Product.List )
-                    if( label == prod.Lable )
-                        // if found
-                        foreach( Delivery del in prod.Storage.In ) {
-                            string del_date = del.Date.ToShortDateString( );
-
-                            if( del_date == DateTime.Today.ToShortDateString( ) )
-                                ;
-
-                        }
-            }
-
-            RefreshForm( );
         }
         #endregion
 
@@ -595,12 +570,19 @@ namespace JIMED.Forms
         private void rdbtn_in_CheckedChanged( object sender, EventArgs e )
         {
             rdbtn_in.Enabled = false;
+            rdbtn_in.BackColor = Color.Orange;
             datagrid_in.BorderStyle = BorderStyle.FixedSingle;
             rdbtn_in.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold), GraphicsUnit.Point, 0 );
 
             rdbtn_out.Enabled = true;
+            rdbtn_out.BackColor = SystemColors.Control;
             datagrid_out.BorderStyle = BorderStyle.Fixed3D;
             rdbtn_out.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold | FontStyle.Italic), GraphicsUnit.Point, 0 );
+
+            rdbtn_rest.Enabled = true;
+            rdbtn_rest.BackColor = SystemColors.Control;
+            datagrid_rest.BorderStyle = BorderStyle.Fixed3D;
+            rdbtn_rest.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold | FontStyle.Italic), GraphicsUnit.Point, 0 );
 
             RefreshForm( );
         }
@@ -608,14 +590,40 @@ namespace JIMED.Forms
         private void rdbtn_out_CheckedChanged( object sender, EventArgs e )
         {
             rdbtn_out.Enabled = false;
+            rdbtn_out.BackColor = Color.Orange;
             datagrid_out.BorderStyle = BorderStyle.FixedSingle;
             rdbtn_out.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold), GraphicsUnit.Point, 0 );
 
             rdbtn_in.Enabled = true;
+            rdbtn_in.BackColor = SystemColors.Control;
             datagrid_in.BorderStyle = BorderStyle.Fixed3D;
             rdbtn_in.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold | FontStyle.Italic), GraphicsUnit.Point, 0 );
 
+            rdbtn_rest.Enabled = true;
+            rdbtn_rest.BackColor = SystemColors.Control;
+            datagrid_rest.BorderStyle = BorderStyle.Fixed3D;
+            rdbtn_rest.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold | FontStyle.Italic), GraphicsUnit.Point, 0 );
+
             RefreshForm( );
+        }
+
+        private void rdbtn_rest_CheckedChanged( object sender, EventArgs e )
+        {
+            rdbtn_rest.Enabled = false;
+            rdbtn_rest.BackColor = Color.Orange;
+            datagrid_rest.BorderStyle = BorderStyle.FixedSingle;
+            rdbtn_rest.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold), GraphicsUnit.Point, 0 );
+
+            rdbtn_out.Enabled = true;
+            rdbtn_out.BackColor = SystemColors.Control;
+            datagrid_out.BorderStyle = BorderStyle.Fixed3D;
+            rdbtn_out.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold | FontStyle.Italic), GraphicsUnit.Point, 0 );
+
+            rdbtn_in.Enabled = true;
+            rdbtn_in.BackColor = SystemColors.Control;
+            datagrid_in.BorderStyle = BorderStyle.Fixed3D;
+            rdbtn_in.Font = new Font( "Microsoft Sans Serif", 10F, (FontStyle.Bold | FontStyle.Italic), GraphicsUnit.Point, 0 );
+
         }
         #endregion
 
@@ -762,7 +770,6 @@ namespace JIMED.Forms
 
         }
         #endregion
-
     }
 }
 

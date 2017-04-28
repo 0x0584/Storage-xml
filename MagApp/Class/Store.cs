@@ -13,7 +13,7 @@ namespace Core.Class
     {
         public enum ListType
         {
-            IN = 0, 
+            IN = 0,
             OUT,
             REST
         }
@@ -184,23 +184,22 @@ namespace Core.Class
             #endregion
 
             return list.ToList( );
-
         }
 
-        public void ComingStorage( Product prod, int quantity, bool isin )
+        public void ComingStorage( Product prod, int quantity, ListType type )
         {
             // TODO: update the quantity
             // done.
 
             // TODO: substract quantity when it's out!
+            if( type == ListType.OUT ) quantity *= (-1);
 
-            string[ ] str = new string[ ] { "in", "out" };
-            string currentstorage = str[ (isin) ? 0 : 1 ];
-
-            if( !(isin) ) quantity *= (-1);
+            string[ ] str = new string[ ] { "in", "out", "rest" };
+            string currentstorage = str[ (int) type ];
 
             #region Update product quantity
-            Quantity += quantity;
+            if( type != ListType.REST ) Quantity += quantity;
+            else Quantity = quantity;
 
             //update the product
             prod.UpdateXML( prod );
@@ -239,9 +238,15 @@ namespace Core.Class
                 if( storagexists ) /* just update it */
                     if( ni.Element( "product" ).Element( "id" ).Value == prod.Id.ToString( ) ) {
                         elem_exists = true;
+                        int prev_q;
 
-                        int prev_q = int.Parse( ni.Element( "product" ).Element( "quantity" ).Value );
-                        ni.Element( "product" ).Element( "quantity" ).Value = (prev_q + quantity).ToString( );
+                        #region setup quantity
+                        prev_q = int.Parse( ni.Element( "product" ).Element( "quantity" ).Value );
+                        if( type != ListType.REST ) prev_q += quantity;
+                        else prev_q = quantity;
+                        #endregion
+
+                        ni.Element( "product" ).Element( "quantity" ).Value = (prev_q).ToString( );
                         // JUST 
                         break;
                         // THE WALL
