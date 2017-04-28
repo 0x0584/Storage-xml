@@ -48,9 +48,11 @@ namespace JIMED.Forms
             //labnotif.BackColor = Color.Red;
 
             this.FormBorderStyle = FormBorderStyle.None;
-            Region = System.Drawing.Region.FromHrgn( CreateRoundRectRgn( 0, 0, Width, Height, 20, 20 ) );
+            Region = Region.FromHrgn( CreateRoundRectRgn( 0, 0, Width, Height, 20, 20 ) );
             textBox1.Region = Region.FromHrgn( CreateRoundRectRgn( 0, 0, textBox1.Width, textBox1.Height, 7, 7 ) );
-
+            rdbtn_in.Region = Region.FromHrgn( CreateRoundRectRgn( 0, 0, rdbtn_in.Width, rdbtn_in.Height, 20, 20 ) );
+            rdbtn_out.Region = Region.FromHrgn( CreateRoundRectRgn( 0, 0, rdbtn_out.Width, rdbtn_out.Height, 20, 20 ) );
+            rdbtn_rest.Region = Region.FromHrgn( CreateRoundRectRgn( 0, 0, rdbtn_rest.Width, rdbtn_rest.Height, 20, 20 ) );
             // RefreshForm( );
         }
 
@@ -177,7 +179,7 @@ namespace JIMED.Forms
             isfirstrun = false;
 
             // $$
-            
+
             // HERE: show the list of in product of today and add a button 
             // to swap between the past and previous ins 
             //datagrid_storage.DataSource = currentprod.Storage.In;
@@ -308,8 +310,8 @@ namespace JIMED.Forms
                 // TODO: select the product at the in or out radios
                 //
 
-                datagrid_rest.Rows[ 0 ].Selected = true;
-                UpdateTotalLabel( datagrid_rest, label_rest_sum, false );
+                datagrid_rest.Rows[ 0 ].Selected = rdbtn_rest.Checked;
+
             }
 
             if( datagrid_storage.Rows.Count > 0 )
@@ -439,10 +441,13 @@ namespace JIMED.Forms
             string content = "";
 
             #region setup message
-            content += rdbtn_in.Checked ? "IN:\n\n" : "OUT:\n\n";
-            content += listadded.Items[ 0 ].ToString( );
+            if( rdbtn_in.Checked ) content += "IN:\n\n";
+            else if( rdbtn_out.Checked ) content += "OUT:\n\n";
+            else content += "DO YOU WANT TO SET THE REST OF THESE PRODUCTS?\n\n";
+
+            content += ("# "+listadded.Items[ 0 ].ToString( ));
             for( int i = 1; i < listadded.Items.Count; i++ )
-                content += ("\n" + listadded.Items[ i ].ToString( ));
+                content += ("\n# " + listadded.Items[ i ].ToString( ));
             #endregion
 
             if( MessageBox.Show( content, "confirmation", MessageBoxButtons.YesNo ) == DialogResult.Yes ) {
@@ -742,6 +747,14 @@ namespace JIMED.Forms
             UpdateTotalLabel( datagrid_in, label_in_sum, false );
         }
         #endregion
+
+        #region datagrid_rest
+        private void datagrid_rest_RowsAdded( object sender, DataGridViewRowsAddedEventArgs e )
+        {
+            UpdateTotalLabel( datagrid_rest, label_rest_sum, false );
+        }
+
+        #endregion
         #endregion
 
         #region StripMenu
@@ -788,6 +801,7 @@ namespace JIMED.Forms
                 }
 
         }
+
         #endregion
     }
 }
