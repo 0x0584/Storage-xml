@@ -243,10 +243,21 @@ namespace Core.Class
                         #region setup quantity
                         prev_q = int.Parse( ni.Element( "product" ).Element( "quantity" ).Value );
                         if( type != ListType.REST ) prev_q += quantity;
-                        else prev_q = quantity;
+                        //else prev_q = quantity;
                         #endregion
 
-                        ni.Element( "product" ).Element( "quantity" ).Value = (prev_q).ToString( );
+                        if( type == ListType.REST ) {
+                            
+                            XElement X = new XElement( "out",
+                                new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
+                                new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
+                                new XElement( "quantity",  quantity - prev_q ) ) //</product>
+                            );
+
+                            xfile.XML_File.Root.Add( X );
+                        }
+                        string val = (type == ListType.REST ? quantity : prev_q).ToString( );
+                        ni.Element( "product" ).Element( "quantity" ).Value = val;
                         // JUST 
                         break;
                         // THE WALL
@@ -256,16 +267,18 @@ namespace Core.Class
 
             #region Create new element
             if( !(storagexists) || !(elem_exists) ) /* you have to create it */ {
-                XElement X = new XElement( currentstorage, new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
-                    new XElement( "product",
-                        new XElement( "id", prod.Id.ToString( ) ),
-                        new XElement( "quantity", quantity )
-                        ) );
+                XElement X = new XElement( currentstorage,
+                    new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
+                    new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
+                    new XElement( "quantity", quantity ) ) //</product>
+                );
 
                 // update the io-file
                 xfile.XML_File.Root.Add( X );
             }
             #endregion
+
+
 
             // save changes to xfile
             xfile.XML_File.Save( xfile.Xmlpath );

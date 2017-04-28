@@ -438,19 +438,21 @@ namespace JIMED.Forms
 
         private void btnconfirm_Click( object sender, EventArgs e )
         {
-            string content = "";
+            string content = "", title = "";
+            DialogResult dlg;
 
             #region setup message
-            if( rdbtn_in.Checked ) content += "IN:\n\n";
-            else if( rdbtn_out.Checked ) content += "OUT:\n\n";
-            else content += "DO YOU WANT TO SET THE REST OF THESE PRODUCTS?\n\n";
+            if( rdbtn_in.Checked ) title = "INCOMING STORAGE";
+            else if( rdbtn_out.Checked ) title = "OUTCOMING STORAGE";
+            else title = "DO YOU WANT TO SET THE REST OF THESE PRODUCTS?";
 
-            content += ("# "+listadded.Items[ 0 ].ToString( ));
+            content += ("# " + listadded.Items[ 0 ].ToString( ));
             for( int i = 1; i < listadded.Items.Count; i++ )
                 content += ("\n# " + listadded.Items[ i ].ToString( ));
+            dlg = MessageBox.Show( content, title, MessageBoxButtons.YesNo );
             #endregion
 
-            if( MessageBox.Show( content, "confirmation", MessageBoxButtons.YesNo ) == DialogResult.Yes ) {
+            if( dlg == DialogResult.Yes ) {
                 // list all added items
                 foreach( string item in listadded.Items ) {
                     string[ ] str = item.Split( new char[ ] { '(', ')' } );
@@ -463,9 +465,8 @@ namespace JIMED.Forms
                                 labnotif.Text = string.Format( "YOU ONLY GOT {0} OF {1}",
                                     prod.Quantity, prod.Lable.ToUpper( ) );
                                 goto OUT_OF_RANGE;
-                            } else {
-                                labnotif.Text = "";
-                            }
+                            } else labnotif.Text = "";
+                            
                             Store.ListType type;
 
                             if( rdbtn_in.Checked ) type = Store.ListType.IN;
