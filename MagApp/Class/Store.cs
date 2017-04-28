@@ -11,6 +11,13 @@ namespace Core.Class
 {
     class Store
     {
+        public enum ListType
+        {
+            IN = 0, 
+            OUT,
+            REST
+        }
+
         #region Construtors
         public Store()
         {
@@ -79,6 +86,24 @@ namespace Core.Class
             }
         }
 
+        public IEnumerable<Delivery> Rest {
+            get
+            {
+                #region check file existence
+                if( !(XSource == null) ) {
+                    int index = (int) XFile.FileType.IO;
+                    xfile.SetDocument( XFile.Paths[ index ] );
+                }
+                if( !(xfile.Exists) ) {
+                    MessageBox.Show( "No Document was set" );
+                    xfile.OpenDocument( XFile.FileType.IO );
+                }
+                #endregion
+
+                return GetStorage( "rest" );
+            }
+            set { }
+        }
         // TODO: here I should find a way to not show 
         // the date! just the products and thier quantity
         // done.
@@ -239,6 +264,29 @@ namespace Core.Class
 
             // save changes to xfile
             xfile.XML_File.Save( xfile.Xmlpath );
+        }
+
+        public static IEnumerable<object> SetupList( ListType type, DateTimePicker dpicker )
+        {
+            List<object> list = new List<object>( );
+            List<Delivery> tmp = new List<Delivery>( );
+
+            foreach( Product prod in Product.List ) {
+                switch( type ) {
+                    default: break;
+                    case ListType.IN: tmp = prod.Storage.In.ToList( ); break;
+                    case ListType.OUT: tmp = prod.Storage.Out.ToList( ); break;
+                    case ListType.REST: tmp = prod.Storage.Rest.ToList( ); break;
+                }
+
+                foreach( Delivery del in tmp ) {
+                    string pickstr = dpicker.Value.ToShortDateString( ),
+                            today = del.Date.ToShortDateString( );
+                    if( del.Id == prod.Id && pickstr == today )
+                        list.Add( new { Product = prod.Lable, Quantity = del.Quantity } );
+                }
+            }
+            return list;
         }
         #endregion
     }

@@ -72,13 +72,20 @@ namespace Core.Class
         public static List<Product> List {
             get
             {
-                if( !(xfile.Exists) ) {
+                #region Check source
+                if( !(XSource == null) ) {
                     int index = (int) XFile.FileType.PRODUCTS;
                     xfile.SetDocument( XFile.Paths[ index ] );
                 }
+                if( !(xfile.Exists) ) {
+                    MessageBox.Show( "No Document was set" );
+                    xfile.OpenDocument( XFile.FileType.PRODUCTS );
+                }
+                #endregion
 
                 List<Product> list = new List<Product>( );
 
+                #region Setup list
                 var bind = xfile.XML_File.Descendants( "product" ).Select( p => new {
                     ProductID = p.Element( "id" ).Value,
                     Lable = p.Element( "lable" ).Value,
@@ -97,6 +104,7 @@ namespace Core.Class
                             float.Parse( item.Price ) );
                     list.Add( foo );
                 }
+                #endregion
 
                 return list;
             }

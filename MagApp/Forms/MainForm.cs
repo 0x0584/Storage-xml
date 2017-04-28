@@ -157,10 +157,18 @@ namespace JIMED.Forms
 
             isfirstrun = false;
 
+            // $$
+            foreach( Product prod in Product.List ) {
+                foreach( Delivery del in prod.Storage.Rest ) {
+                    MessageBox.Show( del.ToString( ) );
+                }
+            }
             // HERE: show the list of in product of today and add a button 
             // to swap between the past and previous ins 
             //datagrid_storage.DataSource = currentprod.Storage.In;
         }
+
+
 
         private void RefreshForm()
         {
@@ -169,43 +177,11 @@ namespace JIMED.Forms
 
             //label_date.Text = "Today: " + DateTime.Today.ToShortDateString( );
             //                   ^
-            List<object> restt, inn, outt;
 
-            #region Setup IN/OUT/REST Lists
-            restt = new List<object>( );
-            inn = new List<object>( );
-            outt = new List<object>( );
+            datagrid_in.DataSource = Store.SetupList( Store.ListType.IN, dpicker );
+            datagrid_out.DataSource = Store.SetupList( Store.ListType.OUT, dpicker );
 
-            #region IN
-            foreach( Product prod in Product.List )
-                foreach( Delivery del in prod.Storage.In ) {
-                    string pickstr = dpicker.Value.ToShortDateString( ),
-                            today = del.Date.ToShortDateString( );
-                    if( del.Id == prod.Id && pickstr == today )
-                        inn.Add( new { Product = prod.Lable, Quantity = del.Quantity } );
-                }
-            #endregion
-            #region OUT
-            foreach( Product prod in Product.List )
-                foreach( Delivery del in prod.Storage.Out ) {
-                    string pickstr = dpicker.Value.ToShortDateString( ),
-                            today = del.Date.ToShortDateString( );
-                    if( del.Id == prod.Id && pickstr == today )
-                        outt.Add( new { Product = prod.Lable, Quantity = del.Quantity } );
-                }
-            #endregion
-            #region REST
-            foreach( Product prod in Product.List )
-                restt.Add( new { Label = prod.Lable, Quantity = prod.Quantity } );
-            #endregion
-            #endregion
-
-            datagrid_in.DataSource = inn;
-            datagrid_out.DataSource = outt;
-
-            // TODO: make rest a propretie
-            //
-            datagrid_rest.DataSource = restt;
+            datagrid_rest.DataSource = Store.SetupList( Store.ListType.REST, dpicker );
 
             if( datagrid_storage.DataSource != null ) {
                 List<object> list = new List<object>( );
@@ -433,43 +409,39 @@ namespace JIMED.Forms
 
         private void btnconfirm_Click( object sender, EventArgs e )
         {
-            // TODO: bind the datagrid and update the XML file
-            //
+            string content = "";
 
-            // get the current list of comming storage (in-or-out)
-            //List<Product> current = new List<Product>( );
-            //if( !(rdbtn_in.Checked) && !(rdbtn_out.Checked) ) {
-            //    labnotif.Text = "Select IN or OUT from the upper radio buttons";
-            //    return;
-            //} else labnotif.Text = "";
+            #region setup message
+            content += rdbtn_in.Checked ? "IN:\n\n" : "OUT:\n\n";
+            content += listadded.Items[ 0 ].ToString( );
+            for( int i = 1; i < listadded.Items.Count; i++ )
+                content += ("\n" + listadded.Items[ i ].ToString());
+            #endregion
 
-            // list all added items
-            foreach( string item in listadded.Items ) {
-                string[ ] str = item.Split( new char[ ] { '(', ')' } );
-                string lable = str[ 0 ].TrimEnd( );
-                int q = int.Parse( str[ 1 ].TrimEnd( ) );
-                // List all the products
-                foreach( Product prod in Product.List )
-                    if( prod.Lable == lable ) {
-                        if( !(rdbtn_in.Checked) && prod.Quantity < q ) {
-                            labnotif.Text = string.Format( "YOU ONLY GOT {0} OF {1}",
-                                prod.Quantity, prod.Lable.ToUpper( ) );
-                            goto OUT_OF_RANGE;
-                        } else {
-                            labnotif.Text = "";
+            if( MessageBox.Show( content, 
+                                "confirmation", MessageBoxButtons.YesNo ) == DialogResult.Yes ) {
+                // list all added items
+                foreach( string item in listadded.Items ) {
+                    string[ ] str = item.Split( new char[ ] { '(', ')' } );
+                    string lable = str[ 0 ].TrimEnd( );
+                    int q = int.Parse( str[ 1 ].TrimEnd( ) );
+                    // List all the products
+                    foreach( Product prod in Product.List )
+                        if( prod.Lable == lable ) {
+                            if( !(rdbtn_in.Checked) && prod.Quantity < q ) {
+                                labnotif.Text = string.Format( "YOU ONLY GOT {0} OF {1}",
+                                    prod.Quantity, prod.Lable.ToUpper( ) );
+                                goto OUT_OF_RANGE;
+                            } else {
+                                labnotif.Text = "";
+                            }
+                            prod.Storage.ComingStorage( prod, q, rdbtn_in.Checked );
+                            OUT_OF_RANGE: break;
                         }
-                        prod.Storage.ComingStorage( prod, q, rdbtn_in.Checked );
-                        OUT_OF_RANGE: break;
-                    }
+                }
+
+                RefreshForm( );
             }
-
-            RefreshForm( );
-
-            //rdbtn_in.Checked = rdbtn_out.Checked = false;
-            //rdbtn_in.Enabled = rdbtn_out.Enabled = true;
-
-            //// bind the datagridview
-            //datagrid_storage.DataSource = current.ToList( );
         }
 
         bool is_shown = false;
