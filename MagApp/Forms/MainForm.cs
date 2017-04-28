@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Core.Class;
 using System.Collections;
 using Core.Printing;
+using System.Runtime.InteropServices;
 
 namespace JIMED.Forms
 {
@@ -23,7 +24,16 @@ namespace JIMED.Forms
         float total;
         bool isfirstrun = true;
         #endregion
-
+        [DllImport( "Gdi32.dll", EntryPoint = "CreateRoundRectRgn" )]
+        private static extern IntPtr CreateRoundRectRgn
+        (
+            int nLeftRect, // x-coordinate of upper-left corner
+            int nTopRect, // y-coordinate of upper-left corner
+            int nRightRect, // x-coordinate of lower-right corner
+            int nBottomRect, // y-coordinate of lower-right corner
+            int nWidthEllipse, // height of ellipse
+            int nHeightEllipse // width of ellipse
+        );
         public StorageForm()
         {
             InitializeComponent( );
@@ -31,6 +41,15 @@ namespace JIMED.Forms
 
             // TODO: get by date in the dpicker
             //
+            //var path = new System.Drawing.Drawing2D.GraphicsPath( );
+            //path.AddEllipse( 0, 0, labnotif.Width+3, labnotif.Height+1);
+
+            //this.labnotif.Region = new Region( path );
+            //labnotif.BackColor = Color.Red;
+
+            this.FormBorderStyle = FormBorderStyle.None;
+            Region = System.Drawing.Region.FromHrgn( CreateRoundRectRgn( 0, 0, Width, Height, 20, 20 ) );
+            textBox1.Region = Region.FromHrgn( CreateRoundRectRgn( 0, 0, textBox1.Width, textBox1.Height, 7, 7 ) );
 
             // RefreshForm( );
         }
