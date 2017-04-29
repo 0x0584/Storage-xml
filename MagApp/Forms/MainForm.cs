@@ -499,7 +499,7 @@ namespace JIMED.Forms
                 Size = new Size( new Point( 935, 658 ) );
             } else {
                 is_shown = false;
-                btn_updown.Text = "SHOW    ▼";
+                 btn_updown.Text = "SHOW    ▼";
                 btn_updown.ForeColor = Color.LimeGreen;
 
                 // clear the datagrid to incress performence

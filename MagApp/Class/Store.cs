@@ -229,6 +229,7 @@ namespace Core.Class
 
             bool storagexists = false;
             bool elem_exists = false;
+            int prev_q = 0;
             foreach( XElement ni in /* while(isHxH = 1) puts("<3"); */ doc ) {
                 // TODO: check for today's coming storage (in-or-out)
                 if( !storagexists && ni.Attribute( "date" ).Value == DateTime.Today.ToShortDateString( ) )
@@ -238,7 +239,6 @@ namespace Core.Class
                 if( storagexists ) /* just update it */
                     if( ni.Element( "product" ).Element( "id" ).Value == prod.Id.ToString( ) ) {
                         elem_exists = true;
-                        int prev_q;
 
                         #region setup quantity
                         prev_q = int.Parse( ni.Element( "product" ).Element( "quantity" ).Value );
@@ -247,14 +247,13 @@ namespace Core.Class
                         #endregion
 
                         if( type == ListType.REST ) {
-                            
-                            XElement X = new XElement( "out",
+                            XElement Xout = new XElement( "out",
                                 new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
                                 new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
-                                new XElement( "quantity",  quantity - prev_q ) ) //</product>
+                                new XElement( "quantity", quantity - prev_q ) ) //</product>
                             );
 
-                            xfile.XML_File.Root.Add( X );
+                            xfile.XML_File.Root.Add( Xout );
                         }
                         string val = (type == ListType.REST ? quantity : prev_q).ToString( );
                         ni.Element( "product" ).Element( "quantity" ).Value = val;
@@ -267,6 +266,22 @@ namespace Core.Class
 
             #region Create new element
             if( !(storagexists) || !(elem_exists) ) /* you have to create it */ {
+
+                foreach( XElement x in doc )
+                    if( x.Element( "product" ).Element( "id" ).Value == prod.Id.ToString( ) )
+                        prev_q = int.Parse( x.Element( "product" ).Element( "quantity" ).Value );
+                
+
+                if( type == ListType.REST ) {
+
+                    XElement Xout = new XElement( "out",
+                        new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
+                        new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
+                        new XElement( "quantity", quantity - prev_q ) ) //</product>
+                    );
+
+                    xfile.XML_File.Root.Add( Xout );
+                }
                 XElement X = new XElement( currentstorage,
                     new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
                     new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
