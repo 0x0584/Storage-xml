@@ -29,6 +29,8 @@ namespace Core.Printing
             // Initialize some controls
             rdoAllRows.Checked = true;
             chkFitToPageWidth.Checked = true;
+            txtTitle.Text += "JIMED " + DateTime.Today.Year.ToString() + "\nEL JADIDA\n";
+            gboxRowsToPrint.Hide( );
         }
 
         private void btnOK_Click( object sender, EventArgs e )
