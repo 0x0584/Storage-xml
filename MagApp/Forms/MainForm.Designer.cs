@@ -149,7 +149,7 @@
             // 
             this.numquantity.Location = new System.Drawing.Point(67, 44);
             this.numquantity.Maximum = new decimal(new int[] {
-            1000,
+            10000,
             0,
             0,
             0});

@@ -253,15 +253,33 @@ namespace Core.Class
 
                         // the current rest is less than the previous one
                         if( type == ListType.REST && quantity - prev_q < 0 ) {
-                            #region Genereate OUT storage
-                            XElement outt = new XElement( "out",
-                                new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
-                                new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
-                                new XElement( "quantity", quantity - prev_q ) ) //</product>
-                            );
+                            XElement outt = null;
+                            int prev_out_quant = 0;
 
-                            xfile.XML_File.Root.Add( outt );
+                            #region Get the previous OUT quantity (setup `outt`)
+                            // get the previous out quantity
+                            foreach( XElement xout in xfile.XML_File.Descendants( "out" ) )
+                                if( xout.Element( "product" ).Element( "id" ).Value == prod.Id.ToString( ) &&
+                                    xout.Attribute( "date" ).Value == DateTime.Today.ToShortDateString( ) ) {
+                                    outt = xout; // take the last out of the current product
+                                    prev_out_quant = int.Parse( xout.Element( "product" ).Element( "quantity" ).Value );
+                                }
                             #endregion
+
+                            if( outt != null ) /* it exists */ {
+                                int vall = (quantity - prev_q) + prev_out_quant;
+                                outt.Element( "product" ).Element( "quantity" ).Value = vall.ToString( );
+                            } else /* create one */ {
+                                #region Generate OUT
+                                XElement Xout = new XElement( "out",
+                                            new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
+                                            new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
+                                            new XElement( "quantity", (quantity - prev_q) ) ) //</product>
+                                        );
+
+                                xfile.XML_File.Root.Add( Xout );
+                                #endregion
+                            }
                         }
                         if( type != ListType.REST )/* update the rest */ {
                             XElement Xrest = null;

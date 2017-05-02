@@ -65,6 +65,11 @@
             // numquan
             // 
             this.numquan.Location = new System.Drawing.Point(123, 102);
+            this.numquan.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.numquan.Name = "numquan";
             this.numquan.Size = new System.Drawing.Size(119, 20);
             this.numquan.TabIndex = 2;

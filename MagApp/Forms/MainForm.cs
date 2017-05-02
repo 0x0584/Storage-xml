@@ -74,6 +74,8 @@ namespace JIMED.Forms
 
                     fooprod.AddXML( );
                     fooprod.Storage.ComingStorage( fooprod, fill.Quantity, Store.ListType.IN );
+                   
+                    #region Generate Rest
                     XElement Xrest = new XElement( "rest",
                             new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
                             new XElement( "product",
@@ -89,6 +91,8 @@ namespace JIMED.Forms
                     }
                     Store.XSource.XML_File.Root.Add( Xrest );
                     Store.XSource.XML_File.Save( Store.XSource.Xmlpath );
+                    #endregion
+
                     fill.Dispose( );
                     fill.Close( );
                     if( !is_shown ) ShowHide( );
