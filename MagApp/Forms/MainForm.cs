@@ -56,6 +56,8 @@ namespace JIMED.Forms
             rdbtn_out.Region = Region.FromHrgn( CreateRoundRectRgn( 0, 0, rdbtn_out.Width, rdbtn_out.Height, 20, 20 ) );
             rdbtn_rest.Region = Region.FromHrgn( CreateRoundRectRgn( 0, 0, rdbtn_rest.Width, rdbtn_rest.Height, 20, 20 ) );
             // RefreshForm( );
+            labnotif.Text = "";
+           
         }
 
         #region Form-related Methodes
@@ -170,7 +172,7 @@ namespace JIMED.Forms
         private void StorageForm_Load( object sender, EventArgs e )
         {
             MaximizeBox = false;
-            Size = new Size( new Point( 935, 415 ) );
+            Size = new Size( new Point( 948, 415 ) );
 
             labltotal.Text = "0.00 MAD";
 
@@ -184,6 +186,7 @@ namespace JIMED.Forms
             if( Product.List.Count == 0 ) {
                 MessageBox.Show( "YOU HAVE NO PRODUCTS!!" );
             } else {
+            ShowHide( );
                 RefreshForm( );
                 combproducts.Text = combproducts.Items[ 0 ].ToString( );
 
@@ -194,6 +197,7 @@ namespace JIMED.Forms
             }
 
             isfirstrun = false;
+
 
             // $$
 
@@ -209,7 +213,7 @@ namespace JIMED.Forms
                 combproducts.Text = combproducts.Items[ 0 ].ToString( );
                 numquantity.Value = 0;
                 lablquant.Text = "(" + Product.List[ 0 ].Quantity.ToString( ) + ")";
-                labnotif.Text = "";
+                //labnotif.Text = "";
                 btnconfirm.Enabled = btnremove.Enabled = false;
             }
         }
@@ -513,7 +517,7 @@ namespace JIMED.Forms
                     datagrid_storage.Rows[ 0 ].Selected = true;
                 }
 
-                Size = new Size( new Point( 935, 658 ) );
+                Size = new Size( new Point( 948, 658 ) );
             } else {
                 is_shown = false;
                  btn_updown.Text = "SHOW    ▼";
@@ -522,7 +526,7 @@ namespace JIMED.Forms
                 // clear the datagrid to incress performence
                 datagrid_storage.DataSource = null;
 
-                Size = new Size( new Point( 935, 415 ) );
+                Size = new Size( new Point( 948, 415 ) );
             }
         }
 
@@ -821,6 +825,12 @@ namespace JIMED.Forms
         }
 
         #endregion
+
+        private void closeToolStripMenuItem_Click( object sender, EventArgs e )
+        {
+            this.Dispose( );
+            this.Close( );
+        }
     }
 }
 

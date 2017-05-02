@@ -283,32 +283,46 @@ namespace Core.Class
             if( !(storagexists) || !(elem_exists) ) /* you have to create it */ {
 
                 IEnumerable<XElement> docc = xfile.XML_File.Descendants( "rest" );
-                XElement Xrest = null;
+                XElement X = null;
 
                 foreach( XElement xrest in docc )
                     if( xrest.Element( "product" ).Element( "id" ).Value == prod.Id.ToString( ) ) {
-                        Xrest = xrest; // take the last rest of the current product
-                        prev_q = int.Parse( xrest.Element("product").Element("quantity").Value);
+                        X = xrest; // take the last rest of the current product
+                        prev_q = int.Parse( xrest.Element( "product" ).Element( "quantity" ).Value );
                     }
 
-                if( type == ListType.REST && quantity - prev_q < 0) {
-                    XElement Xout = new XElement( "out",
-                                new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
-                                new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
-                                new XElement( "quantity", quantity - prev_q ) ) //</product>
-                            );
+                /* THIS CODE IS A MESS!! CLEAN THIS SHIT BEFORE IT GETS COMPLICATED! */
+                if( type == ListType.REST && quantity - prev_q < 0 ) {
+                    int prev_out_quant = 0;
+                    docc = xfile.XML_File.Descendants( "out" );
 
-                    xfile.XML_File.Root.Add( Xout );
-                } else {
+                    foreach( XElement xout in docc )
+                        if( xout.Element( "product" ).Element( "id" ).Value == prod.Id.ToString( ) &&
+                            xout.Attribute("date").Value == DateTime.Today.ToShortDateString()) {
+                            X = xout; // take the last rest of the current product
+                            prev_out_quant = int.Parse( xout.Element( "product" ).Element( "quantity" ).Value );
+                        }
 
-                    if( Xrest != null ) {
-                        int prev = int.Parse( Xrest.Element( "product" ).Element( "quantity" ).Value );
-                        Xrest.Element( "product" ).Element( "quantity" ).Value = (prev + quantity).ToString( );
+                    if( X != null ) {
+                        X.Element( "product" ).Element( "quantity" ).Value = ((quantity - prev_q) + prev_out_quant).ToString( );
+                    } else {
+                        XElement Xout = new XElement( "out",
+                                    new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
+                                    new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
+                                    new XElement( "quantity", (quantity - prev_q) ) ) //</product>
+                                );
+
+                        xfile.XML_File.Root.Add( Xout );
+                    }
+                } else /* IN OR OUT */ {
+                    if( X != null ) {
+                        int prev = int.Parse( X.Element( "product" ).Element( "quantity" ).Value );
+                        X.Element( "product" ).Element( "quantity" ).Value = (prev + quantity).ToString( );
                         xfile.XML_File.Save( xfile.Xmlpath );
                     }
                 }
 
-                XElement X = new XElement( currentstorage,
+                X = new XElement( currentstorage,
                     new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
                     new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
                     new XElement( "quantity", quantity ) ) //</product>
