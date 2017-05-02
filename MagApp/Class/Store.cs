@@ -246,7 +246,8 @@ namespace Core.Class
                         //else prev_q = quantity;
                         #endregion
 
-                        if( type == ListType.REST ) {
+                        // the current rest is less than the previous one
+                        if( type == ListType.REST && quantity - prev_q < 0 ) {
                             XElement Xout = new XElement( "out",
                                 new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
                                 new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
@@ -254,7 +255,21 @@ namespace Core.Class
                             );
 
                             xfile.XML_File.Root.Add( Xout );
+                        } else /* update the rest */ {
+                            IEnumerable<XElement> docc = xfile.XML_File.Descendants( "rest" );
+                            XElement Xrest = null;
+
+                            foreach( XElement xrest in docc )
+                                if( xrest.Element( "product" ).Element( "id" ).Value == prod.Id.ToString( ) )
+                                    Xrest = xrest; // take the last rest of the current product
+
+                            if( Xrest != null ) {
+                                int prev = int.Parse( Xrest.Element( "product" ).Element( "quantity" ).Value );
+                                Xrest.Element( "product" ).Element( "quantity" ).Value = (prev + quantity).ToString( );
+                                xfile.XML_File.Save( xfile.Xmlpath );
+                            }
                         }
+
                         string val = (type == ListType.REST ? quantity : prev_q).ToString( );
                         ni.Element( "product" ).Element( "quantity" ).Value = val;
                         // JUST 
@@ -267,21 +282,32 @@ namespace Core.Class
             #region Create new element
             if( !(storagexists) || !(elem_exists) ) /* you have to create it */ {
 
-                foreach( XElement x in doc )
-                    if( x.Element( "product" ).Element( "id" ).Value == prod.Id.ToString( ) )
-                        prev_q = int.Parse( x.Element( "product" ).Element( "quantity" ).Value );
-                
+                IEnumerable<XElement> docc = xfile.XML_File.Descendants( "rest" );
+                XElement Xrest = null;
 
-                if( type == ListType.REST ) {
+                foreach( XElement xrest in docc )
+                    if( xrest.Element( "product" ).Element( "id" ).Value == prod.Id.ToString( ) ) {
+                        Xrest = xrest; // take the last rest of the current product
+                        prev_q = int.Parse( xrest.Element("product").Element("quantity").Value);
+                    }
 
+                if( type == ListType.REST && quantity - prev_q < 0) {
                     XElement Xout = new XElement( "out",
-                        new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
-                        new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
-                        new XElement( "quantity", quantity - prev_q ) ) //</product>
-                    );
+                                new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
+                                new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),
+                                new XElement( "quantity", quantity - prev_q ) ) //</product>
+                            );
 
                     xfile.XML_File.Root.Add( Xout );
+                } else {
+
+                    if( Xrest != null ) {
+                        int prev = int.Parse( Xrest.Element( "product" ).Element( "quantity" ).Value );
+                        Xrest.Element( "product" ).Element( "quantity" ).Value = (prev + quantity).ToString( );
+                        xfile.XML_File.Save( xfile.Xmlpath );
+                    }
                 }
+
                 XElement X = new XElement( currentstorage,
                     new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
                     new XElement( "product", new XElement( "id", prod.Id.ToString( ) ),

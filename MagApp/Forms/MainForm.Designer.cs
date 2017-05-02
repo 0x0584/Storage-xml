@@ -71,7 +71,6 @@
             this.btnclear = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.datagrid_out = new System.Windows.Forms.DataGridView();
             this.datagrid_in = new System.Windows.Forms.DataGridView();
             this.label_out_sum = new System.Windows.Forms.Label();
             this.label_in_sum = new System.Windows.Forms.Label();
@@ -80,14 +79,15 @@
             this.rdbtn_out = new System.Windows.Forms.RadioButton();
             this.datagrid_rest = new System.Windows.Forms.DataGridView();
             this.label_rest_sum = new System.Windows.Forms.Label();
+            this.datagrid_out = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_storage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numquantity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_total)).BeginInit();
             this.ms.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.datagrid_out)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_in)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_rest)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.datagrid_out)).BeginInit();
             this.SuspendLayout();
             // 
             // datagrid_storage
@@ -303,7 +303,7 @@
             this.societyToolStripMenuItem});
             this.ms.Location = new System.Drawing.Point(0, 0);
             this.ms.Name = "ms";
-            this.ms.Size = new System.Drawing.Size(919, 24);
+            this.ms.Size = new System.Drawing.Size(932, 24);
             this.ms.TabIndex = 16;
             this.ms.Text = "menuStrip1";
             // 
@@ -496,16 +496,6 @@
             this.label2.TabIndex = 21;
             this.label2.Text = "Find";
             // 
-            // datagrid_out
-            // 
-            this.datagrid_out.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.datagrid_out.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.datagrid_out.Location = new System.Drawing.Point(686, 120);
-            this.datagrid_out.Name = "datagrid_out";
-            this.datagrid_out.ReadOnly = true;
-            this.datagrid_out.Size = new System.Drawing.Size(221, 221);
-            this.datagrid_out.TabIndex = 22;
-            // 
             // datagrid_in
             // 
             this.datagrid_in.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -605,19 +595,32 @@
             this.label_rest_sum.TabIndex = 27;
             this.label_rest_sum.Text = "00  MAD";
             // 
+            // datagrid_out
+            // 
+            this.datagrid_out.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.datagrid_out.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.datagrid_out.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.datagrid_out.Location = new System.Drawing.Point(688, 121);
+            this.datagrid_out.Name = "datagrid_out";
+            this.datagrid_out.ReadOnly = true;
+            this.datagrid_out.Size = new System.Drawing.Size(234, 221);
+            this.datagrid_out.TabIndex = 24;
+            this.datagrid_out.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.datagrid_out_CellEnter);
+            this.datagrid_out.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.datagrid_out_RowsAdded);
+            // 
             // StorageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(919, 620);
-            this.Controls.Add(this.datagrid_out);
+            this.ClientSize = new System.Drawing.Size(932, 620);
             this.Controls.Add(this.datagrid_in);
             this.Controls.Add(this.label_out_sum);
             this.Controls.Add(this.label_in_sum);
             this.Controls.Add(this.rdbtn_in);
             this.Controls.Add(this.rdbtn_rest);
             this.Controls.Add(this.rdbtn_out);
+            this.Controls.Add(this.datagrid_out);
             this.Controls.Add(this.datagrid_rest);
             this.Controls.Add(this.label_rest_sum);
             this.Controls.Add(this.label2);
@@ -647,9 +650,9 @@
             this.ms.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.datagrid_out)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_in)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.datagrid_rest)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.datagrid_out)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -697,7 +700,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem8;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.DataGridView datagrid_out;
         private System.Windows.Forms.DataGridView datagrid_in;
         private System.Windows.Forms.Label label_out_sum;
         private System.Windows.Forms.Label label_in_sum;
@@ -706,5 +708,6 @@
         private System.Windows.Forms.RadioButton rdbtn_out;
         private System.Windows.Forms.DataGridView datagrid_rest;
         private System.Windows.Forms.Label label_rest_sum;
+        private System.Windows.Forms.DataGridView datagrid_out;
     }
 }

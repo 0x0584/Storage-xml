@@ -10,6 +10,8 @@ using Core.Class;
 using System.Collections;
 using Core.Printing;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
+using Core.Xml;
 
 namespace JIMED.Forms
 {
@@ -47,7 +49,7 @@ namespace JIMED.Forms
             //this.labnotif.Region = new Region( path );
             //labnotif.BackColor = Color.Red;
 
-            this.FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.None;
             Region = Region.FromHrgn( CreateRoundRectRgn( 0, 0, Width, Height, 20, 20 ) );
             textBox1.Region = Region.FromHrgn( CreateRoundRectRgn( 0, 0, textBox1.Width, textBox1.Height, 7, 7 ) );
             rdbtn_in.Region = Region.FromHrgn( CreateRoundRectRgn( 0, 0, rdbtn_in.Width, rdbtn_in.Height, 20, 20 ) );
@@ -70,6 +72,21 @@ namespace JIMED.Forms
 
                     fooprod.AddXML( );
                     fooprod.Storage.ComingStorage( fooprod, fill.Quantity, Store.ListType.IN );
+                    XElement Xrest = new XElement( "rest",
+                            new XAttribute( "date", DateTime.Today.ToShortDateString( ) ),
+                            new XElement( "product",
+                            new XElement( "id", fooprod.Id.ToString( ) ),
+                            new XElement( "quantity", fooprod.Quantity.ToString( ) ) ) );
+                    if( !(Store.XSource == null) ) {
+                        int index = (int) XFile.FileType.IO;
+                        Store.XSource.SetDocument( XFile.Paths[ index ] );
+                    }
+                    if( !(Store.XSource.Exists) ) {
+                        MessageBox.Show( "No Document was set" );
+                        Store.XSource.OpenDocument( XFile.FileType.IO );
+                    }
+                    Store.XSource.XML_File.Root.Add( Xrest );
+                    Store.XSource.XML_File.Save( Store.XSource.Xmlpath );
                     fill.Dispose( );
                     fill.Close( );
                     if( !is_shown ) ShowHide( );

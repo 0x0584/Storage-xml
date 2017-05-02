@@ -246,14 +246,24 @@ namespace Core.Class
                     new XElement( "volume", volume ),
                     new XElement( "quantity", storage.Quantity.ToString( ) ) );
 
-            xfile.XML_File.Root.Add( XProduct );
+           
 
-            if( !xfile.Exists ) {
+            #region Check source
+            if( !(XSource == null) ) {
+                int index = (int) XFile.FileType.PRODUCTS;
+                xfile.SetDocument( XFile.Paths[ index ] );
+            }
+            if( !(xfile.Exists) ) {
                 MessageBox.Show( "No Document was set" );
                 xfile.OpenDocument( XFile.FileType.PRODUCTS );
             }
+           
+            #endregion
 
+            xfile.XML_File.Root.Add( XProduct );
             xfile.XML_File.Save( xfile.Xmlpath );
+
+           
         }
 
         public void RemoveXML()
@@ -261,10 +271,16 @@ namespace Core.Class
             // TODO: remove from XML
             // done
 
-            if( !xfile.Exists ) {
+            #region Check source
+            if( !(XSource == null) ) {
+                int index = (int) XFile.FileType.PRODUCTS;
+                xfile.SetDocument( XFile.Paths[ index ] );
+            }
+            if( !(xfile.Exists) ) {
                 MessageBox.Show( "No Document was set" );
                 xfile.OpenDocument( XFile.FileType.PRODUCTS );
             }
+            #endregion
 
             XElement product = xfile.XML_File.Descendants( "product" ).FirstOrDefault(
                     p => int.Parse( p.Element( "id" ).Value ) == id );
@@ -280,10 +296,16 @@ namespace Core.Class
         {
             // TODO: (create the file if it does not exists)
             // done;
-            if( !xfile.Exists ) {
+            #region Check source
+            if( !(XSource == null) ) {
+                int index = (int) XFile.FileType.PRODUCTS;
+                xfile.SetDocument( XFile.Paths[ index ] );
+            }
+            if( !(xfile.Exists) ) {
                 MessageBox.Show( "No Document was set" );
                 xfile.OpenDocument( XFile.FileType.PRODUCTS );
             }
+            #endregion
 
             // TODO: (update an existing product)
             // done;
